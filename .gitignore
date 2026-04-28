@@ -1,0 +1,13 @@
+# Secrets & local config
+deploy-config.json
+DEPLOY.md
+*.env
+
+# Claude Code
+.claude/
+
+# macOS
+.DS_Store
+
+# OS files
+Thumbs.db

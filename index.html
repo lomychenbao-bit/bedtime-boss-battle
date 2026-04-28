@@ -1,0 +1,5196 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, maximum-scale=1.0">
+<title>打败晚睡大魔王 - Oliver的睡前冒险</title>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&family=Noto+Sans+SC:wght@400;700;900&display=swap" rel="stylesheet">
+<style>
+/* =============================================
+   REFINED PIXEL FANTASY UI — Bedtime Boss Battle
+   Upgraded with Taste-Skill & Fredoka Fonts
+   ============================================= */
+
+* { margin: 0; padding: 0; box-sizing: border-box; user-select: none; -webkit-user-select: none; -webkit-tap-highlight-color: transparent; }
+
+:root {
+  --bg-deep: #0b0f1e;
+  --bg-mid: #131042;
+  --bg-warm: #1a1040;
+  --gold: #ffd93d;
+  --gold-dark: #d4a830;
+  --accent-primary: #ffd93d;
+  --accent-success: #4ade80;
+  --accent-danger: #f87171;
+  --accent-purple: #a78bfa;
+  --text-main: #ffffff;
+  --font-game: 'Fredoka', 'Noto Sans SC', sans-serif;
+  --spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --glass-border: rgba(255, 255, 255, 0.12);
+  --glass-highlight: rgba(255, 255, 255, 0.05);
+  --green: #4ade80;
+  --green-dark: #15803d;
+  --orange: #fb923c;
+  --red: #f87171;
+  --red-dark: #b91c1c;
+  --blue: #60a5fa;
+  --purple-light: #c084fc;
+  --purple-mid: #7c3aed;
+  --purple-dark: #4a2c8a;
+  --white: #ffffff;
+  --gray: #6b7280;
+  --radius-lg: 20px;
+  --radius-md: 14px;
+  --radius-sm: 10px;
+  --radius-xs: 8px;
+  --shadow-3d-green: 0 6px 0 #15803d, 0 8px 25px rgba(74,222,128,0.35);
+  --shadow-3d-red: 0 6px 0 #b91c1c, 0 8px 25px rgba(248,113,113,0.35);
+  --shadow-3d-gold: 0 5px 0 #b45309, 0 8px 25px rgba(255,217,61,0.35);
+  --shadow-card: 0 4px 15px rgba(0,0,0,0.35);
+  --shadow-glow: 0 0 20px rgba(255,217,61,0.15);
+}
+
+body {
+  font-family: var(--font-game);
+  background: var(--bg-deep);
+  min-height: 100vh;
+  min-height: 100dvh;
+  display: flex;
+  justify-content: center;
+  overflow-x: hidden;
+}
+
+#app {
+  width: 100%;
+  max-width: 480px;
+  min-height: 100vh;
+  min-height: 100dvh;
+  position: relative;
+  overflow: hidden;
+}
+
+/* ============================================
+   STARFIELD BACKGROUND
+   ============================================ */
+.stars { position: fixed; width: 100%; height: 100%; top: 0; left: 0; pointer-events: none; z-index: 0;
+    background:
+      radial-gradient(ellipse at 20% 50%, rgba(120,50,200,0.15) 0%, transparent 50%),
+      radial-gradient(ellipse at 80% 20%, rgba(60,100,200,0.1) 0%, transparent 50%),
+      radial-gradient(ellipse at 50% 80%, rgba(200,50,100,0.08) 0%, transparent 50%),
+      linear-gradient(180deg, #0a0e27 0%, #131042 40%, #0a0e27 100%);
+}
+.star {
+    position: absolute;
+    width: 4px; height: 3px;
+    background: #fff;
+    border-radius: 50%;
+    animation: twinkle 2s ease-in-out infinite;
+}
+.star::after {
+  content: '';
+  position: absolute;
+  top: -1px; left: -1px;
+  width: 5px; height: 5px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.2);
+  filter: blur(2px);
+}
+@keyframes twinkle { 0%,100%{opacity:0.2;} 50%{opacity:1;} }
+
+/* ============================================
+   CHARACTER IMAGES
+   ============================================ */
+.char-img {
+    image-rendering: pixelated;
+    image-rendering: crisp-edges;
+}
+
+/* ============================================
+   TITLE SCREEN
+   ============================================ */
+.title-scene {
+    position: relative;
+    width: 220px;
+    height: 140px;
+    margin: 20px auto;
+}
+.title-scene .boss-img {
+    position: absolute;
+    left: 5px;
+    top: 20px;
+    animation: bossFloat 3s ease-in-out infinite;
+    filter: drop-shadow(0 0 12px rgba(248,113,113,0.5));
+    transition: transform 0.3s;
+}
+.title-scene .boss-img:hover {
+    transform: scale(1.1);
+}
+@keyframes bossFloat {
+    0%,100%{transform:translateY(0);}
+    50%{transform:translateY(-10px);}
+}
+.title-scene .hero-img {
+    position: absolute;
+    right: 15px;
+    top: 40px;
+    filter: drop-shadow(0 0 12px rgba(255,217,61,0.4));
+    animation: heroIdle 2.5s ease-in-out infinite;
+}
+@keyframes heroIdle {
+    0%,100%{transform:translateY(0);}
+    50%{transform:translateY(-5px);}
+}
+.title-scene .vs-text {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    color: #ff6b6b;
+    font-size: 1.6em;
+    font-weight: 900;
+    text-shadow: 3px 3px 0 #000, -1px -1px 0 rgba(255,107,107,0.3);
+    animation: vsPulse 1.8s ease-in-out infinite;
+}
+@keyframes vsPulse {
+    0%,100%{transform:translate(-50%,-50%) scale(1);filter:brightness(1);}
+    50%{transform:translate(-50%,-50%) scale(1.15);filter:brightness(1.3);}
+}
+
+/* Title screen layout */
+#title-screen {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    min-height: 100dvh;
+    padding: 30px 20px;
+    background:
+      radial-gradient(ellipse at 50% 60%, rgba(100,30,150,0.25) 0%, transparent 60%),
+      radial-gradient(circle at 30% 20%, rgba(255,217,61,0.05) 0%, transparent 40%),
+      linear-gradient(180deg, #0a0e27 0%, #1a0a3e 25%, #2d1b69 50%, #1a0a3e 75%, #0a0e27 100%);
+    position: relative;
+    z-index: 1;
+}
+
+.title-emoji {
+    font-size: 3.5em;
+    margin-bottom: 12px;
+    animation: titleBounce 2s ease-in-out infinite;
+    filter: drop-shadow(0 0 15px rgba(255,217,61,0.3));
+}
+@keyframes titleBounce {
+    0%,100%{transform:scale(1) rotate(-5deg);}
+    25%{transform:scale(1.08) rotate(2deg);}
+    50%{transform:scale(1.15) rotate(-3deg);}
+    75%{transform:scale(1.08) rotate(4deg);}
+}
+
+#title-screen h1 {
+    color: var(--gold);
+    font-size: 1.5em;
+    text-align: center;
+    text-shadow:
+      3px 3px 0 #000,
+      0 0 30px rgba(255,217,61,0.2);
+    line-height: 1.8;
+    margin-bottom: 6px;
+    letter-spacing: 2px;
+    position: relative;
+}
+#title-screen h1::after {
+  content: '';
+  position: absolute;
+  bottom: -6px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 60%;
+  height: 3px;
+  background: linear-gradient(90deg, transparent, var(--gold), transparent);
+  border-radius: 2px;
+}
+
+.subtitle {
+    color: var(--purple-light);
+    font-size: 0.55em;
+    text-shadow: 2px 2px 0 #000;
+    margin-bottom: 25px;
+    margin-top: 12px;
+    opacity: 0.85;
+}
+
+#title-canvas { margin: 15px 0; }
+
+/* ============================================
+   BUTTONS — TOY 3D STYLE
+   ============================================ */
+.btn {
+    font-family: var(--font-game);
+    border: none;
+    cursor: pointer;
+    color: var(--white);
+    text-shadow: 2px 2px 0 rgba(0,0,0,0.4);
+    transition: transform 0.08s ease, box-shadow 0.08s ease;
+    -webkit-appearance: none;
+    letter-spacing: 1px;
+    position: relative;
+    overflow: hidden;
+    outline: none;
+}
+.btn:active { transform: translateY(4px); }
+
+/* Button shine effect */
+.btn::before {
+  content: '';
+  position: absolute;
+  top: 0; left: -60%;
+  width: 50%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+  transform: skewX(-20deg);
+  animation: btnShine 3s ease-in-out infinite;
+  pointer-events: none;
+}
+@keyframes btnShine {
+  0%,70%,100%{left:-60%;}
+  85%{left:120%;}
+}
+
+.btn-start {
+    background: linear-gradient(180deg, #4ade80, #22c55e, #16a34a);
+    padding: 18px 36px;
+    font-size: 0.75em;
+    box-shadow: var(--shadow-3d-green);
+    border-radius: var(--radius-lg);
+    margin-top: 15px;
+    border: 2px solid rgba(255,255,255,0.15);
+    border-bottom: none;
+    animation: startPulse 2.5s ease-in-out infinite;
+}
+@keyframes startPulse {
+    0%,100%{transform:scale(1);box-shadow:var(--shadow-3d-green);}
+    50%{transform:scale(1.04);box-shadow:0 8px 0 #15803d, 0 12px 35px rgba(74,222,128,0.45);}
+}
+.btn-start:active { box-shadow: 0 2px 0 #15803d; transform: translateY(4px) scale(0.97); animation: none; }
+
+/* ============================================
+   GAME SCREEN
+   ============================================ */
+#game-screen {
+    display: none;
+    min-height: 100vh;
+    min-height: 100dvh;
+    background:
+      radial-gradient(ellipse at 50% 0%, rgba(100,30,150,0.2) 0%, transparent 50%),
+      linear-gradient(180deg, #0a0e27 0%, #131042 40%, #0a0e27 100%);
+    position: relative;
+    z-index: 1;
+}
+
+/* ============================================
+   BIG CLOCK — TOY PANEL STYLE
+   ============================================ */
+.big-clock {
+    background:
+      linear-gradient(135deg, rgba(30,27,75,0.95), rgba(15,10,46,0.98));
+    border: 3px solid rgba(74,44,138,0.7);
+    border-bottom: 3px solid rgba(74,44,138,0.5);
+    border-radius: var(--radius-lg);
+    padding: 14px 18px;
+    margin: 12px 14px 8px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    box-shadow:
+      0 4px 20px rgba(0,0,0,0.4),
+      inset 0 1px 0 rgba(255,255,255,0.05),
+      0 0 15px rgba(74,44,138,0.15);
+    position: sticky;
+    top: 10px;
+    z-index: 40;
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+}
+
+.clock-left {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    min-width: 65px;
+}
+
+.clock-label {
+    color: var(--purple-light);
+    font-size: 0.35em;
+    text-shadow: 1px 1px 0 #000;
+    margin-bottom: 3px;
+    opacity: 0.8;
+    letter-spacing: 1px;
+}
+
+.clock-time {
+    color: var(--white);
+    font-size: 1.6em;
+    font-weight: 700;
+    text-shadow:
+      0 0 15px rgba(255,217,61,0.3),
+      2px 2px 0 rgba(0,0,0,0.5);
+    letter-spacing: 3px;
+    background: linear-gradient(180deg, var(--white), var(--gold));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    filter: drop-shadow(2px 2px 0 rgba(0,0,0,0.5));
+}
+
+.clock-center {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    flex: 1;
+    padding: 0 14px;
+}
+
+.clock-boss-track {
+    width: 100%;
+    height: 14px;
+    background: rgba(55,65,81,0.8);
+    border-radius: 7px;
+    overflow: hidden;
+    border: 2px solid rgba(74,44,138,0.6);
+    box-shadow: inset 0 2px 4px rgba(0,0,0,0.3);
+    position: relative;
+}
+
+.clock-boss-fill {
+    height: 100%;
+    width: 0%;
+    background: linear-gradient(90deg, #4ade80, #fbbf24, #fb923c, #ef4444);
+    border-radius: 5px;
+    transition: width 1s ease;
+    box-shadow: 0 0 10px rgba(255,217,61,0.4);
+    position: relative;
+}
+.clock-boss-fill::after {
+  content: '';
+  position: absolute;
+  top: 2px; left: 2px; right: 2px;
+  height: 4px;
+  background: linear-gradient(180deg, rgba(255,255,255,0.35), transparent);
+  border-radius: 3px;
+}
+
+.clock-boss-label {
+    color: var(--red);
+    font-size: 0.32em;
+    text-shadow: 1px 1px 0 #000;
+    margin-top: 5px;
+    text-align: center;
+    transition: color 0.5s;
+}
+
+.clock-right {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    cursor: pointer;
+    padding: 5px 8px;
+    border-radius: var(--radius-sm);
+    transition: background 0.2s;
+    min-width: 60px;
+}
+.clock-right:active {
+    background: rgba(255,255,255,0.05);
+}
+
+.clock-target {
+    color: var(--gold);
+    font-size: 0.38em;
+    text-shadow: 1px 1px 0 #000;
+    margin-bottom: 3px;
+}
+
+.clock-settings-icon {
+    font-size: 0.9em;
+    opacity: 0.5;
+    transition: opacity 0.2s, transform 0.2s;
+}
+.clock-right:active .clock-settings-icon {
+    opacity: 0.8;
+    transform: rotate(45deg);
+}
+
+/* ============================================
+   POWER DISPLAY
+   ============================================ */
+.power-display-inline {
+    text-align:center;
+    padding: 8px 0 4px;
+    color: var(--green);
+    font-size: 0.5em;
+    text-shadow: 0 0 10px rgba(74,222,128,0.3), 1px 1px 0 #000;
+}
+
+/* ============================================
+   EQUIPMENT BAR
+   ============================================ */
+.equip-bar {
+    display: flex;
+    justify-content: center;
+    gap: 6px;
+    padding: 6px 14px;
+    min-height: 34px;
+    flex-wrap: wrap;
+    align-items: center;
+}
+.equip-bar span {
+    font-size: 1.2em;
+    cursor: default;
+    padding: 3px 5px;
+    border-radius: 8px;
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.1);
+    transition: transform 0.2s;
+    animation: equipAppear 0.3s ease-out;
+}
+.equip-bar span:hover {
+    transform: scale(1.2);
+}
+@keyframes equipAppear {
+    0%{transform:scale(0) rotate(-180deg);opacity:0;}
+    60%{transform:scale(1.3) rotate(10deg);}
+    100%{transform:scale(1) rotate(0);opacity:1;}
+}
+
+/* ============================================
+   ADVENTURE AREA
+   ============================================ */
+#adventure-area {
+    padding: 10px 14px 130px;
+    overflow-y: auto;
+}
+
+.adventure-title {
+    color: var(--purple-light);
+    font-size: 0.5em;
+    text-align: center;
+    margin-bottom: 18px;
+    text-shadow: 2px 2px 0 #000, 0 0 15px rgba(192,132,252,0.2);
+    letter-spacing: 3px;
+    position: relative;
+    padding-bottom: 8px;
+}
+.adventure-title::before,
+.adventure-title::after {
+  content: '✦';
+  position: absolute;
+  top: 0;
+  color: var(--gold);
+  opacity: 0.5;
+  font-size: 0.6em;
+}
+.adventure-title::before { left: 20%; }
+.adventure-title::after { right: 20%; }
+
+.path-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* ============================================
+   HERO / BOSS NODES
+   ============================================ */
+.hero-node, .boss-node {
+    text-align: center;
+    padding: 12px;
+    margin: 5px 0;
+    position: relative;
+}
+.hero-node {
+    background: radial-gradient(circle, rgba(255,217,61,0.08) 0%, transparent 70%);
+    border-radius: 50%;
+    width: 90px;
+    height: 90px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.hero-label {
+    color: var(--gold);
+    font-size: 0.42em;
+    text-shadow: 1px 1px 0 #000;
+    margin-top: 4px;
+}
+
+.boss-node {
+    background: radial-gradient(circle, rgba(248,113,113,0.1) 0%, transparent 70%);
+}
+
+.boss-label {
+    color: var(--red);
+    font-size: 0.42em;
+    text-shadow: 1px 1px 0 #000;
+    margin-top: 6px;
+    animation: bossPulse 2s ease-in-out infinite;
+}
+@keyframes bossPulse {
+    0%,100%{opacity:0.7;text-shadow:1px 1px 0 #000;}
+    50%{opacity:1;text-shadow:1px 1px 0 #000, 0 0 10px rgba(248,113,113,0.3);}
+}
+
+/* ============================================
+   CONNECTOR LINE
+   ============================================ */
+.connector {
+    width: 6px;
+    height: 40px;
+    background: linear-gradient(180deg, #3d2866, #4a2c8a, #3d2866);
+    border-radius: 2px;
+    margin: 2px 0;
+    position: relative;
+    overflow: hidden;
+}
+.connector::after {
+  content: '';
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(180deg, transparent, rgba(255,255,255,0.1), transparent);
+  animation: connectorGlow 2s ease-in-out infinite;
+}
+@keyframes connectorGlow {
+  0%,100%{opacity:0;} 50%{opacity:1;}
+}
+.connector.active {
+    background: linear-gradient(180deg, #4ade80, #22c55e);
+    box-shadow: 0 0 10px rgba(74,222,128,0.5);
+}
+.connector.active::after {
+  background: linear-gradient(180deg, transparent, rgba(255,255,255,0.3), transparent);
+}
+.connector.all-done {
+    background: linear-gradient(180deg, #4ade80, #ffd93d, #ff6b6b);
+    box-shadow: 0 0 12px rgba(255,217,61,0.5);
+}
+
+/* ============================================
+   TASK CARDS
+   ============================================ */
+.task-card {
+    background: linear-gradient(145deg, rgba(45,27,105,0.9), rgba(30,27,75,0.95));
+    border: 3px solid var(--purple-dark);
+    border-bottom: 3px solid rgba(50,30,90,0.8);
+    border-radius: var(--radius-lg);
+    padding: 14px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    width: 100%;
+    max-width: 380px;
+    box-shadow:
+      var(--shadow-card),
+      inset 0 1px 0 rgba(255,255,255,0.05);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+}
+.task-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+}
+
+.task-card:active {
+    transform: scale(0.98);
+}
+
+.task-card.completed {
+    border-color: var(--green);
+    border-bottom-color: #16a34a;
+    background: linear-gradient(145deg, rgba(5,46,22,0.9), rgba(2,44,34,0.95));
+    box-shadow:
+      0 4px 15px rgba(74,222,128,0.25),
+      inset 0 1px 0 rgba(74,222,128,0.15);
+}
+.task-card.completed::before {
+  background: linear-gradient(90deg, transparent, rgba(74,222,128,0.3), transparent);
+}
+
+.task-card.skipped {
+    border-color: rgba(107,114,128,0.5);
+    border-bottom-color: rgba(75,85,99,0.5);
+    background: linear-gradient(145deg, rgba(31,41,55,0.8), rgba(17,24,39,0.9));
+    opacity: 0.45;
+    filter: grayscale(0.5);
+}
+
+.task-icon-wrap {
+    width: 56px;
+    height: 56px;
+    border-radius: var(--radius-md);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.6em;
+    flex-shrink: 0;
+    border: 2px solid rgba(255,255,255,0.15);
+    border-bottom: 2px solid rgba(255,255,255,0.08);
+    box-shadow:
+      0 3px 8px rgba(0,0,0,0.3),
+      inset 0 1px 0 rgba(255,255,255,0.15);
+    background: rgba(0,0,0,0.2);
+    position: relative;
+    overflow: hidden;
+}
+.task-icon-wrap::after {
+  content: '';
+  position: absolute;
+  top: 3px; left: 3px; right: 3px;
+  height: 40%;
+  background: linear-gradient(180deg, rgba(255,255,255,0.12), transparent);
+  border-radius: 6px 6px 50% 50%;
+  pointer-events: none;
+}
+
+.task-info { flex: 1; min-width: 0; }
+
+.task-name {
+    color: var(--white);
+    font-size: 0.52em;
+    text-shadow: 1px 1px 0 #000;
+    margin-bottom: 5px;
+    line-height: 1.5;
+}
+
+.task-buff {
+    color: var(--gold);
+    font-size: 0.42em;
+    text-shadow: 1px 1px 0 #000;
+    opacity: 0.85;
+}
+
+.task-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    flex-shrink: 0;
+}
+
+.btn-done {
+    background: linear-gradient(180deg, #4ade80, #22c55e, #16a34a);
+    padding: 10px 16px;
+    font-size: 0.45em;
+    border-radius: var(--radius-sm);
+    box-shadow: 0 4px 0 #15803d, 0 5px 15px rgba(74,222,128,0.25);
+    border: 1.5px solid rgba(255,255,255,0.12);
+    border-bottom: none;
+}
+.btn-done:active { box-shadow: 0 1px 0 #15803d; transform: translateY(3px) scale(0.96); }
+
+.btn-skip {
+    background: linear-gradient(180deg, #6b7280, #4b5563, #374151);
+    padding: 8px 16px;
+    font-size: 0.4em;
+    border-radius: var(--radius-xs);
+    box-shadow: 0 3px 0 #374151;
+    border: 1.5px solid rgba(255,255,255,0.08);
+    border-bottom: none;
+    opacity: 0.75;
+}
+.btn-skip:active { box-shadow: 0 1px 0 #374151; transform: translateY(2px); }
+
+.done-check {
+    font-size: 1.5em;
+    padding: 8px;
+    filter: drop-shadow(0 0 6px rgba(74,222,128,0.4));
+}
+
+/* ============================================
+   BOTTOM BAR
+   ============================================ */
+.bottom-bar {
+    position: fixed;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100%;
+    max-width: 480px;
+    padding: 14px 16px 30px;
+    background:
+      linear-gradient(180deg, transparent 0%, rgba(10,14,39,0.9) 25%, #0a0e27 100%);
+    display: flex;
+    gap: 12px;
+    z-index: 50;
+}
+
+.btn-add {
+    flex: 1;
+    background: linear-gradient(180deg, #60a5fa, #3b82f6, #2563eb);
+    padding: 16px;
+    font-size: 0.55em;
+    box-shadow: 0 5px 0 #1d4ed8, 0 7px 20px rgba(96,165,250,0.3);
+    border-radius: var(--radius-md);
+    border: 2px solid rgba(255,255,255,0.1);
+    border-bottom: none;
+}
+.btn-add:active { box-shadow: 0 2px 0 #1d4ed8; transform: translateY(3px); }
+
+.btn-battle {
+    flex: 1;
+    background: linear-gradient(180deg, #f87171, #ef4444, #dc2626);
+    padding: 16px;
+    font-size: 0.55em;
+    box-shadow: var(--shadow-3d-red);
+    border-radius: var(--radius-md);
+    border: 2px solid rgba(255,255,255,0.1);
+    border-bottom: none;
+    animation: battleGlow 1.5s ease-in-out infinite;
+}
+@keyframes battleGlow {
+    0%,100%{box-shadow:var(--shadow-3d-red);}
+    50%{box-shadow:0 6px 0 #b91c1c, 0 8px 35px rgba(248,113,113,0.55), 0 0 25px rgba(248,113,113,0.2);}
+}
+.btn-battle:active { box-shadow: 0 2px 0 #b91c1c; transform: translateY(4px); }
+
+/* ============================================
+   MODAL OVERLAY
+   ============================================ */
+#modal-overlay {
+    display: none;
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: rgba(0,0,0,0.75);
+    backdrop-filter: blur(3px);
+    -webkit-backdrop-filter: blur(3px);
+    z-index: 200;
+    align-items: flex-end;
+    justify-content: center;
+}
+#modal-overlay.show { display: flex; }
+
+#task-modal {
+    background:
+      linear-gradient(180deg, #2d1b69, #1e1b4b, #0f0a2e);
+    width: 100%;
+    max-width: 480px;
+    border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+    padding: 20px 16px 30px;
+    max-height: 80vh;
+    overflow-y: auto;
+    border-top: 3px solid var(--blue);
+    box-shadow: 0 -10px 40px rgba(0,0,0,0.5);
+    animation: slideUp 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+@keyframes slideUp {
+    from{transform:translateY(100%);opacity:0.5;}
+    to{transform:translateY(0);opacity:1;}
+}
+/* Modal grip handle */
+#task-modal::before {
+  content: '';
+  display: block;
+  width: 40px;
+  height: 5px;
+  background: rgba(255,255,255,0.2);
+  border-radius: 3px;
+  margin: 0 auto 15px;
+}
+
+.modal-title {
+    color: var(--blue);
+    font-size: 0.6em;
+    text-align: center;
+    margin-bottom: 15px;
+    text-shadow: 2px 2px 0 #000, 0 0 10px rgba(96,165,250,0.2);
+}
+
+/* ============================================
+   TASK GRID
+   ============================================ */
+.task-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    margin-bottom: 15px;
+}
+
+.task-grid-item {
+    background: linear-gradient(145deg, rgba(61,40,102,0.8), rgba(45,27,105,0.9));
+    border: 2px solid var(--purple-dark);
+    border-bottom: 2px solid rgba(50,30,90,0.7);
+    border-radius: var(--radius-md);
+    padding: 14px 6px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.25);
+    position: relative;
+    overflow: hidden;
+}
+.task-grid-item::after {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 1px;
+  background: rgba(255,255,255,0.08);
+}
+.task-grid-item:active {
+    transform: scale(0.92);
+    border-color: var(--blue);
+    box-shadow: 0 3px 10px rgba(96,165,250,0.3);
+}
+
+.task-grid-item .emoji {
+    font-size: 2em;
+    display: block;
+    margin-bottom: 6px;
+    filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
+}
+
+.task-grid-item .label {
+    color: var(--white);
+    font-size: 0.36em;
+    text-shadow: 1px 1px 0 #000;
+    line-height: 1.4;
+}
+
+/* ============================================
+   CUSTOM TASK FORM
+   ============================================ */
+.custom-form { padding: 5px 0; }
+.form-row { margin-bottom: 10px; }
+
+.form-input, .custom-input {
+    font-family: var(--font-game);
+    background: rgba(30,27,75,0.8);
+    border: 2px solid var(--purple-dark);
+    border-bottom: 2px solid rgba(50,30,90,0.7);
+    color: var(--white);
+    padding: 12px;
+    font-size: 0.45em;
+    border-radius: var(--radius-sm);
+    width: 100%;
+    box-shadow: inset 0 2px 5px rgba(0,0,0,0.2);
+    transition: border-color 0.2s;
+}
+.form-input:focus, .custom-input:focus { outline: none; border-color: var(--green); box-shadow: inset 0 2px 5px rgba(0,0,0,0.2), 0 0 10px rgba(74,222,128,0.15); }
+
+.form-select {
+    -webkit-appearance: none;
+    color: var(--gold);
+    text-align: center;
+    cursor: pointer;
+}
+
+.form-label {
+    display: block;
+    margin-bottom: 5px;
+}
+
+.emoji-picker {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    justify-content: center;
+    padding: 5px;
+}
+
+.emoji-option {
+    font-size: 1.4em;
+    cursor: pointer;
+    padding: 4px 6px;
+    border: 2px solid transparent;
+    border-radius: var(--radius-xs);
+    background: rgba(30,27,75,0.5);
+    transition: all 0.15s;
+}
+.emoji-option:active, .emoji-option.selected {
+    border-color: var(--green);
+    background: rgba(5,46,22,0.5);
+    transform: scale(1.15);
+}
+
+.color-picker {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    justify-content: center;
+    padding: 5px;
+}
+
+.color-option {
+    width: 32px;
+    height: 32px;
+    border-radius: var(--radius-xs);
+    cursor: pointer;
+    border: 3px solid transparent;
+    transition: all 0.15s;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+    position: relative;
+}
+.color-option::after {
+  content: '';
+  position: absolute;
+  top: 3px; left: 3px; right: 3px;
+  height: 40%;
+  background: linear-gradient(180deg, rgba(255,255,255,0.25), transparent);
+  border-radius: 4px;
+  pointer-events: none;
+}
+.color-option:active, .color-option.selected {
+    border-color: var(--white);
+    transform: scale(1.2);
+    box-shadow: 0 2px 6px rgba(0,0,0,0.3), 0 0 10px rgba(255,255,255,0.15);
+}
+
+.btn-add-custom {
+    background: linear-gradient(180deg, #60a5fa, #3b82f6, #2563eb);
+    padding: 14px;
+    font-size: 0.48em;
+    border-radius: var(--radius-sm);
+    box-shadow: 0 4px 0 #1d4ed8, 0 5px 15px rgba(96,165,250,0.25);
+    border: 1.5px solid rgba(255,255,255,0.1);
+    border-bottom: none;
+    flex: 1;
+}
+.btn-add-custom:active { box-shadow: 0 1px 0 #1d4ed8; transform: translateY(3px); }
+
+/* ============================================
+   CURRENT TASKS LIST
+   ============================================ */
+.current-task-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 12px;
+    background: rgba(30,27,75,0.6);
+    border: 2px solid var(--purple-dark);
+    border-radius: var(--radius-sm);
+    margin-bottom: 8px;
+    cursor: pointer;
+    transition: all 0.15s;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+}
+.current-task-item:active {
+    border-color: var(--red);
+    background: rgba(45,27,27,0.6);
+    transform: scale(0.97);
+}
+.current-task-item .ct-emoji { font-size: 1.3em; }
+.current-task-item .ct-name { color: var(--white); font-size: 0.4em; text-shadow: 1px 1px 0 #000; flex:1; }
+.current-task-item .ct-power { color: var(--gold); font-size: 0.36em; text-shadow: 1px 1px 0 #000; }
+.current-task-item .ct-del { color: var(--red); font-size: 0.8em; opacity: 0.6; }
+
+.btn-close-modal {
+    width: 100%;
+    background: linear-gradient(180deg, #6b7280, #4b5563, #374151);
+    padding: 14px;
+    font-size: 0.5em;
+    border-radius: var(--radius-md);
+    box-shadow: 0 4px 0 #374151;
+    border: 1.5px solid rgba(255,255,255,0.08);
+    border-bottom: none;
+    margin-top: 10px;
+}
+.btn-close-modal:active { box-shadow: 0 1px 0 #374151; transform: translateY(3px); }
+
+/* ============================================
+   BATTLE SCREEN
+   ============================================ */
+#battle-screen {
+    display: none;
+    min-height: 100vh;
+    min-height: 100dvh;
+    background:
+      radial-gradient(ellipse at 50% 30%, rgba(80,20,40,0.4) 0%, transparent 60%),
+      radial-gradient(ellipse at 20% 80%, rgba(20,10,40,0.5) 0%, transparent 50%),
+      linear-gradient(180deg, #1a0a2e 0%, #2d0a1a 40%, #1a0a1e 70%, #0a0a2e 100%);
+    padding: 15px;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    position: relative;
+    z-index: 1;
+}
+
+.battle-title {
+    color: var(--red);
+    font-size: 0.85em;
+    text-shadow:
+      3px 3px 0 #000,
+      0 0 20px rgba(248,113,113,0.3);
+    margin: 10px 0 15px;
+    animation: battleTitleFlash 2s ease-in-out infinite;
+    letter-spacing: 2px;
+}
+@keyframes battleTitleFlash {
+    0%,100%{filter:brightness(1);}
+    50%{filter:brightness(1.3);text-shadow:3px 3px 0 #000, 0 0 30px rgba(248,113,113,0.5);}
+}
+
+#battle-canvas {
+    margin: 10px auto;
+    display: block;
+    border-radius: var(--radius-md);
+    border: 3px solid rgba(74,44,138,0.6);
+    box-shadow: 0 4px 20px rgba(0,0,0,0.5), 0 0 15px rgba(200,50,50,0.1);
+}
+
+.battle-log {
+    width: 100%;
+    max-width: 400px;
+    min-height: 50px;
+    max-height: 80px;
+    overflow-y: auto;
+    background: rgba(0,0,0,0.5);
+    border: 2px solid var(--purple-dark);
+    border-radius: var(--radius-sm);
+    padding: 10px;
+    margin: 10px 0;
+    box-shadow: inset 0 2px 8px rgba(0,0,0,0.3);
+}
+.battle-log p {
+    color: var(--white);
+    font-size: 0.38em;
+    text-shadow: 1px 1px 0 #000;
+    margin: 3px 0;
+    text-align: center;
+    line-height: 1.4;
+}
+.battle-log .hero-msg { color: var(--green); }
+.battle-log .boss-msg { color: var(--red); }
+.battle-log .system-msg { color: var(--gold); }
+
+#battle-controls {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 8px;
+    padding: 10px;
+    max-width: 400px;
+}
+
+.btn-atk {
+    background: linear-gradient(180deg, #f87171, #ef4444, #dc2626);
+    padding: 12px 14px;
+    font-size: 0.4em;
+    border-radius: var(--radius-sm);
+    box-shadow: 0 4px 0 var(--red-dark);
+    border: 1.5px solid rgba(255,255,255,0.1);
+    border-bottom: none;
+    transition: transform 0.08s;
+}
+.btn-atk:active { box-shadow: 0 1px 0 var(--red-dark); transform: translateY(3px); }
+
+.btn-ultimate {
+    background: linear-gradient(180deg, #ffd93d, #fbbf24, #f59e0b);
+    color: #000;
+    text-shadow: 2px 2px 0 rgba(255,255,255,0.2);
+    padding: 14px 20px;
+    font-size: 0.5em;
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-3d-gold);
+    border: 2px solid rgba(255,255,255,0.2);
+    border-bottom: none;
+    width: 100%;
+    margin-top: 5px;
+    animation: ultimatePulse 1.2s ease-in-out infinite;
+}
+@keyframes ultimatePulse {
+    0%,100%{transform:scale(1);}
+    50%{transform:scale(1.03);box-shadow:0 5px 0 #b45309, 0 8px 30px rgba(255,217,61,0.5);}
+}
+.btn-ultimate:active { box-shadow: 0 2px 0 #b45309; transform: translateY(3px); animation: none; }
+
+/* ============================================
+   VICTORY SCREEN
+   ============================================ */
+#victory-screen {
+    display: none;
+    min-height: 100vh;
+    min-height: 100dvh;
+    background:
+      radial-gradient(ellipse at 50% 40%, rgba(6,78,59,0.4) 0%, transparent 60%),
+      radial-gradient(circle at 30% 20%, rgba(255,217,61,0.08) 0%, transparent 40%),
+      linear-gradient(180deg, #052e16 0%, #064e3b 40%, #052e16 100%);
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    text-align: center;
+    position: relative;
+    z-index: 1;
+}
+
+.victory-emoji {
+    font-size: 3.5em;
+    margin-bottom: 10px;
+    animation: victoryBounce 0.5s ease-in-out 3;
+    filter: drop-shadow(0 0 20px rgba(255,217,61,0.4));
+}
+@keyframes victoryBounce {
+    0%,100%{transform:scale(1);}
+    50%{transform:scale(1.35);}
+}
+
+.victory-title {
+    color: var(--gold);
+    font-size: 1.5em;
+    text-shadow:
+      3px 3px 0 #000,
+      0 0 25px rgba(255,217,61,0.3);
+    margin-bottom: 8px;
+    letter-spacing: 3px;
+}
+
+.victory-sub {
+    color: var(--green);
+    font-size: 0.55em;
+    text-shadow: 2px 2px 0 #000;
+    margin-bottom: 15px;
+}
+
+#victory-canvas, #defeat-canvas {
+    margin: 10px 0;
+    display: flex;
+    justify-content: center;
+}
+#victory-canvas {
+    filter: drop-shadow(0 0 15px rgba(74,222,128,0.3));
+}
+
+.victory-stats {
+    background: rgba(0,0,0,0.4);
+    border: 2px solid var(--green);
+    border-radius: var(--radius-md);
+    padding: 16px;
+    margin: 10px 0 20px;
+    width: 100%;
+    max-width: 280px;
+    box-shadow: 0 4px 15px rgba(74,222,128,0.15);
+    position: relative;
+    overflow: hidden;
+}
+.victory-stats::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(74,222,128,0.4), transparent);
+}
+.victory-stats p {
+    color: var(--white);
+    font-size: 0.4em;
+    text-shadow: 1px 1px 0 #000;
+    margin: 6px 0;
+    line-height: 1.5;
+}
+
+/* ============================================
+   DEFEAT SCREEN
+   ============================================ */
+#defeat-screen {
+    display: none;
+    min-height: 100vh;
+    min-height: 100dvh;
+    background:
+      radial-gradient(ellipse at 50% 40%, rgba(40,10,10,0.5) 0%, transparent 60%),
+      linear-gradient(180deg, #1a0a0a 0%, #2d1a1a 40%, #1a0a0a 100%);
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    text-align: center;
+    position: relative;
+    z-index: 1;
+}
+
+.defeat-title {
+    color: var(--red);
+    font-size: 0.9em;
+    text-shadow:
+      3px 3px 0 #000,
+      0 0 15px rgba(248,113,113,0.2);
+    margin-bottom: 10px;
+}
+
+.defeat-msg {
+    color: var(--purple-light);
+    font-size: 0.48em;
+    text-shadow: 1px 1px 0 #000;
+    line-height: 1.8;
+    margin-bottom: 20px;
+    padding: 0 20px;
+}
+
+#defeat-canvas { margin: 10px 0; }
+
+/* ============================================
+   BUFF POPUP
+   ============================================ */
+.buff-popup {
+    position: fixed;
+    color: var(--gold);
+    font-family: var(--font-game);
+    font-size: 0.7em;
+    text-shadow: 2px 2px 0 #000, 0 0 10px rgba(255,217,61,0.4);
+    pointer-events: none;
+    z-index: 999;
+    animation: buffFloat 1.5s ease-out forwards;
+}
+@keyframes buffFloat {
+    0%{opacity:1;transform:translateY(0) scale(1);}
+    30%{opacity:1;transform:translateY(-20px) scale(1.2);}
+    100%{opacity:0;transform:translateY(-70px) scale(1.5);}
+}
+
+/* ============================================
+   PARTICLES
+   ============================================ */
+#particles {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    pointer-events: none;
+    z-index: 1000;
+}
+
+/* ============================================
+   BOSS PROXIMITY ANIMATIONS
+   ============================================ */
+.path-boss-wrapper {
+    transition: transform 0.5s ease;
+}
+.path-boss-wrapper.close {
+    animation: bossClose 1s ease-in-out infinite;
+}
+.path-boss-wrapper.very-close {
+    animation: bossVeryClose 0.5s ease-in-out infinite;
+}
+@keyframes bossClose {
+    0%,100%{transform:scale(1);} 50%{transform:scale(1.08);}
+}
+@keyframes bossVeryClose {
+    0%,100%{transform:scale(1);} 50%{transform:scale(1.15) rotate(-2deg);}
+}
+
+/* ============================================
+   SETTINGS MODAL
+   ============================================ */
+#settings-overlay {
+    display: none;
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: rgba(0,0,0,0.75);
+    backdrop-filter: blur(3px);
+    -webkit-backdrop-filter: blur(3px);
+    z-index: 300;
+    align-items: center;
+    justify-content: center;
+}
+#settings-overlay.show { display: flex; }
+
+#settings-modal {
+    background: linear-gradient(180deg, #2d1b69, #1e1b4b, #0f0a2e);
+    width: 90%;
+    max-width: 340px;
+    border-radius: var(--radius-lg);
+    padding: 24px 20px;
+    border: 3px solid var(--blue);
+    box-shadow: 0 10px 40px rgba(0,0,0,0.5), 0 0 20px rgba(96,165,250,0.1);
+    animation: popIn 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+    position: relative;
+    overflow: hidden;
+}
+#settings-modal::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(96,165,250,0.4), transparent);
+}
+@keyframes popIn {
+    from{transform:scale(0.8) translateY(20px);opacity:0;}
+    to{transform:scale(1) translateY(0);opacity:1;}
+}
+
+.settings-title {
+    color: var(--blue);
+    font-size: 0.6em;
+    text-align: center;
+    margin-bottom: 20px;
+    text-shadow: 2px 2px 0 #000, 0 0 10px rgba(96,165,250,0.2);
+}
+
+.setting-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 18px;
+    padding: 8px 0;
+}
+
+.setting-label {
+    color: var(--white);
+    font-size: 0.42em;
+    text-shadow: 1px 1px 0 #000;
+}
+
+.setting-input {
+    font-family: var(--font-game);
+    background: rgba(30,27,75,0.8);
+    border: 2px solid var(--purple-dark);
+    border-bottom: 2px solid rgba(50,30,90,0.7);
+    color: var(--gold);
+    padding: 10px;
+    font-size: 0.55em;
+    border-radius: var(--radius-xs);
+    width: 110px;
+    text-align: center;
+    box-shadow: inset 0 2px 5px rgba(0,0,0,0.2);
+}
+.setting-input:focus { outline: none; border-color: var(--gold); box-shadow: inset 0 2px 5px rgba(0,0,0,0.2), 0 0 10px rgba(255,217,61,0.15); }
+
+.btn-save-settings {
+    width: 100%;
+    background: linear-gradient(180deg, #4ade80, #22c55e, #16a34a);
+    padding: 14px;
+    font-size: 0.5em;
+    border-radius: var(--radius-sm);
+    box-shadow: 0 4px 0 #15803d, 0 5px 15px rgba(74,222,128,0.25);
+    border: 1.5px solid rgba(255,255,255,0.1);
+    border-bottom: none;
+}
+.btn-save-settings:active { box-shadow: 0 1px 0 #15803d; transform: translateY(3px); }
+
+/* ============================================
+   TIME WARNING OVERLAY
+/* Time warning overlay */
+.time-warning {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    pointer-events: none;
+    z-index: 30;
+    background: radial-gradient(ellipse at center, transparent 40%, rgba(255,0,0,0.1) 100%);
+    opacity: 0;
+    transition: opacity 1s;
+}
+.time-warning.active {
+    opacity: 1;
+    animation: warningPulse 2s ease-in-out infinite;
+}
+@keyframes warningPulse {
+    0%,100%{background: radial-gradient(ellipse at center, transparent 40%, rgba(255,0,0,0.05) 100%);}
+    50%{background: radial-gradient(ellipse at center, transparent 30%, rgba(255,0,0,0.15) 100%);}
+}
+
+
+/* Task Config Grids for Settings */
+.config-section { margin-bottom: 15px; }
+.config-label { color: #a78bfa; font-size: 0.45em; margin-bottom: 5px; text-shadow: 1px 1px 0 #000; }
+.task-config-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; }
+.task-toggle { background: #1e1b4b; border: 2px solid #4a2c8a; color: #fff; padding: 6px 2px; font-size: 0.4em; text-align: center; border-radius: 6px; cursor: pointer; transition: all 0.2s; }
+.task-toggle.active { background: #4ade80; color: #000; border-color: #16a34a; box-shadow: 0 0 8px rgba(74,222,128,0.4); }
+
+
+/* Ally Modal */
+.modal-overlay {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: rgba(0,0,0,0.8);
+    z-index: 500;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.ally-modal {
+    background: linear-gradient(135deg, #2d1b69, #1a0a4e);
+    width: 85%;
+    max-width: 320px;
+    border-radius: 24px;
+    padding: 30px 20px;
+    border: 4px solid #4ade80;
+    text-align: center;
+    box-shadow: 0 0 30px rgba(74,222,128,0.4);
+    animation: popIn 0.3s ease;
+}
+
+.ally-title {
+    color: #4ade80;
+    font-size: 0.8em;
+    text-shadow: 2px 2px 0 #000;
+    margin-bottom: 10px;
+}
+
+.ally-desc {
+    color: #fff;
+    font-size: 0.5em;
+    text-shadow: 1px 1px 0 #000;
+    line-height: 1.4;
+    margin-bottom: 20px;
+}
+
+.hand-anim {
+    font-size: 4em;
+    margin: 15px 0;
+    animation: handWave 1s ease-in-out infinite;
+}
+
+@keyframes handWave {
+    0%,100%{transform:rotate(0deg) scale(1);}
+    25%{transform:rotate(-10deg) scale(1.1);}
+    75%{transform:rotate(10deg) scale(1.1);}
+}
+
+.btn-ally-confirm {
+    width: 100%;
+    background: linear-gradient(180deg, #4ade80, #16a34a);
+    padding: 14px;
+    font-size: 0.55em;
+    border-radius: 16px;
+    box-shadow: 0 4px 0 #15803d, 0 6px 20px rgba(74,222,128,0.4);
+    animation: allyPulse 1.5s ease-in-out infinite;
+}
+.btn-ally-confirm:active {
+    box-shadow: 0 2px 0 #15803d;
+    transform: translateY(2px) scale(0.95);
+}
+
+@keyframes allyPulse {
+    0%,100%{box-shadow: 0 4px 0 #15803d, 0 6px 20px rgba(74,222,128,0.4);}
+    50%{box-shadow: 0 4px 0 #15803d, 0 6px 30px rgba(74,222,128,0.8);}
+}
+
+.btn-ally {
+    background: linear-gradient(180deg, #a78bfa, #7c3aed);
+    padding: 10px 12px;
+    font-size: 0.4em;
+    border-radius: 10px;
+    box-shadow: 0 3px 0 #5b21b6;
+}
+.btn-ally:active { box-shadow: 0 1px 0 #5b21b6; transform: translateY(2px); }
+
+@keyframes shake {
+    0% { transform: translateX(0); }
+    25% { transform: translateX(-5px); }
+    50% { transform: translateX(5px); }
+    75% { transform: translateX(-5px); }
+    100% { transform: translateX(0); }
+}
+
+
+
+.task-card:active {
+    transform: scale(0.98);
+}
+
+.btn-ally:active, .btn-done:active, .btn-skip:active {
+    transform: scale(0.95) translateY(2px);
+    box-shadow: 0 0 0 rgba(0,0,0,0) !important;
+}
+
+/* ============================================
+   BATTLE CONFIRMATION MODAL
+   ============================================ */
+#battle-confirm-overlay{
+    display:none;position:fixed;top:0;left:0;width:100%;height:100%;
+    background:rgba(0,0,0,0.8);backdrop-filter:blur(5px);-webkit-backdrop-filter:blur(5px);
+    z-index:500;align-items:center;justify-content:center;
+}
+#battle-confirm-overlay.show{display:flex;}
+#battle-confirm-modal{
+    background:linear-gradient(180deg,#2d1b69,#1e1b4b,#0f0a2e);
+    width:85%;max-width:320px;border-radius:24px;padding:30px 24px;
+    border:4px solid #f87171;text-align:center;
+    box-shadow:0 0 40px rgba(248,113,113,0.4),0 10px 40px rgba(0,0,0,0.5);
+    animation:popIn 0.35s cubic-bezier(0.34,1.56,0.64,1);
+}
+.battle-confirm-emoji{font-size:3em;margin-bottom:10px;animation:titleBounce 0.8s ease-in-out infinite;}
+.battle-confirm-title{color:#f87171;font-size:0.8em;text-shadow:2px 2px 0 #000;margin-bottom:8px;}
+.battle-confirm-msg{color:#fff;font-size:0.5em;text-shadow:1px 1px 0 #000;line-height:1.6;margin-bottom:20px;}
+.battle-confirm-info{
+    background:rgba(0,0,0,0.3);border-radius:12px;padding:10px;margin-bottom:20px;
+    border:2px solid rgba(255,255,255,0.1);
+}
+.battle-confirm-info p{color:#ffd93d;font-size:0.45em;text-shadow:1px 1px 0 #000;margin:4px 0;}
+.battle-confirm-actions{display:flex;gap:10px;}
+.btn-battle-cancel{
+    flex:1;background:linear-gradient(180deg,#6b7280,#4b5563,#374151);
+    padding:14px;font-size:0.5em;border-radius:14px;box-shadow:0 4px 0 #374151;
+    border:1.5px solid rgba(255,255,255,0.08);border-bottom:none;
+}
+.btn-battle-cancel:active{box-shadow:0 1px 0 #374151;transform:translateY(3px);}
+.btn-battle-go{
+    flex:1;background:linear-gradient(180deg,#f87171,#ef4444,#dc2626);
+    padding:14px;font-size:0.5em;border-radius:14px;
+    box-shadow:var(--shadow-3d-red);border:2px solid rgba(255,255,255,0.1);border-bottom:none;
+}
+.btn-battle-go:active{box-shadow:0 2px 0 #b91c1c;transform:translateY(4px);}
+
+/* ============================================
+   TROPHY DISPLAY
+   ============================================ */
+.trophy-display{
+    display:flex;align-items:center;justify-content:center;
+    padding:8px 0 4px;gap:12px;flex-direction:column;
+}
+.trophy-icon{
+    width:64px;height:64px;
+    position:relative;
+    cursor:pointer;
+    transition:all 0.5s;
+}
+.trophy-icon:active{
+    transform:scale(0.92);
+}
+.trophy-redeem-btn{
+    font-family:var(--font-game);font-size:0.35em;
+    color:var(--gold);text-shadow:1px 1px 0 #000,0 0 10px rgba(255,217,61,0.3);
+    cursor:pointer;background:rgba(255,217,61,0.1);
+    border:1.5px solid rgba(255,217,61,0.3);border-radius:8px;
+    padding:4px 14px;transition:all 0.2s;
+}
+.trophy-redeem-btn:hover{
+    background:rgba(255,217,61,0.2);border-color:rgba(255,217,61,0.5);
+}
+.trophy-icon .trophy-body{
+    width:44px;height:34px;
+    background:linear-gradient(180deg,#ffd93d,#f59e0b,#d97706);
+    border-radius:4px 4px 14px 14px;
+    margin:0 auto;
+    position:relative;
+    border:2px solid rgba(0,0,0,0.2);
+    border-top:none;
+    box-shadow:0 4px 12px rgba(255,217,61,0.4);
+    transition:all 0.5s;
+}
+.trophy-icon .trophy-body::before{
+    content:'';position:absolute;top:3px;left:4px;
+    width:12px;height:8px;background:rgba(255,255,255,0.3);
+    border-radius:50%;
+}
+.trophy-icon .trophy-handle{
+    position:absolute;top:2px;width:12px;height:16px;
+    border:2px solid #d97706;border-radius:0 8px 8px 0;
+}
+.trophy-icon .trophy-handle.left{left:-8px;border-right:none;border-radius:8px 0 0 8px;}
+.trophy-icon .trophy-handle.right{right:-8px;border-left:none;}
+.trophy-icon .trophy-base{
+    width:24px;height:8px;
+    background:linear-gradient(180deg,#d97706,#92400e);
+    margin:0 auto;border-radius:0 0 4px 4px;
+}
+.trophy-icon .trophy-time{
+    position:absolute;bottom:-18px;left:50%;transform:translateX(-50%);
+    color:#ffd93d;font-size:0.42em;font-weight:700;
+    text-shadow:1px 1px 0 #000,0 0 8px rgba(255,217,61,0.3);
+    white-space:nowrap;
+}
+.trophy-icon .trophy-star{
+    position:absolute;top:-8px;left:50%;transform:translateX(-50%);
+    font-size:0.8em;filter:drop-shadow(0 0 6px rgba(255,217,61,0.6));
+    animation:trophyStarFloat 2s ease-in-out infinite;
+}
+
+/* Glowing trophy (good sleep) */
+.trophy-icon.glowing .trophy-body{
+    background:linear-gradient(180deg,#ffd93d,#fbbf24,#f59e0b);
+    box-shadow:0 4px 12px rgba(255,217,61,0.6),0 0 25px rgba(255,217,61,0.4),0 0 50px rgba(255,217,61,0.2);
+    animation:trophyGlow 2s ease-in-out infinite;
+}
+.trophy-icon.glowing .trophy-star{
+    animation:trophyStarGlow 1s ease-in-out infinite;
+}
+@keyframes trophyGlow{
+    0%,100%{box-shadow:0 4px 12px rgba(255,217,61,0.6),0 0 25px rgba(255,217,61,0.4);}
+    50%{box-shadow:0 4px 12px rgba(255,217,61,0.8),0 0 35px rgba(255,217,61,0.6),0 0 60px rgba(255,217,61,0.3);}
+}
+@keyframes trophyStarGlow{
+    0%,100%{transform:translateX(-50%) scale(1);filter:drop-shadow(0 0 6px rgba(255,217,61,0.6));}
+    50%{transform:translateX(-50%) scale(1.3) rotate(15deg);filter:drop-shadow(0 0 12px rgba(255,217,61,1));}
+}
+@keyframes trophyStarFloat{
+    0%,100%{transform:translateX(-50%) scale(1);}
+    50%{transform:translateX(-50%) scale(1.1);}
+}
+
+/* Wooden trophy (bad sleep) */
+.trophy-icon.wooden .trophy-body{
+    background:linear-gradient(180deg,#9ca3af,#6b7280,#4b5563);
+    box-shadow:0 4px 8px rgba(0,0,0,0.3);
+    border-color:rgba(0,0,0,0.3);
+}
+.trophy-icon.wooden .trophy-handle{border-color:#6b7280;}
+.trophy-icon.wooden .trophy-base{
+    background:linear-gradient(180deg,#6b7280,#4b5563);
+}
+.trophy-icon.wooden .trophy-time{color:#9ca3af;}
+.trophy-icon.wooden .trophy-star{
+    filter:grayscale(0.8);opacity:0.5;
+}
+
+/* ============================================
+   SLEEP CHECK-IN MODAL
+   ============================================ */
+#sleep-overlay{
+    display:none;position:fixed;top:0;left:0;width:100%;height:100%;
+    background:rgba(0,0,0,0.85);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);
+    z-index:1000;align-items:center;justify-content:center;
+}
+#sleep-overlay.show{display:flex;}
+#sleep-modal{
+    background:linear-gradient(180deg,#2d1b69,#1e1b4b,#0f0a2e);
+    width:85%;max-width:320px;border-radius:24px;padding:30px 24px;
+    text-align:center;
+    box-shadow:0 0 50px rgba(96,165,250,0.3),0 10px 40px rgba(0,0,0,0.5);
+    animation:popIn 0.4s cubic-bezier(0.34,1.56,0.64,1);
+}
+.sleep-moon{font-size:2.5em;margin-bottom:10px;animation:titleBounce 2s ease-in-out infinite;}
+.sleep-title{
+    color:#60a5fa;font-size:0.7em;text-shadow:2px 2px 0 #000,0 0 15px rgba(96,165,250,0.3);
+    margin-bottom:12px;
+}
+.sleep-msg{color:#fff;font-size:0.48em;text-shadow:1px 1px 0 #000;line-height:1.8;margin-bottom:24px;padding:0 10px;}
+.sleep-actions{display:flex;gap:12px;}
+.btn-sleep-yes{
+    flex:1;background:linear-gradient(180deg,#4ade80,#22c55e,#16a34a);
+    padding:16px;font-size:0.55em;border-radius:16px;
+    box-shadow:var(--shadow-3d-green);border:2px solid rgba(255,255,255,0.12);border-bottom:none;
+}
+.btn-sleep-yes:active{box-shadow:0 2px 0 #15803d;transform:translateY(4px);}
+.btn-sleep-no{
+    flex:1;background:linear-gradient(180deg,#f87171,#ef4444,#dc2626);
+    padding:16px;font-size:0.55em;border-radius:16px;
+    box-shadow:var(--shadow-3d-red);border:2px solid rgba(255,255,255,0.12);border-bottom:none;
+}
+.btn-sleep-no:active{box-shadow:0 2px 0 #b91c1c;transform:translateY(4px);}
+
+/* ============================================
+   REDEEM MODAL
+   ============================================ */
+#redeem-overlay{
+    display:none;position:fixed;top:0;left:0;width:100%;height:100%;
+    background:rgba(0,0,0,0.85);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);
+    z-index:1000;align-items:center;justify-content:center;
+}
+#redeem-overlay.show{display:flex;}
+#redeem-modal{
+    background:linear-gradient(180deg,#2d1b69,#1e1b4b,#0f0a2e);
+    width:85%;max-width:320px;border-radius:24px;padding:28px 20px 24px;
+    text-align:center;
+    box-shadow:0 0 50px rgba(255,217,61,0.2),0 10px 40px rgba(0,0,0,0.5);
+    animation:popIn 0.4s cubic-bezier(0.34,1.56,0.64,1);
+}
+.redeem-emoji{font-size:2.5em;margin-bottom:8px;animation:titleBounce 2s ease-in-out infinite;}
+.redeem-title{
+    color:var(--gold);font-size:0.7em;text-shadow:2px 2px 0 #000,0 0 15px rgba(255,217,61,0.3);
+    margin-bottom:16px;
+}
+.redeem-summary{
+    background:rgba(0,0,0,0.3);border-radius:12px;padding:14px;margin-bottom:18px;
+    border:2px solid rgba(255,217,61,0.2);
+}
+.redeem-summary .total-minutes{
+    color:var(--gold);font-size:0.7em;font-weight:700;text-shadow:1px 1px 0 #000;
+}
+.redeem-summary .used-minutes{color:var(--purple-light);font-size:0.45em;text-shadow:1px 1px 0 #000;opacity:0.8;}
+.redeem-summary .avail-minutes{color:var(--accent-success);font-size:0.5em;font-weight:700;text-shadow:1px 1px 0 #000;}
+.redeem-amounts{display:flex;gap:10px;justify-content:center;margin-bottom:16px;}
+.btn-redeem-amt{
+    font-family:var(--font-game);
+    background:linear-gradient(180deg,#4ade80,#22c55e,#16a34a);
+    padding:14px 18px;font-size:0.55em;border-radius:14px;
+    box-shadow:var(--shadow-3d-green);border:2px solid rgba(255,255,255,0.12);border-bottom:none;
+    flex:1;cursor:pointer;
+}
+.btn-redeem-amt:active{box-shadow:0 2px 0 #15803d;transform:translateY(4px);}
+.btn-redeem-amt:disabled{
+    background:linear-gradient(180deg,#4b5563,#374151,#1f2937);
+    box-shadow:0 3px 0 #111827;opacity:0.5;cursor:not-allowed;
+}
+.btn-redeem-close{
+    width:100%;background:rgba(255,255,255,0.08);
+    padding:12px;font-size:0.5em;border-radius:12px;
+    border:2px solid rgba(255,255,255,0.1);
+}
+.btn-redeem-close:active{transform:translateY(2px);}
+.redeem-history{
+    margin-top:16px;border-top:2px solid rgba(96,165,250,0.2);padding-top:12px;
+}
+.redeem-history-title{
+    color:var(--purple-light);font-size:0.45em;text-shadow:1px 1px 0 #000;
+    margin-bottom:8px;
+}
+.redeem-history-item{
+    display:flex;align-items:center;gap:8px;padding:6px 8px;margin-bottom:4px;
+    background:rgba(30,27,75,0.5);border-radius:8px;border:1px solid rgba(255,255,255,0.05);
+}
+.redeem-history-item .rh-date{color:var(--purple-light);font-size:0.35em;flex:1;}
+.redeem-history-item .rh-minutes{color:var(--gold);font-size:0.4em;font-weight:700;}
+
+/* ============================================
+   BATTLE INTRO SPLASH (18:00+ only)
+   ============================================ */
+#battle-intro-overlay{
+    display:none;position:fixed;top:0;left:0;width:100%;height:100%;
+    background:radial-gradient(ellipse at 50% 40%, rgba(100,30,150,0.4) 0%, #0a0e27 70%);
+    z-index:999;align-items:center;justify-content:center;
+    backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);
+}
+#battle-intro-overlay.show{display:flex;}
+#battle-intro-panel{
+    background:linear-gradient(180deg,#1e1b4b,#0f0a2e);
+    width:90%;max-width:360px;border-radius:28px;padding:35px 24px 28px;
+    text-align:center;position:relative;
+    box-shadow:0 0 60px rgba(248,113,113,0.2),0 0 120px rgba(255,217,61,0.1),0 15px 50px rgba(0,0,0,0.6);
+    border:2px solid rgba(255,217,61,0.15);
+    animation:popIn 0.5s cubic-bezier(0.34,1.56,0.64,1);
+}
+@keyframes popIn{
+    0%{transform:scale(0.7);opacity:0;}
+    100%{transform:scale(1);opacity:1;}
+}
+.battle-intro-boss{font-size:3.5em;margin-bottom:8px;animation:bossFloat 3s ease-in-out infinite;filter:drop-shadow(0 0 20px rgba(248,113,113,0.5));}
+.battle-intro-vs{
+    font-size:1.2em;color:#ff6b6b;font-weight:900;
+    text-shadow:2px 2px 0 #000,0 0 15px rgba(255,107,107,0.4);
+    margin:8px 0;animation:vsPulse 1.8s ease-in-out infinite;
+}
+.battle-intro-hero{font-size:2.5em;margin-bottom:10px;filter:drop-shadow(0 0 15px rgba(255,217,61,0.4));}
+.battle-intro-title{
+    color:var(--gold);font-size:0.75em;text-shadow:2px 2px 0 #000,0 0 20px rgba(255,217,61,0.3);
+    margin-bottom:8px;line-height:1.6;
+}
+.battle-intro-msg{
+    color:#fff;font-size:0.5em;text-shadow:1px 1px 0 #000;line-height:1.8;
+    margin-bottom:8px;padding:0 10px;
+}
+.battle-intro-trophy-hint{
+    color:var(--purple-light);font-size:0.42em;text-shadow:1px 1px 0 #000;
+    margin-bottom:20px;opacity:0.8;
+}
+.btn-battle-intro-start{
+    width:100%;
+    background:linear-gradient(180deg,#4ade80,#22c55e,#16a34a);
+    padding:18px;font-size:0.65em;border-radius:18px;
+    box-shadow:var(--shadow-3d-green);border:2px solid rgba(255,255,255,0.15);border-bottom:none;
+    animation:startPulse 2.5s ease-in-out infinite;
+}
+.btn-battle-intro-start:active{box-shadow:0 2px 0 #15803d;transform:translateY(4px) scale(0.97);animation:none;}
+
+/* ============================================
+   REWARDS HISTORY (parent only)
+   ============================================ */
+.rewards-section{margin-top:15px;border-top:2px solid rgba(96,165,250,0.3);padding-top:15px;}
+.rewards-title{color:var(--gold);font-size:0.5em;text-align:center;margin-bottom:10px;text-shadow:2px 2px 0 #000;}
+.rewards-summary{
+    background:rgba(0,0,0,0.3);border-radius:12px;padding:10px;margin-bottom:10px;
+    border:2px solid rgba(255,217,61,0.2);
+}
+.rewards-summary p{color:#fff;font-size:0.42em;text-shadow:1px 1px 0 #000;margin:4px 0;}
+.rewards-summary .highlight{color:var(--gold);font-size:0.55em;font-weight:700;}
+.rewards-list{max-height:150px;overflow-y:auto;padding:5px;}
+.reward-item{
+    display:flex;align-items:center;gap:8px;padding:6px 8px;margin-bottom:4px;
+    background:rgba(30,27,75,0.5);border-radius:8px;border:1px solid rgba(255,255,255,0.05);
+}
+.reward-item .rw-date{color:var(--purple-light);font-size:0.35em;flex:1;}
+.reward-item .rw-boss{color:#fff;font-size:0.35em;flex:1.5;}
+.reward-item .rw-time{color:var(--gold);font-size:0.4em;font-weight:700;}
+.btn-clear-rewards{
+    width:100%;background:linear-gradient(180deg,#f87171,#dc2626);
+    padding:10px;font-size:0.4em;border-radius:10px;box-shadow:0 3px 0 #b91c1c;
+    border:1.5px solid rgba(255,255,255,0.08);border-bottom:none;margin-top:8px;
+}
+.btn-clear-rewards:active{box-shadow:0 1px 0 #b91c1c;transform:translateY(2px);}
+
+
+
+/* Analog Clock */
+.clock-container {
+    width: 130px; height: 130px;
+    position: relative;
+    display: flex; align-items: center; justify-content: center;
+}
+.clock-face {
+    width: 120px; height: 120px;
+    border-radius: 50%;
+    background: radial-gradient(circle, #1e293b 0%, #0f172a 100%);
+    border: 4px solid var(--accent-primary);
+    position: relative;
+    box-shadow: 0 0 15px rgba(255, 217, 61, 0.2);
+}
+.clock-face-center {
+    width: 10px; height: 10px; background: #fff;
+    border-radius: 50%; position: absolute;
+    top: 50%; left: 50%; transform: translate(-50%, -50%);
+    z-index: 10;
+}
+.hand {
+    position: absolute; bottom: 50%; left: 50%;
+    transform-origin: bottom center;
+    border-radius: 4px;
+    transition: transform 0.5s cubic-bezier(0.4, 2.08, 0.55, 0.44);
+}
+.hand-hour {
+    width: 6px; height: 32px; background: #fff;
+    z-index: 5;
+}
+.hand-minute {
+    width: 6px; height: 45px; background: var(--accent-primary);
+    z-index: 6;
+}
+.clock-numbers {
+    position: absolute; width: 100%; height: 100%;
+    color: #9ca3af; font-size: 14px; font-family: 'Fredoka', sans-serif; font-weight: 700;
+}
+.clock-num { position: absolute; }
+
+
+.header-layout {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 10px 15px; background: var(--bg-panel);
+    border-bottom: 1px solid var(--glass-border);
+    gap: 10px;
+}
+.header-left {
+    display: flex; flex-direction: column; align-items: center; gap: 4px;
+}
+.digital-time {
+    font-family: 'Fredoka', sans-serif; font-weight: 700;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+}
+.header-right {
+    flex: 1; display: flex; flex-direction: column; gap: 8px;
+}
+.boss-progress-wrapper { width: 100%; }
+.header-stats {
+    display: flex; gap: 10px; font-size: 0.8em; font-weight: 600;
+    justify-content: flex-end; color: #fff;
+}
+.settings-btn { cursor: pointer; opacity: 0.6; font-size: 1.1em; }
+.settings-btn:hover { opacity: 1; }
+
+/* Refined Character Images */
+.char-refined {
+    image-rendering: auto; /* Smooth out the AI images */
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+    border: 2px solid var(--glass-border);
+}
+
+.hero-battle-img {
+    position: absolute;
+    width: 70px;
+    height: 70px;
+    transition: left 0.2s ease-out;
+    image-rendering: auto;
+}
+
+.boss-battle-img {
+    position: absolute;
+    width: 80px;
+    height: 80px;
+    image-rendering: auto;
+}
+
+/* Adjust Title Scene */
+.title-scene {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+    margin: 20px 0;
+}
+
+.title-char {
+    width: 80px;
+    height: 80px;
+    border-radius: 16px;
+    box-shadow: 0 0 20px rgba(255,217,61,0.3);
+    border: 2px solid var(--glass-border);
+    background: var(--bg-deep);
+}
+
+/* Task Grid Images */
+.task-grid-item img, .task-icon-wrap img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+
+.task-select-grid {
+    display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px;
+    max-height: 200px; overflow-y: auto; padding: 4px;
+}
+.task-check-item {
+    background: rgba(255,255,255,0.05); border: 2px solid transparent;
+    border-radius: 10px; padding: 8px; cursor: pointer;
+    display: flex; align-items: center; gap: 8px;
+    transition: all 0.2s var(--spring);
+}
+.task-check-item.selected {
+    background: rgba(74, 222, 128, 0.15); border-color: var(--accent-success);
+}
+.task-check-item .tc-icon { font-size: 1.4em; }
+.task-check-item .tc-name { font-size: 0.8em; font-weight: 600; color: #fff; }
+.modal-divider {
+    text-align: center; color: #6b7280; font-size: 0.7em; margin: 10px 0 5px;
+}
+.btn-flip {
+    background: linear-gradient(135deg, #a78bfa, #7c3aed);
+    color: #fff; padding: 10px; border-radius: 10px; font-weight: 700;
+    font-size: 0.8em; border: none; cursor: pointer;
+}
+
+
+/* Task Difficulty Badges */
+.task-diff {
+    font-size: 0.7em; margin-left: 4px;
+    padding: 2px 6px; border-radius: 6px; font-weight: 800;
+}
+.diff-1 { background: rgba(74, 222, 128, 0.2); color: #4ade80; }
+.diff-2 { background: rgba(250, 204, 21, 0.2); color: #facc15; }
+.diff-3 { background: rgba(248, 113, 113, 0.2); color: #f87171; }
+
+/* Parent PIN Modal */
+.pin-overlay {
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(0,0,0,0.85); z-index: 9999;
+    display: flex; align-items: center; justify-content: center;
+}
+.pin-box {
+    background: #1e293b; padding: 20px; border-radius: 20px;
+    text-align: center; width: 260px; border: 2px solid var(--accent-primary);
+}
+.pin-dots { display: flex; gap: 8px; justify-content: center; margin: 20px 0; }
+.pin-dot {
+    width: 12px; height: 12px; border-radius: 50%; background: #334155;
+    transition: all 0.2s;
+}
+.pin-dot.active { background: var(--accent-primary); transform: scale(1.2); }
+.pin-pad {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px;
+}
+.pin-key {
+    background: #334155; color: #fff; border: none; border-radius: 12px;
+    padding: 12px; font-size: 1.2em; font-weight: 700; cursor: pointer;
+    font-family: 'Fredoka', sans-serif;
+}
+.pin-key:active { background: #475569; transform: scale(0.95); }
+.pin-cancel { grid-column: span 3; background: transparent; color: #9ca3af; font-size: 0.9em; padding: 8px; }
+
+
+/* Parent PIN Modal */
+.pin-overlay {
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(0,0,0,0.9); z-index: 9999;
+    display: none; align-items: center; justify-content: center;
+}
+.pin-box {
+    background: #1e293b; padding: 24px; border-radius: 24px;
+    text-align: center; width: 280px; border: 2px solid var(--accent-primary);
+    box-shadow: 0 0 30px rgba(255, 217, 61, 0.2);
+}
+.pin-dots { display: flex; gap: 12px; justify-content: center; margin: 24px 0; }
+.pin-dot {
+    width: 16px; height: 16px; border-radius: 50%; background: #334155;
+    transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+.pin-dot.active { background: var(--accent-primary); transform: scale(1.2); box-shadow: 0 0 10px var(--accent-primary); }
+.pin-pad { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+.pin-key {
+    background: #334155; color: #fff; border: none; border-radius: 16px;
+    padding: 16px; font-size: 1.2em; font-weight: 700; cursor: pointer;
+    font-family: 'Fredoka', sans-serif; transition: background 0.1s;
+}
+.pin-key:active { background: #475569; transform: scale(0.95); }
+.pin-cancel { grid-column: span 3; background: transparent; color: #9ca3af; font-size: 0.9em; padding: 12px; border: 1px solid #334155; }
+.pin-error { color: #f87171; font-size: 0.8em; margin-top: 10px; height: 20px; }
+
+
+.task-diff { 
+    font-size: 0.7em; padding: 2px 5px; border-radius: 4px; font-weight: 800; 
+    display: inline-block; margin-right: 4px; 
+}
+.diff-1 { background: rgba(74, 222, 128, 0.2); color: #4ade80; }
+.diff-2 { background: rgba(250, 204, 21, 0.2); color: #facc15; }
+.diff-3 { background: rgba(248, 113, 113, 0.2); color: #f87171; }
+
+/* Card Selection UI */
+.card-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+    margin: 10px 0;
+    perspective: 1000px;
+}
+
+.card {
+    background-color: transparent;
+    width: 100%;
+    aspect-ratio: 3/4;
+    cursor: pointer;
+    position: relative;
+    transform-style: preserve-3d;
+    transition: transform 0.6s;
+}
+
+.card.flipped {
+    transform: rotateY(180deg);
+}
+
+.card.disabled {
+    cursor: default;
+    opacity: 0.5;
+}
+
+.card-face {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    backface-visibility: hidden;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 2px solid #4a2c8a;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+}
+
+.card-back {
+    background: linear-gradient(135deg, #4a2c8a, #2d1b69);
+    color: #fff;
+    font-size: 1.5em;
+}
+.card-back::after {
+    content: '?';
+    font-size: 1.5em;
+    color: #ffd93d;
+}
+
+.card-front {
+    background: linear-gradient(135deg, #1e1b4b, #0f0a2e);
+    transform: rotateY(180deg);
+    flex-direction: column;
+}
+
+.card-icon {
+    font-size: 1.8em;
+    margin-bottom: 4px;
+}
+.card-label {
+    font-size: 0.4em;
+    color: #fff;
+    text-shadow: 1px 1px 0 #000;
+    text-align: center;
+    line-height: 1.2;
+}
+
+.selected-tasks-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin: 10px 0;
+    min-height: 40px;
+    padding: 5px;
+    border: 2px dashed #4a2c8a;
+    border-radius: 8px;
+}
+
+.selected-task-tag {
+    background: #4ade80;
+    color: #000;
+    padding: 4px 8px;
+    border-radius: 6px;
+    font-size: 0.4em;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    animation: popIn 0.3s ease;
+}
+
+.card-selection-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 10px;
+    padding-top: 10px;
+    border-top: 1px solid #4a2c8a;
+}
+
+.taunt-bubble {
+    position: absolute;
+    background: #fff;
+    color: #ef4444;
+    padding: 6px 10px;
+    border-radius: 16px;
+    font-size: 0.45em;
+    font-family: 'Press Start 2P', monospace;
+    white-space: nowrap;
+    text-align: center;
+    border: 2px solid #ef4444;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+    pointer-events: none;
+    z-index: 20;
+    animation: tauntPop 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+.taunt-bubble::after {
+    content: '';
+    position: absolute;
+    bottom: -8px;
+    left: 50%;
+    transform: translateX(-50%);
+    border-width: 8px 6px 0;
+    border-style: solid;
+    border-color: #ef4444 transparent transparent transparent;
+}
+@keyframes tauntPop {
+    0%{transform:scale(0) translateY(10px);opacity:0;}
+    100%{transform:scale(1) translateY(0);opacity:1;}
+}
+
+/* ============================================
+   GAME ENTRY PIN LOCK
+   ============================================ */
+#game-lock-overlay{
+    position:fixed;top:0;left:0;width:100%;height:100%;
+    background:radial-gradient(ellipse at 50% 40%, rgba(100,30,150,0.3) 0%, #0a0e27 70%);
+    z-index:10000;display:flex;align-items:center;justify-content:center;
+    backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);
+}
+#game-lock-overlay.unlocked{display:none;}
+#game-lock-panel{
+    background:linear-gradient(180deg,#2d1b69,#1e1b4b,#0f0a2e);
+    width:85%;max-width:300px;border-radius:28px;padding:35px 24px 28px;
+    text-align:center;
+    box-shadow:0 0 50px rgba(255,217,61,0.15),0 15px 50px rgba(0,0,0,0.6);
+    border:2px solid rgba(255,217,61,0.15);
+    animation:popIn 0.5s cubic-bezier(0.34,1.56,0.64,1);
+}
+.game-lock-emoji{font-size:3em;margin-bottom:12px;animation:titleBounce 2s ease-in-out infinite;}
+.game-lock-title{
+    color:var(--gold);font-size:0.65em;text-shadow:2px 2px 0 #000;
+    margin-bottom:6px;
+}
+.game-lock-sub{color:var(--purple-light);font-size:0.42em;text-shadow:1px 1px 0 #000;margin-bottom:20px;opacity:0.8;}
+.game-lock-dots{display:flex;gap:14px;justify-content:center;margin:20px 0;}
+.game-lock-dot{
+    width:16px;height:16px;border-radius:50%;
+    background:rgba(255,255,255,0.15);border:2px solid rgba(255,217,61,0.3);
+    transition:all 0.2s cubic-bezier(0.34,1.56,0.64,1);
+}
+.game-lock-dot.filled{
+    background:var(--gold);border-color:var(--gold);
+    transform:scale(1.2);box-shadow:0 0 12px rgba(255,217,61,0.5);
+}
+.game-lock-pad{
+    display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:16px;
+}
+.game-lock-key{
+    background:rgba(255,255,255,0.08);color:#fff;border:2px solid rgba(255,255,255,0.1);
+    border-radius:16px;padding:16px;font-size:1.3em;font-weight:700;cursor:pointer;
+    font-family:var(--font-game);transition:all 0.1s;
+}
+.game-lock-key:active{
+    background:rgba(255,217,61,0.2);transform:scale(0.92);border-color:rgba(255,217,61,0.3);
+}
+.game-lock-error{
+    color:var(--accent-danger);font-size:0.42em;text-shadow:1px 1px 0 #000;
+    min-height:18px;margin-top:8px;
+}
+
+/* ============================================
+   SECTION DIVIDER
+   ============================================ */
+.section-divider {
+    border: none;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, var(--purple-dark), transparent);
+    margin: 12px 0;
+}
+
+.hint-text {
+    color: var(--purple-light);
+    font-size: 0.36em;
+    text-shadow: 1px 1px 0 #000;
+    margin: 8px 0 12px;
+    text-align: center;
+    opacity: 0.7;
+}
+
+/* ============================================
+   SCROLLBAR STYLING
+   ============================================ */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: rgba(0,0,0,0.2); border-radius: 3px; }
+::-webkit-scrollbar-thumb { background: rgba(74,44,138,0.6); border-radius: 3px; }
+::-webkit-scrollbar-thumb:active { background: rgba(120,60,200,0.8); }
+</style>
+</head>
+<body>
+<div id="app">
+    <div class="stars" id="stars"></div>
+
+    <!-- GAME ENTRY PIN LOCK -->
+    <div id="game-lock-overlay">
+        <div id="game-lock-panel">
+            <div class="game-lock-emoji">👾</div>
+            <div class="game-lock-title">打败晚睡大魔王</div>
+            <div class="game-lock-sub">Oliver的睡前冒险</div>
+            <div class="game-lock-dots">
+                <div class="game-lock-dot" id="lock-dot-0"></div>
+                <div class="game-lock-dot" id="lock-dot-1"></div>
+                <div class="game-lock-dot" id="lock-dot-2"></div>
+                <div class="game-lock-dot" id="lock-dot-3"></div>
+            </div>
+            <div class="game-lock-pad">
+                <button class="game-lock-key" onclick="lockPress(1)">1</button>
+                <button class="game-lock-key" onclick="lockPress(2)">2</button>
+                <button class="game-lock-key" onclick="lockPress(3)">3</button>
+                <button class="game-lock-key" onclick="lockPress(4)">4</button>
+                <button class="game-lock-key" onclick="lockPress(5)">5</button>
+                <button class="game-lock-key" onclick="lockPress(6)">6</button>
+                <button class="game-lock-key" onclick="lockPress(7)">7</button>
+                <button class="game-lock-key" onclick="lockPress(8)">8</button>
+                <button class="game-lock-key" onclick="lockPress(9)">9</button>
+                <button class="game-lock-key" style="visibility:hidden;"></button>
+                <button class="game-lock-key" onclick="lockPress(0)">0</button>
+                <button class="game-lock-key" onclick="lockBackspace()">⌫</button>
+            </div>
+            <div class="game-lock-error" id="lock-error"></div>
+        </div>
+    </div>
+
+    <!-- TITLE -->
+    <div id="title-screen">
+        <div class="title-emoji">👾</div>
+        <h1>打败晚睡<br>大魔王</h1>
+        <div class="subtitle">Oliver的睡前冒险</div>
+        <div class="title-scene">
+            <img class="boss-img char-img" src="images/boss.png" width="60" height="60" alt="Boss">
+            <div class="vs-text">VS</div>
+            <img class="hero-img char-img" src="images/oliver.png" width="44" height="48" alt="Oliver">
+        </div>
+        <button class="btn btn-start" onclick="startGame()">开始冒险！</button>
+    </div>
+
+    <!-- GAME -->
+    <div id="game-screen">
+        <div class="header-layout">
+            <div class="header-left">
+                <div class="clock-container">
+                    <div class="clock-face" id="analog-clock">
+                        <div class="hand hand-hour" id="hand-hour"></div>
+                        <div class="hand hand-minute" id="hand-minute"></div>
+                        <div class="clock-face-center"></div>
+                        <div class="clock-numbers">
+                            <span class="clock-num" style="top:2px; left:50%; transform:translateX(-50%);">12</span>
+                            <span class="clock-num" style="top:50%; right:6px; transform:translateY(-50%);">3</span>
+                            <span class="clock-num" style="bottom:2px; left:50%; transform:translateX(-50%);">6</span>
+                            <span class="clock-num" style="top:50%; left:6px; transform:translateY(-50%);">9</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="clock-time digital-time" id="big-clock-time">20:00</div>
+            </div>
+            <div class="header-right">
+                <div class="boss-progress-wrapper">
+                    <div class="clock-boss-track">
+                        <div class="clock-boss-fill" id="boss-fill"></div>
+                    </div>
+                    <div class="clock-boss-label" id="boss-label">大魔王还很远...</div>
+                </div>
+                <div class="header-stats">
+                    <span>⚡ <span id="power-val">0</span></span>
+                    <span>🔥 <span id="streak-val">0</span></span>
+                    <span class="settings-btn" onclick="showSettings()">⚙️</span>
+                    <span class="settings-btn" onclick="syncFromServer()" title="同步数据">🔄</span>
+                </div>
+            </div>
+        </div>
+        <div class="power-display-inline">
+    ⚡ 力量: <span id="power-val">0</span>
+    <span style="color:#f87171; margin-left: 10px;">🔥 <span id="streak-val">0</span>连胜</span>
+</div>
+        <div class="trophy-display" id="trophy-display" style="display:none;">
+            <div class="trophy-icon" id="trophy-icon" onclick="showRedeemModal()">
+                <div class="trophy-star">⭐</div>
+                <div class="trophy-body">
+                    <div class="trophy-handle left"></div>
+                    <div class="trophy-handle right"></div>
+                </div>
+                <div class="trophy-base"></div>
+                <div class="trophy-time" id="trophy-time"></div>
+            </div>
+            <div class="trophy-redeem-btn" onclick="showRedeemModal()">🎮 兑换游戏时间</div>
+        </div>
+        <div class="equip-bar" id="equip-bar"></div>
+        <div id="adventure-area">
+            <div class="adventure-title">✦ 今晚的冒险之路 ✦</div>
+            <div class="path-container" id="path-container"></div>
+        </div>
+        <div class="time-warning" id="time-warning"></div>
+        <div class="bottom-bar">
+            <button class="btn btn-add" onclick="showModal()">✨ 翻牌选任务</button>
+            <button class="btn btn-battle" id="battle-btn" onclick="showBattleConfirm()" style="display:none;">⚔️ 战斗！</button>
+        </div>
+    </div>
+
+    <!-- MODAL -->
+    <div id="modal-overlay" onclick="closeModalOutside(event)">
+        <div id="task-modal">
+            <div class="modal-title">📋 选择今晚的任务</div>
+            <div class="task-select-grid" id="task-select-grid"></div>
+            
+            <div class="modal-divider">— 或者让运气决定 —</div>
+            <div style="display:flex; gap:8px; justify-content:center; margin: 10px 0;">
+                <button class="btn btn-flip" onclick="triggerFlip()" style="flex:1;">✨ 随机翻牌</button>
+            </div>
+
+            <div class="selected-tasks-list" id="selected-tasks-list"></div>
+
+            <div class="card-selection-footer">
+                <button class="btn btn-back" onclick="hideModal()">关闭</button>
+                <button class="btn btn-start" onclick="finishSelection()" style="flex:1;">🚀 开始冒险</button>
+            </div>
+            
+            <div style="border-top:2px solid #4a2c8a;margin:15px 0 10px;"></div>
+            <div class="modal-title" style="font-size:0.5em;color:#4ade80;">添加自定义任务</div>
+            <div class="custom-form">
+                <div class="form-row">
+                    <input type="text" class="form-input" id="custom-name" placeholder="任务名称" maxlength="15">
+                </div>
+                <div class="form-row">
+                    <div class="emoji-picker" id="emoji-picker"></div>
+                </div>
+                <div class="form-row">
+                    <label class="form-label" style="color:var(--purple-light);font-size:0.4em;">力量:</label>
+                    <select class="form-input form-select" id="custom-power">
+                        <option value="10">10</option><option value="15">15</option>
+                        <option value="20">20</option><option value="25" selected>25</option>
+                        <option value="30">30</option><option value="40">40</option>
+                        <option value="50">50</option>
+                    </select>
+                </div>
+                <div class="form-row">
+                    <div class="color-picker" id="color-picker"></div>
+                </div>
+                <div class="custom-row">
+                    <button class="btn btn-add-custom" onclick="addCustom()" style="flex:1;">添加任务</button>
+                </div>
+            </div>
+            <hr class="section-divider">
+            <div id="current-tasks-section" style="display:none;">
+                <div class="modal-title" style="font-size:0.5em;color:var(--red);">已添加的任务（点击删除）</div>
+                <div id="current-tasks-list"></div>
+            </div>
+            <button class="btn btn-close-modal" onclick="hideModal()">关闭</button>
+        </div>
+    </div>
+
+    <!-- BATTLE CONFIRMATION -->
+    <div id="battle-confirm-overlay" onclick="hideBattleConfirm()">
+        <div id="battle-confirm-modal" onclick="event.stopPropagation()">
+            <div class="battle-confirm-emoji">⚔️</div>
+            <div class="battle-confirm-title">你确定要挑战大魔王了吗？</div>
+            <div class="battle-confirm-msg">确认所有任务都完成了吗？<br>打败大魔王才能获得奖励哦！</div>
+            <div class="battle-confirm-info" id="battle-confirm-info"></div>
+            <div class="battle-confirm-actions">
+                <button class="btn btn-battle-cancel" onclick="hideBattleConfirm()">再想想</button>
+                <button class="btn btn-battle-go" onclick="confirmBattle()">战斗！</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- BATTLE INTRO SPLASH -->
+    <div id="battle-intro-overlay">
+        <div id="battle-intro-panel">
+            <div class="battle-intro-boss" id="intro-boss-emoji">👾</div>
+            <div class="battle-intro-vs">VS</div>
+            <div class="battle-intro-hero">🧒</div>
+            <div class="battle-intro-title" id="intro-title">今晚的战斗准备好了吗？</div>
+            <div class="battle-intro-msg" id="intro-msg">完成睡前任务，打败大魔王，<br>就能获得游戏时间奖励！</div>
+            <div class="battle-intro-trophy-hint" id="intro-trophy-hint"></div>
+            <button class="btn btn-battle-intro-start" onclick="startFromIntro()">⚔️ 开始战斗！</button>
+        </div>
+    </div>
+
+    <!-- REDEEM MODAL -->
+    <div id="redeem-overlay" onclick="hideRedeemModal()">
+        <div id="redeem-modal" onclick="event.stopPropagation()">
+            <div class="redeem-emoji">🎮</div>
+            <div class="redeem-title">兑换游戏时间</div>
+            <div class="redeem-summary" id="redeem-summary"></div>
+            <div class="redeem-amounts" id="redeem-amounts"></div>
+            <button class="btn btn-redeem-close" onclick="hideRedeemModal()">关闭</button>
+            <div class="redeem-history" id="redeem-history" style="display:none;"></div>
+        </div>
+    </div>
+
+    <!-- SLEEP CHECK-IN -->
+    <div id="sleep-overlay">
+        <div id="sleep-modal" onclick="event.stopPropagation()">
+            <div class="sleep-moon">🌙</div>
+            <div class="sleep-title">昨晚睡得好吗？</div>
+            <div class="sleep-msg" id="sleep-msg">Oliver，昨晚有没有乖乖睡觉呀？<br>告诉大魔王你昨晚的表现吧！</div>
+            <div class="sleep-actions">
+                <button class="btn btn-sleep-yes" onclick="handleSleepAnswer(true)">😊 睡得很好</button>
+                <button class="btn btn-sleep-no" onclick="handleSleepAnswer(false)">😅 没有好好睡</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- BATTLE -->
+    <div id="battle-screen">
+        <div class="battle-title">BOSS 战斗！</div>
+        <div style="position:relative; width:280px; margin:0 auto;">
+            <canvas id="battle-canvas" width="280" height="180"></canvas>
+            <div id="battle-boss-taunt" style="position:absolute; top:-30px; left:50%; transform:translateX(-50%);"></div>
+        </div>
+        <div class="battle-log" id="battle-log"></div>
+        <div id="battle-controls"></div>
+    </div>
+
+    <!-- VICTORY -->
+    <div id="victory-screen">
+        <div class="victory-emoji">🎉</div>
+        <div class="victory-title">胜利！</div>
+        <div class="victory-sub">打败了晚睡大魔王！</div>
+        <div id="victory-canvas" class="victory-char"></div>
+        <div class="victory-stats" id="victory-stats"></div>
+        <button class="btn btn-start" onclick="newDay()">新的一天</button>
+    </div>
+
+    <!-- DEFEAT -->
+    <div id="defeat-screen">
+        <div class="defeat-title">力量不够...</div>
+        <div class="defeat-msg">大魔王说：<br>"哈哈，明天完成任务再来！"</div>
+        <div id="defeat-canvas" class="defeat-char"></div>
+        <div style="height:15px;"></div>
+        <button class="btn btn-start" onclick="newDay()">明天再来！</button>
+    </div>
+
+    
+<!-- Parent PIN Modal -->
+<div id="pin-modal" class="pin-overlay" style="display:none;">
+    <div class="pin-box">
+        <h3 style="color:var(--text-main); margin-bottom:5px;">🔒 家长验证</h3>
+        <p style="color:var(--text-muted); font-size:0.8em;">请输入密码 (默认 1234)</p>
+        <div class="pin-dots">
+            <div class="pin-dot" id="dot-0"></div>
+            <div class="pin-dot" id="dot-1"></div>
+            <div class="pin-dot" id="dot-2"></div>
+            <div class="pin-dot" id="dot-3"></div>
+        </div>
+        <div class="pin-pad">
+            <button class="pin-key" onclick="pinPress(1)">1</button>
+            <button class="pin-key" onclick="pinPress(2)">2</button>
+            <button class="pin-key" onclick="pinPress(3)">3</button>
+            <button class="pin-key" onclick="pinPress(4)">4</button>
+            <button class="pin-key" onclick="pinPress(5)">5</button>
+            <button class="pin-key" onclick="pinPress(6)">6</button>
+            <button class="pin-key" onclick="pinPress(7)">7</button>
+            <button class="pin-key" onclick="pinPress(8)">8</button>
+            <button class="pin-key" onclick="pinPress(9)">9</button>
+            <button class="pin-cancel" onclick="hidePin()">取消</button>
+            <button class="pin-key" onclick="pinPress(0)">0</button>
+            <button class="pin-key" onclick="pinBackspace()">⌫</button>
+        </div>
+    </div>
+</div>
+
+
+<!-- Parent PIN Modal -->
+<div id="pin-modal" class="pin-overlay">
+    <div class="pin-box">
+        <h3 style="color:#fff; margin:0 0 5px;">🔒 家长验证</h3>
+        <p style="color:#9ca3af; font-size:0.8em; margin:0;">请输入密码 (1234)</p>
+        <div class="pin-dots">
+            <div class="pin-dot" id="dot-0"></div><div class="pin-dot" id="dot-1"></div>
+            <div class="pin-dot" id="dot-2"></div><div class="pin-dot" id="dot-3"></div>
+        </div>
+        <div id="pin-error" class="pin-error"></div>
+        <div class="pin-pad">
+            <button class="pin-key" onclick="pinPress(1)">1</button>
+            <button class="pin-key" onclick="pinPress(2)">2</button>
+            <button class="pin-key" onclick="pinPress(3)">3</button>
+            <button class="pin-key" onclick="pinPress(4)">4</button>
+            <button class="pin-key" onclick="pinPress(5)">5</button>
+            <button class="pin-key" onclick="pinPress(6)">6</button>
+            <button class="pin-key" onclick="pinPress(7)">7</button>
+            <button class="pin-key" onclick="pinPress(8)">8</button>
+            <button class="pin-key" onclick="pinPress(9)">9</button>
+            <button class="pin-cancel" onclick="hidePin()">取消</button>
+            <button class="pin-key" onclick="pinPress(0)">0</button>
+            <button class="pin-key" onclick="pinBackspace()">⌫</button>
+        </div>
+    </div>
+</div>
+
+<canvas id="particles"></canvas>
+
+    <!-- HIGH-FIVE MODAL -->
+    <div id="ally-overlay" class="modal-overlay" style="display:none;">
+        <div class="ally-modal">
+            <div class="ally-title">🤝 召唤盟友！</div>
+            <div class="ally-desc">Oliver，快找爸爸/妈妈击掌！<br>获得盟友能量加持！</div>
+            <div class="hand-anim">✋</div>
+            <button class="btn btn-ally-confirm" onclick="confirmAlly()">✅ 家长确认：已击掌！</button>
+        </div>
+    </div>
+
+    <!-- SETTINGS MODAL (parent only) -->
+    <div id="settings-overlay" onclick="hideSettings()">
+        <div id="settings-modal" onclick="event.stopPropagation()">
+            <div class="settings-title">⚙️ 家长设置</div>
+            <div class="setting-row">
+                <div class="setting-label">睡觉时间</div>
+                <input type="time" class="setting-input" id="bedtime-input" value="22:30">
+            </div>
+            <div class="setting-row">
+                <div class="setting-label">提前预警</div>
+                <input type="number" class="setting-input" id="warning-input" value="30" min="5" max="120" step="5">
+            </div>
+            <div style="color:var(--purple-light);font-size:0.32em;text-shadow:1px 1px 0 #000;margin-bottom:12px;opacity:0.7;">提前几分钟开始预警（分钟）</div>
+            
+<div class="config-section">
+    <div class="config-label">必做任务 (自动加入)</div>
+    <div id="cfg-mandatory" class="task-config-grid"></div>
+</div>
+<div class="config-section">
+    <div class="config-label">翻牌任务池 (让孩子选)</div>
+    <div id="cfg-pool" class="task-config-grid"></div>
+</div>
+
+<button class="btn btn-save-settings" onclick="saveSettings()">保存</button>
+
+<div class="rewards-section" id="rewards-section" style="display:none;">
+    <div class="rewards-title">🎮 游戏时间兑换记录</div>
+    <div class="rewards-summary" id="rewards-summary"></div>
+    <div class="rewards-list" id="rewards-list"></div>
+    <button class="btn btn-clear-rewards" onclick="clearRewards()">清空记录</button>
+</div>
+
+<div class="rewards-section" id="entry-pin-section" style="display:none;">
+    <div class="rewards-title">🔑 进入密码</div>
+    <div style="display:flex;gap:8px;align-items:center;padding:0 10px;">
+        <input type="text" class="setting-input" id="entry-pin-input" maxlength="4" placeholder="默认 1413" style="width:100px;text-align:center;letter-spacing:8px;font-size:1.2em;">
+        <button class="btn btn-save-settings" onclick="saveEntryPin()" style="flex:1;padding:12px;font-size:0.45em;">修改</button>
+    </div>
+    <div style="color:var(--purple-light);font-size:0.32em;text-shadow:1px 1px 0 #000;margin-top:6px;opacity:0.7;padding:0 10px;">修改游戏入口密码（4位数字）</div>
+</div>
+        </div>
+    </div>
+</div>
+
+<script>
+// ===== DATA =====
+const TASKS = [
+    {id:'bath', name:'洗澡', emoji:'🛁', buff:'水之力量', power:40, color:'#60a5fa', diff:2},
+    {id:'brush', name:'刷牙', emoji:'🪥', buff:'闪光力量', power:20, color:'#e2e8f0', diff:1},
+    {id:'english', name:'读英语', emoji:'📚', buff:'英语魔力', power:60, color:'#4ade80', diff:3},
+    {id:'book', name:'读绘本', emoji:'📖', buff:'故事之力', power:40, color:'#f472b6', diff:2},
+    {id:'pajamas', name:'换睡衣', emoji:'👕', buff:'盔甲之力', power:30, color:'#a78bfa', diff:1},
+    {id:'toilet', name:'上厕所', emoji:'🚽', buff:'轻盈之力', power:20, color:'#fbbf24', diff:1},
+    {id:'drink', name:'喝水', emoji:'💧', buff:'生命之水', power:30, color:'#38bdf8', diff:1},
+    {id:'hug', name:'拥抱', emoji:'🤗', buff:'爱的力量', power:30, color:'#f87171', diff:2},
+    {id:'tidy', name:'收玩具', emoji:'🧸', buff:'整理之力', power:50, color:'#fb923c', diff:3},
+    {id:'stretch', name:'伸懒腰', emoji:'🤸', buff:'伸展之力', power:30, color:'#34d399', diff:1},
+];
+const PARENT_PIN = "1234"; // 家长密码
+const GAME_ENTRY_PIN_KEY = "boss_entry_pin"; // localStorage key for entry PIN
+function getGameEntryPin(){
+    const p=localStorage.getItem(GAME_ENTRY_PIN_KEY);
+    return p||"1413"; // Default PIN
+}
+
+
+let state = {
+    tasks: [], idCounter: 0, totalPower: 0,
+    bossHP:100, bossMaxHP:100, heroHP:100, heroMaxHP:100,
+    battleActive:false, battleTurn:0,
+    heroX:60, heroY:90, bossX:200, bossY:50,
+    bedtime: '22:30',
+    warningMinutes: 30,
+    equipment: {}, // {crown: true, weapon: true, ...}
+    allyReady: true, // Ally can be used once per battle
+    streak: 0, // Consecutive win streak
+    mandatoryIds: [], // Array of task IDs for auto-add
+    poolIds: [],     // Array of task IDs for card pool
+    rewards: [],     // Game time reward records
+    sleepLog: [],    // {date: 'YYYY-MM-DD', good: true/false}
+    todayChecked: false, // Whether today's sleep check-in is done
+    redeemLog: [],   // {date: 'YYYY-MM-DD', minutes: number}
+    redeemedMinutes: 0, // Total redeemed minutes (lifetime, reset on new day)
+    battlesFought: 0, // Number of times boss has been fought today (max 1)
+    battleDate: null, // Date string when boss was last fought (YYYY-MM-DD)
+};
+
+// ===== AUDIO =====
+let audioCtx;
+function ensureAudio(){try{if(!audioCtx)audioCtx=new(window.AudioContext||window.webkitAudioContext)();if(audioCtx.state==='suspended')audioCtx.resume().catch(function(){});}catch(e){}}
+function tone(f,d,t,v){try{t=t||'square';v=v||0.12;ensureAudio();if(!audioCtx)return;const o=audioCtx.createOscillator(),g=audioCtx.createGain();o.type=t;o.frequency.setValueAtTime(f,audioCtx.currentTime);g.gain.setValueAtTime(v,audioCtx.currentTime);g.gain.exponentialRampToValueAtTime(0.001,audioCtx.currentTime+d);o.connect(g);g.connect(audioCtx.destination);o.start();o.stop(audioCtx.currentTime+d);}catch(e){}}
+function sfxDone(){tone(523,.1);setTimeout(()=>tone(659,.1),100);setTimeout(()=>tone(784,.2),200);}
+function sfxBuff(){tone(440,.1);setTimeout(()=>tone(554,.1),80);setTimeout(()=>tone(659,.1),160);setTimeout(()=>tone(880,.3),240);}
+function sfxBattle(){tone(200,.15,'sawtooth',0.15);setTimeout(()=>tone(150,.2,'sawtooth',0.15),150);}
+function sfxVictory(){[523,659,784,1047].forEach((f,i)=>setTimeout(()=>tone(f,.3,'square',0.1),i*150));}
+function sfxDefeat(){[400,350,300,200].forEach((f,i)=>setTimeout(()=>tone(f,.4,'sawtooth',0.08),i*200));}
+function sfxClick(){tone(800,.05,'sine',0.08);}
+function sfxEquip(){tone(600,.1);setTimeout(()=>tone(800,.1),80);setTimeout(()=>tone(1000,.15),160);}
+
+// ===== EQUIPMENT SYSTEM =====
+const EQUIPMENT_DEFS = {
+    bath:      {type:'shield', name:'水之盾', icon:'🛡️', color:'#60a5fa', glow:'rgba(96,165,250,0.3)'},
+    brush:     {type:'crown', name:'星之冠', icon:'👑', color:'#ffd93d', glow:'rgba(255,217,61,0.3)'},
+    english:   {type:'weapon', name:'知识之剑', icon:'⚔️', color:'#4ade80', glow:'rgba(74,222,128,0.3)'},
+    book:      {type:'aura', name:'故事光环', icon:'✨', color:'#f472b6', glow:'rgba(244,114,182,0.4)'},
+    pajamas:   {type:'armor', name:'梦之铠甲', icon:'🦺', color:'#a78bfa', glow:'rgba(167,139,250,0.3)'},
+    toilet:    {type:'boots', name:'轻盈之靴', icon:'👟', color:'#fbbf24', glow:'rgba(251,191,36,0.3)'},
+    drink:     {type:'potion', name:'生命之水', icon:'🧪', color:'#38bdf8', glow:'rgba(56,189,248,0.3)'},
+    hug:       {type:'heart', name:'爱心护符', icon:'💖', color:'#f87171', glow:'rgba(248,113,113,0.3)'},
+    tidy:      {type:'gloves', name:'力量手套', icon:'🧤', color:'#fb923c', glow:'rgba(251,146,60,0.3)'},
+    stretch:   {type:'wings', name:'疾风之翼', icon:'🪽', color:'#34d399', glow:'rgba(52,211,153,0.3)'},
+};
+
+// Draw Oliver with equipment on a canvas
+function drawHeroWithEquip(canvas, width, height, scale=4){
+    if(!canvas) return;
+    const ctx = canvas.getContext('2d');
+    ctx.clearRect(0, 0, width, height);
+
+    // Draw base hero
+    drawPixels(ctx, 4, 0, HR, scale, HP);
+
+    const eq = state.equipment;
+
+    // Draw wings (behind body)
+    if(eq.wings){
+        const w = EQUIPMENT_DEFS.stretch.color;
+        ctx.fillStyle = w;
+        ctx.globalAlpha = 0.7;
+        // Left wing
+        ctx.fillRect(0, scale*5, scale*3, scale*2);
+        ctx.fillRect(0, scale*6, scale*4, scale*2);
+        ctx.fillRect(0, scale*7, scale*3, scale);
+        // Right wing
+        ctx.fillRect(scale*13, scale*5, scale*3, scale*2);
+        ctx.fillRect(scale*12, scale*6, scale*4, scale*2);
+        ctx.fillRect(scale*13, scale*7, scale*3, scale);
+        ctx.globalAlpha = 1;
+    }
+
+    // Draw aura (behind character)
+    if(eq.aura){
+        const a = EQUIPMENT_DEFS.book.color;
+        ctx.strokeStyle = a;
+        ctx.lineWidth = 2;
+        ctx.globalAlpha = 0.5;
+        ctx.beginPath();
+        ctx.ellipse(scale*8, scale*9, scale*10, scale*12, 0, 0, Math.PI*2);
+        ctx.stroke();
+        ctx.globalAlpha = 0.3;
+        ctx.beginPath();
+        ctx.ellipse(scale*8, scale*9, scale*8, scale*10, 0, 0, Math.PI*2);
+        ctx.fill();
+        ctx.globalAlpha = 1;
+    }
+
+    // Draw armor/chest
+    if(eq.armor){
+        const a = EQUIPMENT_DEFS.pajamas.color;
+        ctx.fillStyle = a;
+        // Chest plate
+        ctx.fillRect(scale*3, scale*10, scale*2, scale*3);
+        ctx.fillRect(scale*11, scale*10, scale*2, scale*3);
+        ctx.fillStyle = '#c084fc';
+        ctx.fillRect(scale*5, scale*11, scale*6, scale*2);
+        // Shoulder pads
+        ctx.fillStyle = a;
+        ctx.fillRect(scale*1, scale*9, scale*3, scale*2);
+        ctx.fillRect(scale*12, scale*9, scale*3, scale*2);
+    }
+
+    // Draw shield
+    if(eq.shield){
+        const s = EQUIPMENT_DEFS.bath.color;
+        ctx.fillStyle = s;
+        // Shield shape on left side
+        ctx.fillRect(scale*-3, scale*8, scale*4, scale*4);
+        ctx.fillRect(scale*-2, scale*12, scale*3, scale);
+        ctx.fillRect(scale*-1, scale*13, scale*1, scale);
+        ctx.fillStyle = '#93c5fd';
+        ctx.fillRect(scale*-2, scale*9, scale*2, scale*2);
+    }
+
+    // Draw weapon (right hand)
+    if(eq.weapon){
+        const w = EQUIPMENT_DEFS.english.color;
+        // Sword
+        ctx.fillStyle = w;
+        ctx.fillRect(scale*14, scale*2, scale, scale*5);
+        ctx.fillRect(scale*13, scale*7, scale*3, scale);
+        ctx.fillStyle = '#22c55e';
+        ctx.fillRect(scale*14, scale*0, scale, scale*3);
+    }
+
+    // Draw crown
+    if(eq.crown){
+        const c = EQUIPMENT_DEFS.brush.color;
+        ctx.fillStyle = c;
+        // Crown points
+        ctx.fillRect(scale*3, scale*-2, scale*2, scale*2);
+        ctx.fillRect(scale*7, scale*-3, scale*2, scale*3);
+        ctx.fillRect(scale*11, scale*-2, scale*2, scale*2);
+        // Crown base
+        ctx.fillRect(scale*2, scale*-1, scale*12, scale);
+        ctx.fillStyle = '#fde047';
+        ctx.fillRect(scale*7, scale*-3, scale*1, scale*1);
+        ctx.fillRect(scale*3, scale*-2, scale*1, scale*1);
+        ctx.fillRect(scale*11, scale*-2, scale*1, scale*1);
+    }
+
+    // Draw gloves
+    if(eq.gloves){
+        const g = EQUIPMENT_DEFS.tidy.color;
+        ctx.fillStyle = g;
+        ctx.fillRect(scale*1, scale*11, scale*2, scale*2);
+        ctx.fillRect(scale*13, scale*11, scale*2, scale*2);
+    }
+
+    // Draw boots
+    if(eq.boots){
+        const b = EQUIPMENT_DEFS.toilet.color;
+        ctx.fillStyle = b;
+        ctx.fillRect(scale*4, scale*14, scale*3, scale*2);
+        ctx.fillRect(scale*9, scale*14, scale*3, scale*2);
+    }
+
+    // Draw heart
+    if(eq.heart){
+        ctx.fillStyle = EQUIPMENT_DEFS.hug.color;
+        // Floating heart above head
+        const hx = scale*8, hy = scale*-5;
+        ctx.fillRect(hx-1*scale, hy, scale, scale*2);
+        ctx.fillRect(hx, hy-1*scale, scale, scale*3);
+        ctx.fillRect(hx+1*scale, hy, scale, scale*2);
+        ctx.fillRect(hx-1*scale, hy+1*scale, scale*3, scale);
+        ctx.fillRect(hx, hy+2*scale, scale, scale);
+    }
+
+    // Draw potion
+    if(eq.potion){
+        const p = EQUIPMENT_DEFS.drink.color;
+        ctx.fillStyle = p;
+        // Small potion bottle on right hip
+        ctx.fillRect(scale*12, scale*10, scale*2, scale*2);
+        ctx.fillRect(scale*12, scale*9, scale, scale);
+        ctx.fillStyle = '#7dd3fc';
+        ctx.fillRect(scale*12, scale*11, scale, scale);
+    }
+}
+
+function drawHeroBattle(ctx, x, y, scale=4){
+    // Draw base hero
+    drawPixels(ctx, x, y, HR, scale, HP);
+
+    const eq = state.equipment;
+
+    // Wings
+    if(eq.wings){
+        const w = EQUIPMENT_DEFS.stretch.color;
+        ctx.fillStyle = w; ctx.globalAlpha = 0.7;
+        ctx.fillRect(x, y+scale*5, scale*3, scale*2);
+        ctx.fillRect(x-4, y+scale*6, scale*4, scale*2);
+        ctx.fillRect(x, y+scale*7, scale*3, scale);
+        ctx.fillRect(x+scale*13, y+scale*5, scale*3, scale*2);
+        ctx.fillRect(x+scale*12, y+scale*6, scale*4, scale*2);
+        ctx.fillRect(x+scale*13, y+scale*7, scale*3, scale);
+        ctx.globalAlpha = 1;
+    }
+    // Aura
+    if(eq.aura){
+        const a = EQUIPMENT_DEFS.book.color;
+        ctx.strokeStyle = a; ctx.lineWidth = 2; ctx.globalAlpha = 0.5;
+        ctx.beginPath(); ctx.ellipse(x+scale*8, y+scale*9, scale*10, scale*12, 0, 0, Math.PI*2);
+        ctx.stroke(); ctx.globalAlpha = 0.3;
+        ctx.beginPath(); ctx.ellipse(x+scale*8, y+scale*9, scale*8, scale*10, 0, 0, Math.PI*2);
+        ctx.fill(); ctx.globalAlpha = 1;
+    }
+    // Armor
+    if(eq.armor){
+        const a = EQUIPMENT_DEFS.pajamas.color;
+        ctx.fillStyle = a;
+        ctx.fillRect(x+scale*3, y+scale*10, scale*2, scale*3);
+        ctx.fillRect(x+scale*11, y+scale*10, scale*2, scale*3);
+        ctx.fillStyle = '#c084fc';
+        ctx.fillRect(x+scale*5, y+scale*11, scale*6, scale*2);
+        ctx.fillStyle = a;
+        ctx.fillRect(x+scale, y+scale*9, scale*3, scale*2);
+        ctx.fillRect(x+scale*12, y+scale*9, scale*3, scale*2);
+    }
+    // Shield
+    if(eq.shield){
+        const s = EQUIPMENT_DEFS.bath.color;
+        ctx.fillStyle = s;
+        ctx.fillRect(x+scale*-3, y+scale*8, scale*4, scale*4);
+        ctx.fillRect(x+scale*-2, y+scale*12, scale*3, scale);
+        ctx.fillRect(x+scale*-1, y+scale*13, scale, scale);
+        ctx.fillStyle = '#93c5fd';
+        ctx.fillRect(x+scale*-2, y+scale*9, scale*2, scale*2);
+    }
+    // Weapon
+    if(eq.weapon){
+        const w = EQUIPMENT_DEFS.english.color;
+        ctx.fillStyle = w;
+        ctx.fillRect(x+scale*14, y+scale*2, scale, scale*5);
+        ctx.fillRect(x+scale*13, y+scale*7, scale*3, scale);
+        ctx.fillStyle = '#22c55e';
+        ctx.fillRect(x+scale*14, y+scale*0, scale, scale*3);
+    }
+    // Crown
+    if(eq.crown){
+        const c = EQUIPMENT_DEFS.brush.color;
+        ctx.fillStyle = c;
+        ctx.fillRect(x+scale*3, y+scale*-2, scale*2, scale*2);
+        ctx.fillRect(x+scale*7, y+scale*-3, scale*2, scale*3);
+        ctx.fillRect(x+scale*11, y+scale*-2, scale*2, scale*2);
+        ctx.fillRect(x+scale*2, y+scale*-1, scale*12, scale);
+        ctx.fillStyle = '#fde047';
+        ctx.fillRect(x+scale*7, y+scale*-3, scale, scale);
+        ctx.fillRect(x+scale*3, y+scale*-2, scale, scale);
+        ctx.fillRect(x+scale*11, y+scale*-2, scale, scale);
+    }
+    // Gloves
+    if(eq.gloves){
+        const g = EQUIPMENT_DEFS.tidy.color;
+        ctx.fillStyle = g;
+        ctx.fillRect(x+scale, y+scale*11, scale*2, scale*2);
+        ctx.fillRect(x+scale*13, y+scale*11, scale*2, scale*2);
+    }
+    // Boots
+    if(eq.boots){
+        const b = EQUIPMENT_DEFS.toilet.color;
+        ctx.fillStyle = b;
+        ctx.fillRect(x+scale*4, y+scale*14, scale*3, scale*2);
+        ctx.fillRect(x+scale*9, y+scale*14, scale*3, scale*2);
+    }
+    // Heart
+    if(eq.heart){
+        const hx = x+scale*8, hy = y+scale*-5;
+        ctx.fillStyle = EQUIPMENT_DEFS.hug.color;
+        ctx.fillRect(hx-scale, hy, scale, scale*2);
+        ctx.fillRect(hx, hy-scale, scale, scale*3);
+        ctx.fillRect(hx+scale, hy, scale, scale*2);
+        ctx.fillRect(hx-scale, hy+scale, scale*3, scale);
+        ctx.fillRect(hx, hy+scale*2, scale, scale);
+    }
+    // Potion
+    if(eq.potion){
+        const p = EQUIPMENT_DEFS.drink.color;
+        ctx.fillStyle = p;
+        ctx.fillRect(x+scale*12, y+scale*10, scale*2, scale*2);
+        ctx.fillRect(x+scale*12, y+scale*9, scale, scale);
+        ctx.fillStyle = '#7dd3fc';
+        ctx.fillRect(x+scale*12, y+scale*11, scale, scale);
+    }
+}
+
+// ===== PIXEL ART =====
+const HP=[null,'#8B4513','#FFD5A0','#2C2C2C','#42A5F5','#1565C0','#795548','#FFF','#FF6B6B'];
+const HR=[
+    [0,0,0,1,1,1,1,1,0,0,0,0],
+    [0,0,1,1,1,1,1,1,1,0,0,0],
+    [0,0,2,2,2,3,3,2,2,0,0,0],
+    [0,0,2,2,2,2,2,2,2,0,0,0],
+    [0,0,2,2,7,7,2,2,2,0,0,0],
+    [0,0,2,2,2,2,2,2,2,0,0,0],
+    [0,0,2,2,8,2,8,2,2,0,0,0],
+    [0,0,2,2,2,2,2,2,2,0,0,0],
+    [0,0,0,4,4,4,4,4,0,0,0,0],
+    [0,0,4,4,5,4,4,5,4,4,0,0],
+    [0,0,4,4,4,4,4,4,4,4,0,0],
+    [0,0,0,4,4,4,4,4,4,0,0,0],
+    [0,0,0,5,0,5,5,0,5,0,0,0],
+    [0,0,0,6,0,6,6,0,6,0,0,0],
+];
+const BP=[null,'#4A0000','#8B0000','#FF0000','#FFD700','#FFF','#2C0000','#FF4500','#1a0a2e'];
+const BR=[
+    [0,0,0,0,1,1,1,1,1,1,1,1,0,0,0,0],
+    [0,0,0,1,1,1,1,1,1,1,1,1,1,0,0,0],
+    [0,0,1,1,1,1,1,1,1,1,1,1,1,1,0,0],
+    [0,0,1,1,1,1,1,1,1,1,1,1,1,1,0,0],
+    [0,0,1,1,1,1,1,1,1,1,1,1,1,1,0,0],
+    [0,0,1,1,4,4,1,1,1,1,4,4,1,1,0,0],
+    [0,0,1,1,4,4,1,1,1,1,4,4,1,1,0,0],
+    [0,0,1,1,1,1,1,5,5,1,1,1,1,1,0,0],
+    [0,0,1,1,1,1,5,5,5,5,1,1,1,1,0,0],
+    [0,0,1,1,1,1,5,5,5,5,1,1,1,1,0,0],
+    [0,0,1,1,1,1,1,5,5,1,1,1,1,1,0,0],
+    [0,0,1,1,1,1,7,7,7,7,1,1,1,1,0,0],
+    [0,0,0,1,1,7,7,7,7,7,7,1,1,0,0,0],
+    [0,0,0,1,1,1,1,1,1,1,1,1,1,0,0,0],
+    [0,0,0,0,1,2,1,0,0,1,2,1,0,0,0,0],
+    [0,0,0,0,1,1,0,0,0,0,1,1,0,0,0,0],
+];
+const BR_DEAD=BR.map((r,i)=>i>10?r.map(c=>c===0?0:7):r);
+
+// ===== BOSS DEFINITIONS — 7 Day-of-Week Bosses =====
+// Each boss has its OWN full sprite matrix (not just a color mod)
+const BOSS_SPRITES = {
+  0: [ // Sunday — 周末瞌睡龙 (long dragon shape with crown)
+    [0,0,0,0,0,3,3,3,3,3,3,0,0,0,0,0],
+    [0,0,0,0,3,1,1,1,1,1,1,3,0,0,0,0],
+    [0,0,0,3,1,4,4,1,1,4,4,1,3,0,0,0],
+    [0,0,0,3,1,4,4,1,1,4,4,1,3,0,0,0],
+    [0,0,3,1,1,1,1,1,1,1,1,1,1,3,0,0],
+    [0,0,3,1,1,1,1,5,5,1,1,1,1,3,0,0],
+    [0,0,0,3,1,1,1,5,5,1,1,1,3,0,0,0],
+    [0,0,0,0,3,1,1,1,1,1,1,3,0,0,0,0],
+    [0,0,0,0,0,3,1,1,1,1,3,0,0,0,0,0],
+    [0,0,0,0,0,0,3,1,1,3,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,3,3,0,0,0,0,0,0,0],
+    [0,0,0,0,1,7,7,7,7,7,7,1,0,0,0,0],
+    [0,0,0,1,1,7,7,7,7,7,7,1,1,0,0,0],
+    [0,0,1,1,1,7,7,7,7,7,7,1,1,1,0,0],
+    [0,0,1,1,0,0,1,1,0,0,1,1,0,0,0,0],
+  ],
+  1: [ // Monday — 周一起床魔 (spiky angry demon)
+    [0,0,0,0,1,0,0,0,0,0,0,1,0,0,0,0],
+    [0,0,0,0,0,1,0,0,0,0,1,0,0,0,0,0],
+    [0,0,0,1,1,1,1,1,1,1,1,1,1,0,0,0],
+    [0,0,1,1,1,1,1,1,1,1,1,1,1,1,0,0],
+    [0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0],
+    [0,1,1,1,4,4,1,1,1,4,4,1,1,1,1,0],
+    [0,1,1,1,4,4,1,1,1,4,4,1,1,1,1,0],
+    [0,0,1,1,1,1,1,5,5,1,1,1,1,1,0,0],
+    [0,0,0,1,1,1,5,5,5,5,1,1,1,0,0,0],
+    [0,0,0,1,1,1,1,5,5,1,1,1,1,0,0,0],
+    [0,0,0,1,1,1,1,7,7,1,1,1,1,0,0,0],
+    [0,0,0,0,1,1,7,7,7,7,1,1,0,0,0,0],
+    [0,0,0,0,1,7,7,7,7,7,7,1,0,0,0,0],
+    [0,0,0,1,1,0,0,1,1,0,0,1,1,0,0,0],
+    [0,0,0,1,0,0,0,0,0,0,0,0,1,0,0,0],
+  ],
+  2: [ // Tuesday — 拖延小恶魔 (round chubby blob with wings)
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,3,3,3,3,0,0,0,0,0,0],
+    [0,0,0,0,0,3,1,1,1,1,3,0,0,0,0,0],
+    [0,0,0,0,1,1,4,4,4,4,1,1,0,0,0,0],
+    [0,0,0,1,1,1,4,4,4,4,1,1,1,0,0,0],
+    [0,0,1,1,1,1,1,1,1,1,1,1,1,1,0,0],
+    [0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0],
+    [0,1,1,1,1,1,1,5,5,1,1,1,1,1,1,0],
+    [1,1,1,1,1,1,5,5,5,5,1,1,1,1,1,1],
+    [0,1,1,1,1,1,1,5,5,1,1,1,1,1,1,0],
+    [0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0],
+    [0,0,1,1,1,1,7,7,7,7,1,1,1,1,0,0],
+    [0,0,0,1,1,1,1,7,7,1,1,1,1,0,0,0],
+    [0,0,0,0,1,1,1,1,1,1,1,1,0,0,0,0],
+    [0,0,0,0,0,1,1,0,0,1,1,0,0,0,0,0],
+  ],
+  3: [ // Wednesday — 周中打盹怪 (tall thin sleeping ghost)
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,1,1,1,1,0,0,0,0,0,0],
+    [0,0,0,0,0,1,1,1,1,1,1,0,0,0,0,0],
+    [0,0,0,0,1,1,4,4,4,4,1,1,0,0,0,0],
+    [0,0,0,1,1,1,4,4,4,4,1,1,1,0,0,0],
+    [0,0,0,1,1,1,1,1,1,1,1,1,1,0,0,0],
+    [0,0,0,1,1,1,1,1,1,1,1,1,1,0,0,0],
+    [0,0,0,1,1,1,1,5,5,1,1,1,1,0,0,0],
+    [0,0,0,0,1,1,1,5,5,1,1,1,0,0,0,0],
+    [0,0,0,0,0,1,1,1,1,1,1,0,0,0,0,0],
+    [0,0,0,0,0,0,1,1,1,1,0,0,0,0,0,0],
+    [0,0,0,0,0,0,1,7,7,1,0,0,0,0,0,0],
+    [0,0,0,0,0,1,7,7,7,7,1,0,0,0,0,0],
+    [0,0,0,0,0,1,0,0,0,0,1,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+  ],
+  4: [ // Thursday — 兴奋不眠星 (star-shaped with sparkles)
+    [0,0,0,0,0,0,0,4,4,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,4,4,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,4,1,1,4,0,0,0,0,0,0],
+    [0,0,0,0,0,4,1,1,1,1,4,0,0,0,0,0],
+    [0,0,4,4,4,1,1,1,1,1,1,4,4,4,0,0],
+    [0,0,0,1,1,1,1,1,1,1,1,1,1,0,0,0],
+    [0,0,0,1,1,1,1,1,1,1,1,1,1,0,0,0],
+    [0,0,0,0,1,1,1,5,5,1,1,1,0,0,0,0],
+    [0,0,0,1,1,1,5,5,5,5,1,1,1,0,0,0],
+    [0,0,0,0,1,1,1,5,5,1,1,1,0,0,0,0],
+    [0,0,0,1,1,1,1,1,1,1,1,1,1,0,0,0],
+    [0,0,0,0,1,7,7,1,1,7,7,1,0,0,0,0],
+    [0,0,0,0,1,1,7,7,7,7,1,1,0,0,0,0],
+    [0,0,0,0,0,1,1,0,0,1,1,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+  ],
+  5: [ // Friday — 狂欢熬夜王 (wide party clown with party hat)
+    [0,0,0,0,0,0,4,4,4,4,0,0,0,0,0,0],
+    [0,0,0,0,0,4,4,5,5,4,4,0,0,0,0,0],
+    [0,0,0,0,4,4,1,1,1,1,4,4,0,0,0,0],
+    [0,0,0,1,1,1,1,1,1,1,1,1,1,0,0,0],
+    [0,0,1,1,1,1,1,1,1,1,1,1,1,1,0,0],
+    [0,0,1,1,1,4,4,1,1,4,4,1,1,1,0,0],
+    [0,0,1,1,1,4,4,1,1,4,4,1,1,1,0,0],
+    [0,0,0,1,1,1,1,5,5,1,1,1,1,0,0,0],
+    [0,0,0,0,1,1,5,5,5,5,1,1,0,0,0,0],
+    [0,0,0,0,0,1,1,5,5,1,1,0,0,0,0,0],
+    [0,0,0,0,1,1,1,7,7,1,1,1,0,0,0,0],
+    [0,0,0,1,1,7,7,7,7,7,7,1,1,0,0,0],
+    [0,0,1,1,0,0,7,7,7,7,0,0,1,1,0,0],
+    [0,0,1,0,0,0,1,1,1,1,0,0,0,1,0,0],
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+  ],
+  6: [ // Saturday — 游戏沉迷怪 (controller/tech monster with antennas)
+    [0,0,1,0,0,0,0,0,0,0,0,0,0,1,0,0],
+    [0,0,1,1,0,0,0,0,0,0,0,0,1,1,0,0],
+    [0,0,0,1,1,1,1,1,1,1,1,1,1,0,0,0],
+    [0,0,1,1,1,1,1,1,1,1,1,1,1,1,0,0],
+    [0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0],
+    [0,1,1,1,4,4,1,1,1,4,4,1,1,1,1,0],
+    [0,1,1,1,4,4,1,1,1,4,4,1,1,1,1,0],
+    [0,0,1,1,1,1,1,5,5,1,1,1,1,1,0,0],
+    [0,0,0,1,1,1,5,5,5,5,1,1,1,0,0,0],
+    [0,0,0,1,1,1,1,5,5,1,1,1,1,0,0,0],
+    [0,0,0,1,1,1,1,7,7,1,1,1,1,0,0,0],
+    [0,0,0,0,1,1,7,7,7,7,1,1,0,0,0,0],
+    [0,0,0,1,1,1,1,7,7,1,1,1,1,0,0,0],
+    [0,0,1,1,0,0,1,1,1,1,0,0,1,1,0,0],
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+  ],
+};
+
+const BOSS_DEAD_SPRITES = {
+  0: BOSS_SPRITES[0].map((r,i)=>i>=10?r.map(c=>c===0?0:7):r),
+  1: BOSS_SPRITES[1].map((r,i)=>i>=10?r.map(c=>c===0?0:7):r),
+  2: BOSS_SPRITES[2].map((r,i)=>i>=10?r.map(c=>c===0?0:7):r),
+  3: BOSS_SPRITES[3].map((r,i)=>i>=10?r.map(c=>c===0?0:7):r),
+  4: BOSS_SPRITES[4].map((r,i)=>i>=10?r.map(c=>c===0?0:7):r),
+  5: BOSS_SPRITES[5].map((r,i)=>i>=10?r.map(c=>c===0?0:7):r),
+  6: BOSS_SPRITES[6].map((r,i)=>i>=10?r.map(c=>c===0?0:7):r),
+};
+
+const BOSS_DEFS = {
+  0: { // Sunday
+    name: '周末瞌睡龙', emoji: '🐉',
+    palette: [null,'#1a0033','#6b0099','#cc00ff','#ffd700','#fff','#3d0066','#ff44ff','#1a0a2e'],
+    taunts: ['周末就是我的主场！','呼呼呼...再来一关！','Oliver，不困吗？'],
+    hpBase: 120, hpPerSkip: 15, hpPerTask: 8,
+  },
+  1: { // Monday
+    name: '周一起床魔', emoji: '😈',
+    palette: [null,'#330000','#880000','#ff3333','#ffd700','#fff','#660000','#ff6644','#1a0a2e'],
+    taunts: ['周一了还想早睡？','我是最可怕的！','你起得来吗？'],
+    hpBase: 140, hpPerSkip: 18, hpPerTask: 10,
+  },
+  2: { // Tuesday
+    name: '拖延小恶魔', emoji: '😏',
+    palette: [null,'#003300','#006600','#00cc00','#ffd700','#fff','#004400','#44ff44','#1a0a2e'],
+    taunts: ['明天再做吧~','不急不急~','再玩一会儿！'],
+    hpBase: 130, hpPerSkip: 16, hpPerTask: 8,
+  },
+  3: { // Wednesday
+    name: '周中打盹怪', emoji: '😴',
+    palette: [null,'#001a33','#004488','#0088ff','#ffd700','#fff','#002244','#44aaff','#1a0a2e'],
+    taunts: ['才周三呢~','好困啊...你也是吧？','半途而废可不行！'],
+    hpBase: 135, hpPerSkip: 16, hpPerTask: 8,
+  },
+  4: { // Thursday
+    name: '兴奋不眠星', emoji: '🌟',
+    palette: [null,'#332200','#886600','#ffcc00','#fff','#ffe','#443300','#ffee66','#1a0a2e'],
+    taunts: ['明天就周末了！激动吧！','睡不着吧？','再来一个故事！'],
+    hpBase: 125, hpPerSkip: 15, hpPerTask: 8,
+  },
+  5: { // Friday
+    name: '狂欢熬夜王', emoji: '🎉',
+    palette: [null,'#330022','#880055','#ff00aa','#ffd700','#fff','#660033','#ff44cc','#1a0a2e'],
+    taunts: ['周五不熬夜等于没过！','狂欢吧！','周末开始了！'],
+    hpBase: 150, hpPerSkip: 20, hpPerTask: 10,
+  },
+  6: { // Saturday
+    name: '游戏沉迷怪', emoji: '🎮',
+    palette: [null,'#220033','#550088','#aa00ff','#ffd700','#fff','#330055','#cc44ff','#1a0a2e'],
+    taunts: ['再玩一局！','就快通关了！','周六怕什么！'],
+    hpBase: 145, hpPerSkip: 18, hpPerTask: 10,
+  },
+};
+
+function getCurrentBoss(){
+  return BOSS_DEFS[new Date().getDay()];
+}
+
+function getBossSprite(){
+  const boss=getCurrentBoss();
+  let sprite=BR.map(r=>[...r]);
+  if(boss.spriteMod) sprite=boss.spriteMod(sprite);
+  return sprite;
+}
+
+// Get boss image for current day
+function getBossImage(){
+    return imgCache['boss_' + new Date().getDay()];
+}
+
+function drawPixels(ctx,x,y,pixels,size,palette){
+    for(let r=0;r<pixels.length;r++)for(let c=0;c<pixels[r].length;c++){
+        const ci=pixels[r][c]; if(!ci)continue;
+        ctx.fillStyle=palette[ci];
+        ctx.fillRect(x+c*size,y+r*size,size,size);
+    }
+}
+function drawHero(ctx,x,y,s=3){drawPixels(ctx,x,y,HR,s,HP);}
+function drawBoss(ctx,x,y,s=4,dead=false){drawPixels(ctx,x,y,dead?BR_DEAD:BR,s,BP);}
+
+
+// ===== IMAGE LOADER =====
+const imgCache = {};
+function loadImg(src) {
+    return new Promise((resolve) => {
+        const img = new Image();
+        img.src = src;
+        img.onload = () => resolve(img);
+        img.onerror = () => { console.warn('Failed to load:', src); resolve(null); };
+    });
+}
+async function preloadAssets() {
+    const tasks = [
+        ['hero', 'images/oliver.png'],
+        ['boss', 'images/boss.png'],
+        ['boss_dead', 'images/boss_defeated.png']
+    ];
+    for(let [key, src] of tasks) {
+        imgCache[key] = await loadImg(src);
+    }
+    // Preload all 7 daily boss images
+    for(let i = 0; i < 7; i++) {
+        imgCache['boss_' + i] = await loadImg('images/boss_' + i + '.png');
+    }
+    console.log("Refined assets loaded");
+}
+
+// ===== GAME ENTRY PIN LOCK =====
+let lockPin="";
+
+function lockPress(n){
+    if(lockPin.length<4){
+        lockPin+=n;
+        updateLockDots();
+        if(lockPin.length===4){
+            if(lockPin===getGameEntryPin()){
+                unlockGame();
+            }else{
+                sfxDefeat();
+                document.getElementById('lock-error').textContent='❌ 密码错误，请重试';
+                lockPin="";
+                setTimeout(()=>{updateLockDots();document.getElementById('lock-error').textContent='';},800);
+            }
+        }
+    }
+    sfxClick();
+}
+
+function lockBackspace(){
+    lockPin=lockPin.slice(0,-1);
+    updateLockDots();
+    document.getElementById('lock-error').textContent='';
+}
+
+function updateLockDots(){
+    for(let i=0;i<4;i++){
+        const dot=document.getElementById('lock-dot-'+i);
+        if(i<lockPin.length) dot.classList.add('filled');
+        else dot.classList.remove('filled');
+    }
+}
+
+function unlockGame(){
+    sfxEquip();
+    document.getElementById('game-lock-overlay').classList.add('unlocked');
+    lockPin="";
+}
+
+preloadAssets().then(()=>{
+    // Update title screen boss image for today
+    const dayIdx = new Date().getDay();
+    const bossImg = imgCache['boss_' + dayIdx];
+    if(bossImg){
+        const titleBossImg = document.querySelector('.title-scene .boss-img');
+        if(titleBossImg){
+            titleBossImg.src = bossImg.src;
+        }
+        // Update boss name in intro
+        const boss = getCurrentBoss();
+        const bossNameEl = document.getElementById('intro-boss-name');
+        if(bossNameEl) bossNameEl.textContent = boss.name;
+        const bossEmojiEl = document.getElementById('intro-boss-emoji');
+        if(bossEmojiEl) bossEmojiEl.textContent = boss.emoji;
+    }
+});
+
+// ===== TITLE =====
+let currentPin = "";
+let pinCallback = null;
+
+function showPin(callback){
+    currentPin = "";
+    updatePinDots();
+    document.getElementById('pin-modal').style.display = 'flex';
+    document.getElementById('pin-error').textContent = "";
+    pinCallback = callback;
+}
+function hidePin(){
+    document.getElementById('pin-modal').style.display = 'none';
+    currentPin = "";
+}
+function pinPress(num){
+    if(currentPin.length < 4){
+        currentPin += num;
+        updatePinDots();
+        if(currentPin.length === 4){
+            setTimeout(checkPin, 200);
+        }
+    }
+}
+function pinBackspace(){
+    currentPin = currentPin.slice(0, -1);
+    updatePinDots();
+    document.getElementById('pin-error').textContent = "";
+}
+function checkPin(){
+    if(currentPin === PARENT_PIN){
+        sfxEquip(); // Success sound
+        hidePin();
+        if(pinCallback) pinCallback();
+    } else {
+        sfxDefeat(); // Fail sound
+        document.getElementById('pin-error').textContent = "❌ 密码错误";
+        currentPin = "";
+        updatePinDots();
+    }
+}
+function updatePinDots(){
+    for(let i=0; i<4; i++){
+        const dot = document.getElementById('dot-'+i);
+        if(i < currentPin.length) dot.classList.add('active');
+        else dot.classList.remove('active');
+    }
+}
+
+// ===== TITLE =====
+function initTitle(){
+    // Stars
+    const stars=document.getElementById('stars');stars.innerHTML='';
+    for(let i=0;i<40;i++){
+        const s=document.createElement('div');s.className='star';
+        s.style.left=Math.random()*100+'%';s.style.top=Math.random()*60+'%';
+        s.style.animationDelay=Math.random()*2+'s';
+        stars.appendChild(s);
+    }
+}
+
+// ===== GAME FLOW =====
+function startGame(){
+    sfxClick();
+    // Load all persistent state (server first, then localStorage fallback)
+    loadAllState().then(function(){
+        loadRewards(); // Refresh rewards after loading
+
+        const hour=new Date().getHours();
+        if(hour>=18){
+            // After 18:00 — show battle intro splash
+            showBattleIntro();
+        } else {
+            // Before 18:00 — go straight to game screen
+            enterGameScreen();
+        }
+    });
+}
+
+function enterGameScreen(){
+    document.getElementById('title-screen').style.display='none';
+    document.getElementById('game-screen').style.display='block';
+    loadSettings();
+    updateTime();
+
+    // Check if we already have today's tasks loaded from server
+    const hasTodayTasks = state.tasks && state.tasks.length > 0;
+
+    if(!hasTodayTasks){
+        // No saved tasks — add mandatory ones from scratch
+        state.tasks = [];
+        state.mandatoryIds.forEach(id => {
+            const t = TASKS.find(x => x.id === id);
+            if(t) {
+                state.tasks.push({
+                    id: 'm_'+t.id, presetId: t.id, name: t.name, emoji: t.emoji,
+                    buff: t.buff, power: t.power, color: t.color, status: 'pending', icon: t.id
+                });
+            }
+        });
+    } else {
+        // Restore from saved — re-add mandatory tasks that might be missing
+        state.mandatoryIds.forEach(id => {
+            const exists = state.tasks.find(t => t.presetId === id && t.id.startsWith('m_'));
+            if(!exists){
+                const t = TASKS.find(x => x.id === id);
+                if(t) {
+                    state.tasks.unshift({
+                        id: 'm_'+t.id, presetId: t.id, name: t.name, emoji: t.emoji,
+                        buff: t.buff, power: t.power, color: t.color, status: 'pending', icon: t.id
+                    });
+                }
+            }
+        });
+    }
+
+    renderTasks();
+    updatePower();
+    updateStreakDisplay();
+    startPathTaunts();
+    initCardGrid();
+
+    // Show trophy if any history exists
+    renderTrophy();
+
+    // Sleep check-in only after 18:00
+    if(state.sleepLog&&state.sleepLog.length>0&&!state.todayChecked){
+        setTimeout(()=>showSleepCheckIn(),500);
+    }
+}
+
+function showBattleIntro(){
+    document.getElementById('title-screen').style.display='none';
+    const boss=getCurrentBoss();
+    document.getElementById('intro-boss-emoji').textContent=boss.emoji;
+
+    // Trophy hint
+    const totalMin=(state.rewards||[]).reduce((s,r)=>s+r.minutes,0);
+    const trophyHint=document.getElementById('intro-trophy-hint');
+    if(totalMin>0){
+        trophyHint.textContent='🏆 累计游戏时间: '+totalMin+' 分钟';
+    } else {
+        trophyHint.textContent='';
+    }
+
+    const overlay=document.getElementById('battle-intro-overlay');
+    overlay.classList.add('show');
+}
+
+function startFromIntro(){
+    sfxClick();
+    document.getElementById('battle-intro-overlay').classList.remove('show');
+    setTimeout(()=>enterGameScreen(),300);
+}
+
+
+function newDay(){
+    sfxClick();
+    saveAllState(); // Save current state before clearing
+    const bt=state.bedtime,wm=state.warningMinutes;
+    const mr=state.rewards,sl=state.sleepLog,tc=state.todayChecked;
+    const mi=state.mandatoryIds,pi=state.poolIds;
+    state={tasks:[],idCounter:0,totalPower:0,bossHP:100,bossMaxHP:100,heroHP:100,heroMaxHP:100,battleActive:false,battleTurn:0,heroX:60,heroY:90,bossX:200,bossY:50,bedtime:bt,warningMinutes:wm,equipment:{},allyReady:true,streak:state.streak,rewards:mr,sleepLog:sl||[],todayChecked:tc,mandatoryIds:mi,poolIds:pi,redeemLog:[],redeemedMinutes:0,battlesFought:0,battleDate:null};
+    ['victory-screen','defeat-screen','battle-screen','game-screen','battle-intro-overlay'].forEach(id=>document.getElementById(id).style.display='none');
+    document.getElementById('game-lock-overlay').classList.remove('unlocked');
+    document.getElementById('title-screen').style.display='flex';
+    initTitle();
+}
+
+function updateTime(){
+    const now=new Date();
+    const h=String(now.getHours()).padStart(2,'0'),m=String(now.getMinutes()).padStart(2,'0');
+
+    // Digital Clock
+    const clockEl=document.getElementById('big-clock-time');
+    if(clockEl) clockEl.textContent=h+':'+m;
+
+    // Analog Clock
+    const hours = now.getHours() % 12;
+    const minutes = now.getMinutes();
+    const hourDeg = (hours * 30) + (minutes * 0.5);
+    const minuteDeg = minutes * 6;
+    const hourHand = document.getElementById('hand-hour');
+    const minHand = document.getElementById('hand-minute');
+    if(hourHand) hourHand.style.transform = `rotate(${hourDeg}deg)`;
+    if(minHand) minHand.style.transform = `rotate(${minuteDeg}deg)`;
+
+    updateBossProximity(now);
+    setTimeout(updateTime, 15000);
+}
+
+function updateBossProximity(now){
+    const [bh,bm]=state.bedtime.split(':').map(Number);
+    const bedTime=new Date(now);bedTime.setHours(bh,bm,0,0);
+
+    // Day starts at 18:00 (6 PM)
+    const dayStart=new Date(now);dayStart.setHours(18,0,0,0);
+    const totalMs=bedTime-dayStart; // total time window (e.g. 4.5 hours)
+    const elapsedMs=now-dayStart; // time already passed
+    const diffMs=bedTime-now; // time remaining to bedtime
+    const diffMin=diffMs/60000;
+
+    const fillEl=document.getElementById('boss-fill');
+    const labelEl=document.getElementById('boss-label');
+    const warningEl=document.getElementById('time-warning');
+    const bossNode=document.getElementById('path-boss-node');
+
+    if(!fillEl||!labelEl) return;
+
+    if(now<dayStart){
+        // Before 18:00 - day hasn't started
+        fillEl.style.width='0%';
+        labelEl.textContent='🌅 还没到冒险时间...';
+        warningEl?.classList.remove('active');
+        if(bossNode) bossNode.className='path-boss-wrapper';
+        return;
+    }
+
+    if(diffMin<=0){
+        // Past bedtime!
+        fillEl.style.width='100%';
+        labelEl.textContent='😱 大魔王来了！';
+        warningEl?.classList.add('active');
+        if(bossNode) bossNode.className='path-boss-wrapper very-close';
+        return;
+    }
+
+    // Calculate progress: 0% at 18:00, 100% at bedtime
+    const progress=Math.min(100,Math.max(0,(elapsedMs/totalMs)*100));
+    fillEl.style.width=progress+'%';
+
+    // Different stages based on remaining time
+    if(diffMin<=5){
+        labelEl.textContent='😱 大魔王快到了！';
+        warningEl?.classList.add('active');
+        if(bossNode) bossNode.className='path-boss-wrapper very-close';
+    } else if(diffMin<=15){
+        labelEl.textContent='😰 大魔王在靠近...';
+        warningEl?.classList.add('active');
+        if(bossNode) bossNode.className='path-boss-wrapper close';
+    } else if(diffMin<=30){
+        labelEl.textContent='😨 大魔王走来了...';
+        warningEl?.classList.remove('active');
+        if(bossNode) bossNode.className='path-boss-wrapper close';
+    } else if(diffMin<=60){
+        labelEl.textContent='👀 大魔王出发了...';
+        warningEl?.classList.remove('active');
+        if(bossNode) bossNode.className='path-boss-wrapper';
+    } else {
+        labelEl.textContent='😌 大魔王还很远...';
+        warningEl?.classList.remove('active');
+        if(bossNode) bossNode.className='path-boss-wrapper';
+    }
+}
+
+// ===== SETTINGS =====
+
+function renderConfigGrids(){
+    const mandGrid=document.getElementById('cfg-mandatory');
+    const poolGrid=document.getElementById('cfg-pool');
+    if(!mandGrid || !poolGrid) return;
+    
+    mandGrid.innerHTML='';
+    poolGrid.innerHTML='';
+    
+    TASKS.forEach(t => {
+        // Mandatory toggle
+        const mDiv = document.createElement('div');
+        mDiv.className = 'task-toggle' + (state.mandatoryTaskIds.includes(t.id) ? ' active' : '');
+        mDiv.textContent = t.emoji + ' ' + t.name;
+        mDiv.onclick = () => {
+            const idx = state.mandatoryTaskIds.indexOf(t.id);
+            if(idx > -1) state.mandatoryTaskIds.splice(idx, 1);
+            else state.mandatoryTaskIds.push(t.id);
+            mDiv.classList.toggle('active');
+        };
+        mandGrid.appendChild(mDiv);
+        
+        // Pool toggle
+        const pDiv = document.createElement('div');
+        pDiv.className = 'task-toggle' + (state.cardPoolIds.includes(t.id) ? ' active' : '');
+        pDiv.textContent = t.emoji + ' ' + t.name;
+        pDiv.onclick = () => {
+            const idx = state.cardPoolIds.indexOf(t.id);
+            if(idx > -1) state.cardPoolIds.splice(idx, 1);
+            else state.cardPoolIds.push(t.id);
+            pDiv.classList.toggle('active');
+        };
+        poolGrid.appendChild(pDiv);
+    });
+}
+
+
+
+function renderConfig(){
+    const mandGrid=document.getElementById('cfg-mandatory');
+    const poolGrid=document.getElementById('cfg-pool');
+    if(!mandGrid || !poolGrid) return;
+    
+    mandGrid.innerHTML='';
+    poolGrid.innerHTML='';
+    
+    TASKS.forEach(t => {
+        // Mandatory toggle
+        const mDiv = document.createElement('div');
+        mDiv.className = 'task-toggle' + (state.mandatoryIds.includes(t.id) ? ' active' : '');
+        mDiv.innerHTML = `<span class="t-icon">${t.emoji}</span>${t.name}`;
+        mDiv.onclick = () => {
+            const idx = state.mandatoryIds.indexOf(t.id);
+            if(idx > -1) state.mandatoryIds.splice(idx, 1);
+            else state.mandatoryIds.push(t.id);
+            mDiv.classList.toggle('active');
+        };
+        mandGrid.appendChild(mDiv);
+        
+        // Pool toggle
+        const pDiv = document.createElement('div');
+        pDiv.className = 'task-toggle' + (state.poolIds.includes(t.id) ? ' active' : '');
+        pDiv.innerHTML = `<span class="t-icon">${t.emoji}</span>${t.name}`;
+        pDiv.onclick = () => {
+            const idx = state.poolIds.indexOf(t.id);
+            if(idx > -1) state.poolIds.splice(idx, 1);
+            else state.poolIds.push(t.id);
+            pDiv.classList.toggle('active');
+        };
+        poolGrid.appendChild(pDiv);
+    });
+}
+
+
+function saveSettings(){
+    sfxClick();
+    state.bedtime=document.getElementById('bedtime-input').value||'22:30';
+    state.warningMinutes=parseInt(document.getElementById('warning-input').value)||30;
+    localStorage.setItem('bedtime_boss_bedtime',state.bedtime);
+    localStorage.setItem('bedtime_boss_warning',state.warningMinutes);
+    localStorage.setItem('boss_mandatory', JSON.stringify(state.mandatoryIds));
+    localStorage.setItem('boss_pool', JSON.stringify(state.poolIds));
+    document.getElementById('target-display').textContent=state.bedtime;
+    updateBossProximity(new Date());
+    hideSettings();
+    saveAllState();
+}
+
+function loadSettings(){
+    const bt=localStorage.getItem('bedtime_boss_bedtime');
+    const wm=localStorage.getItem('bedtime_boss_warning');
+    if(bt) state.bedtime=bt;
+    if(wm) state.warningMinutes=parseInt(wm);
+    const td=document.getElementById('target-display');
+    if(td) td.textContent=state.bedtime;
+
+    // Load streak
+    const s=localStorage.getItem('boss_battle_streak');
+    if(s) state.streak=parseInt(s);
+    updateStreakDisplay();
+
+    // Load task configs
+    const m=localStorage.getItem('boss_mandatory');
+    const p=localStorage.getItem('boss_pool');
+    if(m) state.mandatoryIds=JSON.parse(m);
+    if(p) state.poolIds=JSON.parse(p);
+
+    loadRewards();
+    renderConfig();
+}
+
+function syncFromServer(){
+    sfxClick();
+    fetch('/api/load').then(function(r){return r.json();}).then(function(data){
+        if(data&&Object.keys(data).length>0){
+            applyServerData(data);
+            renderTasks();
+            updatePower();
+            updateStreakDisplay();
+            updateEquipBar();
+            checkBattle();
+            renderTrophy();
+            alert('✅ 同步成功！');
+        }else{
+            alert('服务器没有数据');
+        }
+    }).catch(function(){
+        alert('❌ 同步失败，请检查网络');
+    });
+}
+
+function showSettings(){
+    sfxClick();
+    showPin(()=>{
+        document.getElementById('bedtime-input').value=state.bedtime;
+        document.getElementById('warning-input').value=state.warningMinutes;
+        document.getElementById('settings-overlay').classList.add('show');
+        renderConfig();
+        renderRewards();
+        // Show entry PIN section
+        document.getElementById('entry-pin-section').style.display='block';
+        document.getElementById('entry-pin-input').value=getGameEntryPin();
+    });
+}
+
+function hideSettings(){
+    sfxClick();
+    document.getElementById('settings-overlay').classList.remove('show');
+}
+
+function updateStreakDisplay(){
+    const el=document.getElementById('streak-val');
+    if(el) el.textContent=state.streak;
+}
+
+function saveStreak(){
+    localStorage.setItem('boss_battle_streak', state.streak);
+    updateStreakDisplay();
+}
+
+function saveEntryPin(){
+    sfxClick();
+    const pin=document.getElementById('entry-pin-input').value.trim();
+    if(pin.length===4&&/^\d{4}$/.test(pin)){
+        localStorage.setItem(GAME_ENTRY_PIN_KEY,pin);
+        alert('密码已修改为: '+pin);
+    }else{
+        alert('请输入4位数字密码');
+    }
+}
+
+// ===== MODAL =====
+const EMOJIS = ['🛁','🪥','📚','📖','👕','🚽','💧','🤗','🧸','🤸','⭐','🎯','🔥','💎','🌟','✨','🎮','🎨','🧹','🎵','🧘','🥛','🍎','🏃','🎒','🐕','🌙','💤'];
+const COLORS = ['#60a5fa','#4ade80','#f472b6','#a78bfa','#f87171','#fbbf24','#fb923c','#38bdf8','#34d399','#e2e8f0','#c084fc','#f59e0b'];
+
+let selectedEmoji = '⭐';
+let selectedColor = '#c084fc';
+
+function initEmojiPicker(){
+    const c=document.getElementById('emoji-picker');c.innerHTML='';
+    EMOJIS.forEach(e=>{
+        const s=document.createElement('span');s.className='emoji-option'+(e===selectedEmoji?' selected':'');
+        s.textContent=e;
+        s.onclick=()=>{
+            c.querySelectorAll('.emoji-option').forEach(x=>x.classList.remove('selected'));
+            s.classList.add('selected');selectedEmoji=e;
+        };
+        c.appendChild(s);
+    });
+}
+
+function initColorPicker(){
+    const c=document.getElementById('color-picker');c.innerHTML='';
+    COLORS.forEach(clr=>{
+        const s=document.createElement('div');s.className='color-option'+(clr===selectedColor?' selected':'');
+        s.style.background=clr;
+        s.onclick=()=>{
+            c.querySelectorAll('.color-option').forEach(x=>x.classList.remove('selected'));
+            s.classList.add('selected');selectedColor=clr;
+        };
+        c.appendChild(s);
+    });
+}
+
+function renderCurrentTasks(){
+    const section=document.getElementById('current-tasks-section');
+    const list=document.getElementById('current-tasks-list');
+    if(state.tasks.length===0){section.style.display='none';return;}
+    section.style.display='block';
+    list.innerHTML='';
+    state.tasks.forEach(t=>{
+        const d=document.createElement('div');d.className='current-task-item';
+        d.innerHTML=`<span class="ct-emoji">${t.emoji}</span><span class="ct-name">${t.name}</span><span class="ct-power">+${t.power}</span><span class="ct-del">✕</span>`;
+        d.onclick=()=>{
+            sfxClick();
+            state.tasks=state.tasks.filter(x=>x.id!==t.id);
+            renderCurrentTasks();renderTasks();updatePower();checkBattle();
+        };
+        list.appendChild(d);
+    });
+}
+
+let selectedTasksPool = [];
+let currentSelection = [];
+
+function initCardGrid(){
+    const g = document.getElementById('card-grid');
+    if(!g) return; // Guard clause
+
+    // Use Pool IDs defined by parent
+    let pool = [];
+    if(state.poolIds.length > 0) {
+        pool = state.poolIds.map(id => TASKS.find(t => t.id === id)).filter(Boolean);
+    } else {
+        // If no pool configured, fallback to all tasks EXCEPT mandatory ones
+        pool = TASKS.filter(t => !state.mandatoryIds.includes(t.id));
+    }
+    
+    if(pool.length === 0) pool = [...TASKS]; // Safety fallback
+    
+    // Shuffle and pick up to 8 to show on screen
+    selectedTasksPool = [...pool].sort(()=>Math.random()-0.5).slice(0, 8);
+    currentSelection = [];
+    renderCards();
+    updateSelectedList();
+}
+
+function renderCards(){
+    const g = document.getElementById('card-grid');
+    if(!g) return;
+    g.innerHTML = '';
+    selectedTasksPool.forEach((t, i) => {
+        const card = document.createElement('div');
+        card.className = 'card';
+        card.id = `card-${i}`;
+        card.innerHTML = `
+            <div class="card-face card-back"></div>
+            <div class="card-face card-front">
+                <div class="card-icon">${t.emoji}</div>
+                <div class="card-label">${t.name}</div>
+            </div>
+        `;
+        card.onclick = () => flipCard(i, t, card);
+        g.appendChild(card);
+    });
+}
+
+function flipCard(index, task, cardEl){
+    if(cardEl.classList.contains('flipped') || cardEl.classList.contains('disabled')) return;
+    if(currentSelection.length >= 3) {
+        // Shake animation to indicate limit
+        cardEl.style.animation = 'shake 0.3s';
+        setTimeout(()=>cardEl.style.animation='', 300);
+        return;
+    }
+    
+    // Check if task already exists (avoid duplicates from mandatory tasks)
+    if(state.tasks.find(t => t.presetId === task.id)) {
+        // Task already in path, just flip the card but don't add again
+        cardEl.classList.add('flipped');
+        cardEl.classList.add('disabled');
+        // Add to selection for visual but mark as duplicate
+        currentSelection.push({...task, isDuplicate: true});
+        updateSelectedList();
+        return;
+    }
+    
+    // Flip
+    cardEl.classList.add('flipped');
+    
+    // Add to selection
+    currentSelection.push(task);
+    addTask(task); // Adds to state.tasks
+    updateSelectedList();
+    
+    // Disable if full
+    if(currentSelection.length >= 3) {
+        document.querySelectorAll('.card:not(.flipped)').forEach(c => c.classList.add('disabled'));
+    }
+}
+
+function updateSelectedList(){
+    const list = document.getElementById('selected-tasks-list');
+    if(!list) return;
+    list.innerHTML = '';
+    if(currentSelection.length === 0) {
+        list.innerHTML = '<span style="color:#6b7280;font-size:0.4em;margin:auto;">点击翻开 3 张卡牌</span>';
+        return;
+    }
+    currentSelection.forEach(t => {
+        const tag = document.createElement('div');
+        tag.className = 'selected-task-tag';
+        tag.innerHTML = `<span>${t.emoji}</span><span>${t.name}</span>`;
+        list.appendChild(tag);
+    });
+}
+
+function confirmCardSelection(){
+    hideModal();
+    renderTasks();
+    checkBattle();
+}
+
+function showModal(){
+    sfxClick();
+    document.getElementById('modal-overlay').classList.add('show');
+    renderTaskSelection();
+    renderSelectedList();
+}
+
+function renderTaskSelection(){
+    const grid = document.getElementById('task-select-grid');
+    if(!grid) return;
+    grid.innerHTML = '';
+    
+    TASKS.forEach(t => {
+        const div = document.createElement('div');
+        div.className = 'task-check-item';
+        
+        // Check selection
+        const isSelected = state.tasks.find(x => x.presetId === t.id);
+        if(isSelected) div.classList.add('selected');
+        
+        // Stars
+        const stars = '⭐'.repeat(t.diff || 1);
+        const diffClass = 'diff-' + (t.diff || 1);
+        
+        div.innerHTML = `
+            <span class="tc-icon">${t.emoji}</span>
+            <div style="flex:1">
+                <div class="tc-name" style="margin-bottom:2px;">${t.name}</div>
+                <div>
+                    <span class="task-diff ${diffClass}">${stars}</span>
+                    <span style="color:#ffd93d; font-size:0.8em; font-weight:bold;">⚡ ${t.power}</span>
+                </div>
+            </div>
+        `;
+        div.onclick = () => toggleTaskSelection(t);
+        grid.appendChild(div);
+    });
+}
+
+function toggleTaskSelection(task){
+    const exists = state.tasks.find(t => t.presetId === task.id);
+    if(exists){
+        state.tasks = state.tasks.filter(t => t.presetId !== task.id);
+        // Also remove from currentSelection if present
+        currentSelection = currentSelection.filter(t => t.id !== task.id);
+    } else {
+        addTask(task);
+        currentSelection.push(task);
+    }
+    renderTaskSelection();
+    renderSelectedList();
+    renderTasks(); // Update main path
+    updatePower();
+    checkBattle();
+}
+
+function renderSelectedList(){
+    const list = document.getElementById('selected-tasks-list');
+    if(!list) return;
+    list.innerHTML = '';
+    if(state.tasks.length === 0){
+        list.innerHTML = '<div style="color:#6b7280;font-size:0.7em;text-align:center;padding:10px;">请选择任务</div>';
+        return;
+    }
+    state.tasks.forEach(t => {
+        const tag = document.createElement('div');
+        tag.className = 'selected-task-tag';
+        tag.innerHTML = `<span>${t.emoji}</span><span>${t.name}</span>`;
+        list.appendChild(tag);
+    });
+}
+
+function triggerFlip(){
+    // Old card flip logic
+    initCardGrid();
+    // Hide selection grid, show cards (handled by CSS/JS swap usually, but let's just clear and re-render)
+    document.getElementById('task-select-grid').innerHTML = '<div id="card-grid" class="card-grid"></div>';
+    initCardGrid(); // This renders into #card-grid
+    renderCards();
+    updateSelectedList();
+}
+
+function finishSelection(){
+    hideModal();
+    saveAllState();
+}
+
+function hideModal(){sfxClick();document.getElementById('modal-overlay').classList.remove('show');}
+function closeModalOutside(e){if(e.target===document.getElementById('modal-overlay'))hideModal();}
+
+function addCustom(){
+    const name=document.getElementById('custom-name').value.trim();
+    if(!name)return;
+    sfxClick();
+    const power=parseInt(document.getElementById('custom-power').value)||25;
+    addTask({id:'custom_'+state.idCounter,name:name,emoji:selectedEmoji,buff:selectedEmoji+' 力量',power:power,color:selectedColor,icon:'custom'});
+    document.getElementById('custom-name').value='';
+    renderCurrentTasks();
+    saveAllState();
+}
+
+function addTask(p){
+    sfxClick();
+    state.tasks.push({id:'t_'+state.idCounter++,presetId:p.id,name:p.name,emoji:p.emoji,buff:p.buff,power:p.power,color:p.color,status:'pending',icon:p.icon||p.id});
+    renderTasks();updatePower();checkBattle();
+    saveAllState();
+}
+
+function completeTask(id){
+    sfxDone();
+    const t=state.tasks.find(x=>x.id===id);
+    if(!t||t.status!=='pending')return;
+    t.status='completed';state.totalPower+=t.power;
+
+    // Grant equipment
+    if(EQUIPMENT_DEFS[t.presetId]){
+        const eqDef = EQUIPMENT_DEFS[t.presetId];
+        state.equipment[eqDef.type] = true;
+        showBuff(eqDef.icon+' '+eqDef.name+'!');
+        sfxEquip();
+    } else {
+        showBuff('+'+t.buff+' +'+t.power);
+    }
+
+    renderTasks();updatePower();updateEquipBar();checkBattle();
+    saveAllState();
+}
+
+function skipTask(id){
+    sfxClick();
+    const t=state.tasks.find(x=>x.id===id);
+    if(!t||t.status!=='pending')return;
+    t.status='skipped';renderTasks();updatePower();checkBattle();
+}
+
+function showBuff(text){
+    const p=document.createElement('div');p.className='buff-popup';
+    p.textContent=text;p.style.left='50%';p.style.top='40%';p.style.transform='translateX(-50%)';
+    document.body.appendChild(p);setTimeout(()=>p.remove(),1500);
+}
+
+function updatePower(){document.getElementById('power-val').textContent=state.totalPower;}
+
+function updateEquipBar(){
+    const bar=document.getElementById('equip-bar');if(!bar)return;
+    bar.innerHTML='';
+    const types=['crown','weapon','shield','armor','aura','wings','gloves','boots','heart','potion'];
+    types.forEach(type=>{
+        if(!state.equipment[type])return;
+        const def=Object.values(EQUIPMENT_DEFS).find(e=>e.type===type);
+        if(!def)return;
+        const s=document.createElement('span');
+        s.style.cssText=`font-size:1em;cursor:default;`
+        s.textContent=def.icon;
+        s.title=def.name;
+        bar.appendChild(s);
+    });
+}
+
+function checkBattle(){
+    const btn=document.getElementById('battle-btn');
+    // Auto-reset battlesFought if it's a new day
+    if(state.battleDate && state.battleDate !== getTodayStr()){
+        state.battlesFought=0;
+        state.battleDate=null;
+    }
+    if(state.battlesFought>=1){
+        btn.style.display='none';
+    }else{
+        const hasTasks=state.tasks.length>0;
+        btn.style.display=hasTasks?'block':'none';
+    }
+}
+
+// ===== BATTLE CONFIRMATION =====
+function showBattleConfirm(){
+    // Auto-reset battlesFought if it's a new day
+    if(state.battleDate && state.battleDate !== getTodayStr()){
+        state.battlesFought=0;
+        state.battleDate=null;
+    }
+    if(state.battlesFought>=1){
+        alert('🌙 今天已经打过一次大魔王啦！\n明天再来挑战吧！');
+        return;
+    }
+    sfxClick();
+    const comp=state.tasks.filter(t=>t.status==='completed');
+    const skip=state.tasks.filter(t=>t.status==='skipped');
+    const pending=state.tasks.filter(t=>t.status==='pending');
+    const totalPower=comp.reduce((s,t)=>s+t.power,0);
+    const boss=getCurrentBoss();
+
+    // Time-based difficulty hint
+    const now=new Date();
+    const [bh2,bm2]=state.bedtime.split(':').map(Number);
+    const bedMins=bh2*60+bm2;
+    const nowMins=now.getHours()*60+now.getMinutes();
+    const diff=nowMins-bedMins;
+    let timeHint='';
+    if(diff<0){
+        const h=Math.floor(Math.abs(diff)/60);
+        const m=Math.abs(diff)%60;
+        if(h>=1) timeHint=`<p style="color:#4ade80;">⏰ 距离睡觉还有 ${h}小时${m}分钟，Boss 比较弱！</p>`;
+        else timeHint=`<p style="color:#4ade80;">⏰ 还有 ${m} 分钟到睡觉时间，Boss 比较弱！</p>`;
+    }else if(diff<=10){
+        timeHint=`<p style="color:#fbbf24;">⏰ 快到睡觉时间了，Boss 开始变强！</p>`;
+    }else{
+        const h=Math.floor(diff/60);
+        const m=diff%60;
+        const late=h>0?`${h}小时${m}分钟`:`${m}分钟`;
+        timeHint=`<p style="color:#f87171;">⚠️ 超过睡觉时间 ${late}，Boss 超级强！</p>`;
+    }
+
+    let info='';
+    info+=`<p>⚔️ 对手: ${boss.emoji} ${boss.name}</p>`;
+    info+=`<p>✅ 已完成: ${comp.length}/${state.tasks.length} 任务</p>`;
+    if(pending.length>0) info+=`<p style="color:#fbbf24;">⏳ 还有 ${pending.length} 个任务没完成！</p>`;
+    if(skip.length>0) info+=`<p style="color:#f87171;">⚠️ ${skip.length} 个任务跳过了，Boss 变强了</p>`;
+    info+=`<p>⚡ 总力量: ${totalPower}</p>`;
+    info+=timeHint;
+
+    document.getElementById('battle-confirm-info').innerHTML=info;
+    document.getElementById('battle-confirm-overlay').classList.add('show');
+}
+
+function hideBattleConfirm(){
+    sfxClick();
+    document.getElementById('battle-confirm-overlay').classList.remove('show');
+}
+
+function confirmBattle(){
+    sfxClick();
+    document.getElementById('battle-confirm-overlay').classList.remove('show');
+    setTimeout(()=>startBattle(),200);
+}
+
+// ===== REWARDS SYSTEM =====
+function saveRewards(){
+    localStorage.setItem('boss_battle_rewards',JSON.stringify(state.rewards||[]));
+}
+
+function loadRewards(){
+    const r=localStorage.getItem('boss_battle_rewards');
+    state.rewards=r?JSON.parse(r):[];
+    // Seed yesterday's first victory if no records exist
+    if(state.rewards.length===0){
+        const now=new Date();
+        const yesterday=new Date(now);
+        yesterday.setDate(yesterday.getDate()-1);
+        const dateStr=yesterday.getFullYear()+'-'+(yesterday.getMonth()+1).toString().padStart(2,'0')+'-'+yesterday.getDate().toString().padStart(2,'0');
+        const boss=getCurrentBoss();
+        state.rewards.push({date:dateStr,time:'21:30',boss:boss.name,bossEmoji:boss.emoji,minutes:15});
+        saveRewards();
+    }
+}
+
+function addReward(bossName,bossEmoji,earnedMinutes){
+    if(!state.rewards) state.rewards=[];
+    const now=new Date();
+    const dateStr=now.getFullYear()+'-'+(now.getMonth()+1).toString().padStart(2,'0')+'-'+now.getDate().toString().padStart(2,'0');
+    const timeStr=now.getHours().toString().padStart(2,'0')+':'+now.getMinutes().toString().padStart(2,'0');
+    state.rewards.unshift({date:dateStr,time:timeStr,boss:bossName,bossEmoji:bossEmoji,minutes:earnedMinutes});
+    saveRewards();
+}
+
+function getRewardsSummary(){
+    if(!state.rewards||state.rewards.length===0) return null;
+    const total=state.rewards.reduce((s,r)=>s+r.minutes,0);
+    const today=new Date();
+    const todayStr=today.getFullYear()+'-'+(today.getMonth()+1).toString().padStart(2,'0')+'-'+today.getDate().toString().padStart(2,'0');
+    const todayRewards=state.rewards.filter(r=>r.date===todayStr);
+    const todayTotal=todayRewards.reduce((s,r)=>s+r.minutes,0);
+    return {total:Math.min(total,999),todayToday:Math.min(todayTotal,30),todayRaw:todayTotal,records:state.rewards.length};
+}
+
+function renderRewards(){
+    const section=document.getElementById('rewards-section');
+    if(!section) return;
+    section.style.display='block';
+
+    const summary=getRewardsSummary();
+    if(!summary){
+        document.getElementById('rewards-summary').innerHTML='<p style="color:#6b7280;font-size:0.45em;text-align:center;">还没有奖励记录</p>';
+        document.getElementById('rewards-list').innerHTML='';
+        return;
+    }
+
+    document.getElementById('rewards-summary').innerHTML=`
+        <p class="highlight">🎮 今日可用: ${summary.todayToday} / 30 分钟</p>
+        <p>累计获得: ${summary.total} 分钟 (${summary.records} 次胜利)</p>
+    `;
+
+    const list=document.getElementById('rewards-list');
+    list.innerHTML='';
+    state.rewards.slice(0,20).forEach(r=>{
+        const div=document.createElement('div');
+        div.className='reward-item';
+        div.innerHTML=`<span class="rw-date">${r.date} ${r.time}</span><span class="rw-boss">${r.bossEmoji} ${r.boss}</span><span class="rw-time">+${r.minutes}分钟</span>`;
+        list.appendChild(div);
+    });
+}
+
+function clearRewards(){
+    if(confirm('确定要清空所有奖励记录吗？')){
+        sfxClick();
+        state.rewards=[];
+        saveRewards();
+        renderRewards();
+    }
+}
+
+function renderTasks(){
+    const c=document.getElementById('path-container');c.innerHTML='';
+
+    // Hero with refined image
+    const hn=document.createElement('div');hn.className='hero-node';
+    hn.innerHTML=`
+        <img src="images/oliver.png" class="char-refined" style="width:64px; height:64px; border-radius:50%;">
+        <div class="hero-label">Oliver</div>
+        <div id="path-hero-eq" style="position:absolute; top:0; left:0; width:100%; height:100%; pointer-events:none;"></div>
+    `;
+    c.appendChild(hn);
+    updatePathHeroEquipment();
+
+    state.tasks.forEach((t,i)=>{
+        // Connector
+        const cn=document.createElement('div');
+        cn.className='connector'+(t.status==='completed'?' active':'');
+        c.appendChild(cn);
+
+        // Card
+        const card=document.createElement('div');
+        const cls=t.status==='completed'?'completed':(t.status==='skipped'?'skipped':'');
+        const icon=t.status==='completed'?'<div class="done-check">✅</div>':(t.status==='skipped'?'<div class="done-check">⬜</div>':
+            `<div class="task-actions">
+                <button class="btn btn-done" onclick="completeTask('${t.id}')">完成</button>
+                <button class="btn btn-skip" onclick="skipTask('${t.id}')">跳过</button>
+            </div>`);
+
+        card.className='task-card '+cls;
+        const iconHTML = t.icon==='custom'
+            ? `<div class="task-icon-wrap" style="background:${t.color}33;border-color:${t.color};font-size:1.6em;">${t.emoji}</div>`
+            : `<div class="task-icon-wrap" style="background:${t.color}33;border-color:${t.color}"><img class="char-img" src="images/icon_${t.icon}.png" width="40" height="40" alt="${t.emoji}"></div>`;
+        card.innerHTML=`
+            ${iconHTML}
+            <div class="task-info">
+                <div class="task-name">${t.name}</div>
+                <div class="task-buff">${t.buff} +${t.power}</div>
+            </div>
+            ${icon}
+        `;
+        c.appendChild(card);
+    });
+
+    if(state.tasks.length>0){
+        const cn=document.createElement('div');
+        const allDone=state.tasks.every(t=>t.status==='completed');
+        cn.className='connector'+(allDone?' all-done':'');
+        c.appendChild(cn);
+
+        const bn=document.createElement('div');bn.className='path-boss-wrapper';bn.id='path-boss-node';
+        const boss=getCurrentBoss();
+        bn.innerHTML=`
+            <img src="images/boss_${new Date().getDay()}.png" class="char-refined" style="width:64px; height:64px; border-radius:16px;">
+            <div class="boss-label">${boss.emoji} ${boss.name}</div>
+        `;
+        c.appendChild(bn);
+    }
+}
+
+
+function updatePathHeroEquipment(){
+    const container = document.getElementById('path-hero-eq');
+    if(!container) return;
+    container.innerHTML = '';
+    const eq = state.equipment;
+    
+    // Helper to add emoji
+    const addEq = (emoji, style) => {
+        const span = document.createElement('span');
+        span.textContent = emoji;
+        span.style.cssText = `position:absolute; font-size:20px; ${style}`;
+        container.appendChild(span);
+    };
+
+    if(eq.crown) addEq('👑', 'top:-10px; left:20px;');
+    if(eq.shield) addEq('🛡️', 'top:40px; left:-10px;');
+    if(eq.weapon) addEq('⚔️', 'top:30px; right:-10px; transform:rotate(-45deg);');
+    if(eq.armor) addEq('🦺', 'top:45px; left:15px; opacity:0.7;');
+    if(eq.heart) addEq('💖', 'top:-15px; left:30px;');
+    if(eq.wings) addEq('🪽', 'top:40px; left:-20px;');
+    if(eq.wings) addEq('🪽', 'top:40px; right:-20px;');
+}
+
+// ===== BATTLE =====
+function startBattle(){
+    // Check minimum tasks
+    if(state.tasks.length < 3){
+        alert("⚠️ 至少需要完成 3 个任务才能挑战大魔王哦！");
+        return;
+    }
+
+    sfxClick();
+
+    const comp=state.tasks.filter(t=>t.status==='completed');
+    const skip=state.tasks.filter(t=>t.status==='skipped');
+    const power=comp.reduce((s,t)=>s+t.power,0);
+    const skipPower=skip.reduce((s,t)=>s+t.power,0);
+
+    // Boss HP scales with current day boss + tasks
+    const boss=getCurrentBoss();
+    let bossHP = boss.hpBase + (skip.length * boss.hpPerSkip) + (comp.length * boss.hpPerTask);
+    bossHP = Math.min(bossHP, 350);
+
+    // Time-based difficulty scaling
+    const now=new Date();
+    const [bh,bm]=state.bedtime.split(':').map(Number);
+    const bedTimeMins=bh*60+bm;
+    const nowMins=now.getHours()*60+now.getMinutes();
+    const diffMins=nowMins-bedTimeMins;
+
+    let timeMultiplier=1.0;
+    if(diffMins<0){
+        const hoursEarly=Math.abs(diffMins)/60;
+        timeMultiplier=Math.max(0.4, 1.0-hoursEarly*0.25);
+    }else{
+        const hoursLate=diffMins/60;
+        timeMultiplier=Math.pow(1.5, hoursLate);
+    }
+    timeMultiplier=Math.min(timeMultiplier, 4.0);
+    bossHP=Math.floor(bossHP*timeMultiplier);
+    bossHP=Math.max(bossHP, 80);
+
+    state.bossMaxHP = bossHP;
+    state.bossHP = bossHP;
+    state.heroHP = 100;
+    state.allyReady = true;
+    state.battleActive = true;
+    state.battleTurn = 0;
+    state.battlesFought = 1;
+    state.battleDate = getTodayStr();
+
+    // Switch to battle screen
+    document.getElementById('game-screen').style.display='none';
+    document.getElementById('battle-screen').style.display='flex';
+
+    const log=document.getElementById('battle-log');
+    log.innerHTML='';
+    addLog(`${boss.emoji} ${boss.name}出现了！(HP: ${bossHP})`, 'system');
+
+    // Update battle title
+    const titleEl=document.querySelector('.battle-title');
+    if(titleEl) titleEl.textContent=`⚔️ VS ${boss.emoji} ${boss.name}`;
+
+    // Initial Taunt
+    setTimeout(()=>{
+        showBossTaunt(boss.taunts[Math.floor(Math.random()*boss.taunts.length)], 'battle-boss-taunt', 0, 0);
+    }, 1000);
+    addLog('力量:'+power+' | '+boss.name+'HP:'+bossHP,'system');
+    if(skip.length>0)addLog('⚠️ '+skip.length+'个任务没完成，'+boss.name+'变强了！','boss');
+
+    drawBattle();showControls(power);
+}
+
+function drawBattle(){
+    const c=document.getElementById('battle-canvas'),ctx=c.getContext('2d');
+
+    ctx.save();
+    // Clear
+    ctx.clearRect(0,0,c.width,c.height);
+
+    // Background (keep the nice gradient)
+    const g=ctx.createLinearGradient(0,0,0,c.height);
+    g.addColorStop(0,'#131042');g.addColorStop(1,'#0b0f1e');
+    ctx.fillStyle=g;ctx.fillRect(0,0,c.width,c.height);
+
+    // Ground line
+    ctx.strokeStyle = 'rgba(255,255,255,0.1)';
+    ctx.beginPath(); ctx.moveTo(0, 150); ctx.lineTo(280, 150); ctx.stroke();
+
+    // Draw Boss (Right side) — image-based for day-of-week variety
+    if(!bossDeathAnim.active){
+        const bossImg = getBossImage();
+        if(bossImg){
+            ctx.drawImage(bossImg, state.bossX, 25, 90, 90);
+        } else {
+            // Fallback to pixel art if image not loaded
+            const sprite=getBossSprite();
+            const palette=getCurrentBoss().palette;
+            drawPixels(ctx,state.bossX,40,sprite,4,palette);
+        }
+    }
+
+    // Draw Hero (Left side - animated position)
+    const heroImg = imgCache['hero'];
+    if(heroImg) {
+        ctx.fillStyle = 'rgba(0,0,0,0.3)';
+        ctx.beginPath(); ctx.ellipse(state.heroX + 35, 145, 25, 8, 0, 0, Math.PI*2); ctx.fill();
+        ctx.drawImage(heroImg, state.heroX, 60, 70, 70);
+    }
+
+    // Draw Equipment as Emojis
+    const eq = state.equipment;
+    ctx.font = '24px Arial';
+    ctx.textAlign = 'center';
+
+    if(eq.crown) ctx.fillText('👑', state.heroX + 35, 55);
+    if(eq.shield) ctx.fillText('🛡️', state.heroX - 5, 100);
+    if(eq.weapon) {
+        ctx.save();
+        ctx.translate(state.heroX + 75, 90);
+        ctx.rotate(-0.5);
+        ctx.fillText('⚔️', 0, 0);
+        ctx.restore();
+    }
+    if(eq.armor) ctx.fillText('🦺', state.heroX + 35, 110);
+    if(eq.heart) ctx.fillText('💖', state.heroX + 35, 30);
+    if(eq.wings) ctx.fillText('🪽', state.heroX - 10, 90);
+    if(eq.wings) ctx.fillText('🪽', state.heroX + 80, 90);
+
+    // Hero HP
+    ctx.fillStyle='#374151';ctx.fillRect(8,8,70,8);
+    const hr=Math.max(0,state.heroHP/state.heroMaxHP);
+    ctx.fillStyle=hr>0.5?'#4ade80':hr>0.25?'#fbbf24':'#ef4444';
+    ctx.fillRect(8,8,70*hr,8);
+    ctx.strokeStyle='#000';ctx.lineWidth=1;ctx.strokeRect(8,8,70,8);
+    ctx.fillStyle='#fff';ctx.font='5px monospace';ctx.fillText('HP '+Math.max(0,state.heroHP),10,15);
+
+    // Boss HP
+    ctx.fillStyle='#374151';ctx.fillRect(c.width-78,8,70,8);
+    const br=Math.max(0,state.bossHP/state.bossMaxHP);
+    ctx.fillStyle=br>0.5?'#ef4444':br>0.25?'#f97316':'#7f1d1d';
+    ctx.fillRect(c.width-78,8,70*br,8);
+    ctx.strokeRect(c.width-78,8,70,8);
+    ctx.fillText('BOSS '+Math.max(0,state.bossHP),c.width-76,15);
+
+    ctx.restore();
+
+    // Render battle effects
+    renderBattleEffects(ctx);
+}
+
+function addLog(t,type){
+    const l=document.getElementById('battle-log'),p=document.createElement('p');
+    p.className=type+'-msg';p.textContent=t;l.appendChild(p);l.scrollTop=l.scrollHeight;
+}
+
+function showControls(){
+    const c=document.getElementById('battle-controls');c.innerHTML='';
+    if(!state.battleActive)return;
+
+    const comp=state.tasks.filter(t=>t.status==='completed');
+    const pending=state.tasks.filter(t=>t.status==='pending');
+    const skip=state.tasks.filter(t=>t.status==='skipped');
+
+    // Single auto-attack button: cycles through all completed tasks + ultimate
+    if(comp.length===0){
+        // No completed tasks — just basic attack
+        const b=document.createElement('button');b.className='btn btn-atk';
+        b.textContent='⚔️ 攻击！';b.onclick=()=>heroAtk(10);c.appendChild(b);
+    } else {
+        // Main auto-attack button: fires all completed tasks in sequence
+        const b=document.createElement('button');b.className='btn btn-ultimate';
+        b.style.flex='1';
+        b.textContent='⚔️ 全军出击！';
+        b.onclick=()=>autoBattle(comp);
+        c.appendChild(b);
+    }
+
+    // Ally button
+    if(state.allyReady){
+        const ab=document.createElement('button');ab.className='btn btn-ally';
+        ab.textContent='🤝 召唤盟友';ab.onclick=showAlly;c.appendChild(ab);
+    }
+}
+
+function autoBattle(comp){
+    if(!state.battleActive) return;
+    document.getElementById('battle-controls').style.pointerEvents='none';
+
+    // Fire all completed tasks as ONE combined attack
+    const totalDmg=comp.reduce((s,t)=>s+t.power,0);
+    heroAtk(totalDmg);
+}
+
+// ===== BOSS TAUNTS =====
+const BOSS_TAUNTS = [
+    "嘿嘿，还没开始行动呢！",
+    "我的力量正在变强！",
+    "你怕了吗？小不点！",
+    "快睡吧，我赢了！",
+    "你的装备打不痛我！",
+    "今晚别想睡觉了！",
+    "我要偷走你的梦境！"
+];
+
+function showBossTaunt(text, targetElId, offsetX=0, offsetY=-40){
+    const parent = document.getElementById(targetElId);
+    if(!parent) return;
+    
+    // Remove existing taunt
+    const existing = parent.querySelector('.taunt-bubble');
+    if(existing) existing.remove();
+    
+    const bubble = document.createElement('div');
+    bubble.className = 'taunt-bubble';
+    bubble.textContent = text;
+    bubble.style.left = `calc(50% + ${offsetX}px)`;
+    bubble.style.top = `${offsetY}px`;
+    bubble.style.transform = 'translateX(-50%)';
+    
+    // Ensure relative positioning
+    if(getComputedStyle(parent).position === 'static'){
+        parent.style.position = 'relative';
+    }
+    parent.appendChild(bubble);
+    
+    // Auto remove
+    setTimeout(() => {
+        if(bubble.parentNode) bubble.remove();
+    }, 3000);
+}
+
+function randomTaunt(){
+    return BOSS_TAUNTS[Math.floor(Math.random() * BOSS_TAUNTS.length)];
+}
+
+// Taunt timer for path
+let tauntInterval = null;
+function startPathTaunts(){
+    if(tauntInterval) clearInterval(tauntInterval);
+    tauntInterval = setInterval(() => {
+        const diffMin = (new Date(new Date().setHours(22,30,0,0)) - new Date()) / 60000;
+        if(diffMin < 60 && diffMin > 0) {
+            showBossTaunt(randomTaunt(), 'path-boss-node', 0, -30);
+        }
+    }, 15000);
+}
+
+// ===== ALLY SYSTEM =====
+function showAlly(){
+    sfxClick();
+    document.getElementById('ally-overlay').style.display='flex';
+}
+
+function hideAlly(){
+    document.getElementById('ally-overlay').style.display='none';
+}
+
+function confirmAlly(){
+    sfxEquip();
+    state.allyReady=false;
+    hideAlly();
+    flash('#4ade80');
+    // Big heal + damage buff
+    const heal=40;
+    state.heroHP=Math.min(state.heroMaxHP,state.heroHP+heal);
+    drawBattle();
+    addLog('🤝 盟友击掌！HP +'+heal+'！','hero');
+    addLog('💖 充满力量了！','hero');
+    showControls();
+}
+
+function heroAtk(dmg){
+    sfxBattle();state.battleTurn++;
+    // Quick charge animation
+    let f=0;
+    const ai=setInterval(()=>{
+        f++;
+        state.heroX=60+f*10;
+        if(f>=3&&f<=6) spawnTrail(state.heroX+35,100);
+        drawBattle();
+        if(f>=8){
+            clearInterval(ai);
+            flash('#ffd93d');
+            state.heroX=60;
+            state.bossHP-=dmg;
+            triggerShake(6,5);bossHitFlash=1;
+            spawnDamageNumber(state.bossX+40,60,dmg,'#4ade80',16);
+            spawnSlash(state.bossX+40,80,'#ffd93d',3);
+            spawnEmojis(state.bossX+40,60,3);
+            addLog('Oliver造成'+dmg+'点伤害！','hero');
+            drawBattle();
+            if(state.bossHP<=0){state.bossHP=0;state.battleActive=false;triggerBossDeath();return;}
+            setTimeout(bossAtk,500);
+        }
+    },30);
+}
+
+function ultimateAtk(){
+    sfxBuff();state.battleTurn++;
+    const comp=state.tasks.filter(t=>t.status==='completed');
+    const totalPower=comp.reduce((s,t)=>s+t.power,0);
+    const rawDmg=totalPower*1.5;
+    const maxDmg=Math.floor(state.bossMaxHP*0.40);
+    const dmg=Math.floor(Math.min(rawDmg,maxDmg));
+    spawnTrail(state.heroX+35,100);
+    flash('#ffd93d');
+    state.bossHP-=dmg;
+    triggerShake(10,8);bossHitFlash=1;
+    spawnDamageNumber(state.bossX+40,60,dmg,'#ffd93d',22);
+    spawnSlash(state.bossX+40,80,'#ffd93d',5);
+    flash('#fff');
+    addLog('⚡ 终极一击！'+dmg+'伤害！','hero');addLog('所有buff的力量汇聚！','system');
+    if(state.bossHP<=0){state.bossHP=0;drawBattle();state.battleActive=false;triggerBossDeath();return;}
+    drawBattle();
+    setTimeout(bossAtk,500);
+}
+
+function bossAtk(){
+    if(!state.battleActive)return;sfxBattle();
+    if(!state.battleActive)return; // Double guard
+
+    const boss=getCurrentBoss();
+    if(Math.random()>0.5){
+        showBossTaunt(boss.taunts[Math.floor(Math.random()*boss.taunts.length)],'battle-boss-taunt',0,0);
+    }
+
+    let f=0;
+    const ai=setInterval(()=>{
+        f++;state.bossX=200-f*8;drawBattle();
+        if(f>=10){
+            clearInterval(ai);state.bossX=200;flash('#ef4444');
+            const baseDmg=8+state.battleTurn*2;
+            const dmg=baseDmg+Math.floor(Math.random()*8);
+            state.heroHP-=dmg;drawBattle();
+            triggerShake(5,5);
+            spawnDamageNumber(state.heroX+35,55,dmg,'#ff6b6b',14);
+            spawnSlash(state.heroX+35,90,'#ef4444',2);
+            addLog(boss.name+'攻击！'+dmg+'伤害！','boss');
+            if(state.heroHP<=0){state.heroHP=0;drawBattle();state.battleActive=false;setTimeout(showDefeat,800);return;}
+            // Auto-continue battle
+            const comp=state.tasks.filter(t=>t.status==='completed');
+            if(comp.length>0){
+                setTimeout(()=>autoBattle(comp),400);
+            }else{
+                document.getElementById('battle-controls').style.pointerEvents='auto';showControls();
+            }
+        }
+    },30);
+}
+
+function flash(color){
+    const o=document.createElement('div');
+    o.style.cssText='position:fixed;top:0;left:0;width:100%;height:100%;background:'+color+';opacity:0.3;pointer-events:none;z-index:999;transition:opacity 0.3s;';
+    document.body.appendChild(o);requestAnimationFrame(()=>o.style.opacity='0');
+    setTimeout(()=>o.remove(),300);
+}
+
+function shake(){
+    const c=document.getElementById('battle-canvas');let n=0;
+    const si=setInterval(()=>{
+        c.style.transform='translate('+(Math.random()-0.5)*10+'px,'+(Math.random()-0.5)*10+'px)';
+        n++;if(n>5){clearInterval(si);c.style.transform='';}
+    },30);
+}
+
+// ===== END SCREENS =====
+function showVictory(){
+    sfxVictory();
+    state.streak++;
+    saveStreak();
+    
+    document.getElementById('battle-screen').style.display='none';
+    document.getElementById('victory-screen').style.display='flex';
+    const comp=state.tasks.filter(t=>t.status==='completed');
+    const skip=state.tasks.filter(t=>t.status==='skipped');
+    const power=comp.reduce((s,t)=>s+t.power,0);
+    const vc=document.getElementById('victory-canvas');
+    vc.innerHTML='<canvas class="char-img" width="80" height="90" style="image-rendering:pixelated;"></canvas>';
+    setTimeout(()=>{const c=vc.querySelector('canvas');if(c)drawHeroWithEquip(c,80,90,5);},10);
+
+    // Equipment list
+    const eqList = Object.keys(state.equipment).map(type=>{
+        const def=Object.values(EQUIPMENT_DEFS).find(e=>e.type===type);
+        return def?def.icon+def.name:'';
+    }).filter(Boolean).join(' ');
+
+    const boss=getCurrentBoss();
+
+    document.getElementById('victory-stats').innerHTML=`
+        <p>完成: ${comp.length}/${state.tasks.length}</p>
+        <p>总力量: ${power}</p>
+        <p>回合: ${state.battleTurn}</p>
+        <p>装备: ${eqList||'无'}</p>
+        <p style="color:#4ade80;">${boss.name}被打败了！</p>
+        <p style="color:#ffd93d;font-weight:700;">🎮 获得 15 分钟游戏时间！</p>
+        ${skip.length>0?'<p style="color:#fbbf24;">下次全部完成更厉害！</p>':'<p style="color:#ffd93d;">完美通关！全部完成！</p>'}
+    `;
+    spawnVictoryParticles();
+
+    // Record reward
+    addReward(boss.name,boss.emoji,15);
+    saveAllState();
+}
+
+function showDefeat(){
+    sfxDefeat();
+    state.streak=0;
+    saveStreak();
+    
+    document.getElementById('battle-screen').style.display='none';
+    document.getElementById('defeat-screen').style.display='flex';
+    document.getElementById('defeat-canvas').innerHTML=`<img class="char-img" src="images/boss_${new Date().getDay()}.png" width="80" height="80" style="filter: grayscale(1) opacity(0.6);">`;
+}
+
+function spawnParticles(){
+    const c=document.getElementById('particles');c.width=window.innerWidth;c.height=window.innerHeight;
+    const ctx=c.getContext('2d');
+    const ps=[],colors=['#ffd93d','#4ade80','#f472b6','#60a5fa','#f87171','#a78bfa'];
+    for(let i=0;i<60;i++)ps.push({x:Math.random()*c.width,y:-20-Math.random()*200,vx:(Math.random()-.5)*4,vy:2+Math.random()*4,sz:4+Math.random()*6,color:colors[Math.floor(Math.random()*colors.length)],rot:Math.random()*360,rs:(Math.random()-.5)*10,life:1});
+    function anim(){
+        ctx.clearRect(0,0,c.width,c.height);let alive=false;
+        ps.forEach(p=>{p.x+=p.vx;p.y+=p.vy;p.vy+=.1;p.rot+=p.rs;p.life-=.003;
+            if(p.life>0&&p.y<c.height+20){alive=true;ctx.save();ctx.translate(p.x,p.y);ctx.rotate(p.rot*Math.PI/180);ctx.globalAlpha=p.life;ctx.fillStyle=p.color;ctx.fillRect(-p.sz/2,-p.sz/2,p.sz,p.sz);ctx.restore();}
+        });
+        if(alive)requestAnimationFrame(anim);else ctx.clearRect(0,0,c.width,c.height);
+    }
+    anim();
+}
+
+// ===== BATTLE EFFECTS SYSTEM =====
+let battleEffects=[];
+let shakeTimer=0, shakeIntensity=0;
+let bossHitFlash=0;
+let bossDeathAnim={active:false, progress:0};
+
+function triggerShake(intensity,duration){
+    shakeIntensity=intensity;shakeTimer=duration;
+}
+
+function spawnDamageNumber(x,y,value,color,size){
+    battleEffects.push({type:'damage',x,y,value,
+        color:color||'#fff',size:size||16,
+        life:1.0,vy:-2});
+}
+
+function spawnSlash(x,y,color,count){
+    const c=count||3;
+    for(let i=0;i<c;i++){
+        battleEffects.push({type:'slash',
+            x:x+(Math.random()-0.5)*30, y:y+(Math.random()-0.5)*20,
+            angle:-45+Math.random()*30, length:15+Math.random()*15,
+            color:color||'#ffd93d', life:1.0});
+    }
+}
+
+function spawnTrail(x,y){
+    battleEffects.push({type:'trail',x:x+(Math.random()-0.5)*10,y:y+(Math.random()-0.5)*20,
+        size:4+Math.random()*4, color:'#ffd93d', life:0.6, vy:0.5+Math.random()});
+}
+
+function spawnEmojis(x,y,count){
+    const emojis=['✨','⭐','💫','🌟'];
+    for(let i=0;i<(count||5);i++){
+        battleEffects.push({type:'emoji',
+            x:x+(Math.random()-0.5)*40, y,
+            emoji:emojis[Math.floor(Math.random()*emojis.length)],
+            size:10+Math.random()*8, vx:(Math.random()-0.5)*3,
+            vy:-2-Math.random()*3, life:1.0,
+            rot:Math.random()*Math.PI*2, rotSpeed:(Math.random()-0.5)*0.2});
+    }
+}
+
+function triggerBossDeath(){
+    state.battleActive=false;
+    bossDeathAnim={active:true, progress:0};
+    triggerShake(8,15);
+    for(let i=0;i<15;i++){
+        battleEffects.push({type:'emoji',
+            x:state.bossX+40+(Math.random()-0.5)*60, y:60+(Math.random()-0.5)*30,
+            emoji:['💥','⭐','✨','💫'][Math.floor(Math.random()*4)],
+            size:12+Math.random()*12, vx:(Math.random()-0.5)*5,
+            vy:-3-Math.random()*4, life:1.5,
+            rot:Math.random()*Math.PI*2, rotSpeed:(Math.random()-0.5)*0.3});
+    }
+    setTimeout(()=>{flash('#4ade80');showVictory();},1200);
+}
+
+function renderBattleEffects(ctx){
+    if(shakeTimer>0){
+        const sx=(Math.random()-0.5)*shakeIntensity;
+        const sy=(Math.random()-0.5)*shakeIntensity;
+        ctx.translate(sx,sy);
+        shakeTimer--;
+        shakeIntensity*=0.9;
+    }
+
+    if(bossHitFlash>0){
+        ctx.globalAlpha=bossHitFlash*0.5;
+        ctx.fillStyle='#ff0000';
+        ctx.fillRect(state.bossX,25,90,90);
+        ctx.globalAlpha=1;
+        bossHitFlash-=0.08;
+    }
+
+    if(bossDeathAnim.active){
+        bossDeathAnim.progress+=0.04;
+        const fade=Math.min(1,bossDeathAnim.progress);
+        ctx.globalAlpha=1-fade;
+        const dx=(Math.random()-0.5)*fade*12;
+        const dy=(Math.random()-0.5)*fade*12;
+        ctx.save();ctx.translate(dx,dy);
+        const bossImg = getBossImage();
+        if(bossImg){
+            ctx.drawImage(bossImg, state.bossX+dx, 25+dy, 90, 90);
+        } else {
+            const sprite=getBossSprite();
+            const palette=getCurrentBoss().palette;
+            drawPixels(ctx,state.bossX+dx,40+dy,sprite,4,palette);
+        }
+        ctx.restore();ctx.globalAlpha=1;
+    }
+
+    const nextEffects=[];
+    for(const e of battleEffects){
+        e.life-=0.02;
+        if(e.life<=0) continue;
+        nextEffects.push(e);
+        ctx.save();
+        ctx.globalAlpha=Math.min(1,e.life);
+        switch(e.type){
+            case 'damage':
+                e.y+=e.vy;
+                ctx.font=`bold ${e.size}px 'Fredoka','Noto Sans SC',sans-serif`;
+                ctx.textAlign='center';
+                ctx.strokeStyle='#000';ctx.lineWidth=3;
+                ctx.strokeText(e.value,e.x,e.y);
+                ctx.fillStyle=e.color;
+                ctx.fillText(e.value,e.x,e.y);
+                break;
+            case 'slash':
+                ctx.strokeStyle=e.color;ctx.lineWidth=2;
+                ctx.beginPath();
+                ctx.moveTo(e.x,e.y);
+                ctx.lineTo(e.x+Math.cos(e.angle*Math.PI/180)*e.length,
+                           e.y+Math.sin(e.angle*Math.PI/180)*e.length);
+                ctx.stroke();
+                ctx.fillStyle='#fff';
+                const tipX=e.x+Math.cos(e.angle*Math.PI/180)*e.length;
+                const tipY=e.y+Math.sin(e.angle*Math.PI/180)*e.length;
+                ctx.beginPath();ctx.arc(tipX,tipY,2,0,Math.PI*2);ctx.fill();
+                break;
+            case 'trail':
+                e.y+=e.vy;
+                ctx.fillStyle=e.color;ctx.globalAlpha=e.life*0.6;
+                ctx.beginPath();ctx.arc(e.x,e.y,e.size*e.life,0,Math.PI*2);ctx.fill();
+                break;
+            case 'emoji':
+                e.x+=e.vx;e.y+=e.vy;e.vy+=0.1;e.rot+=e.rotSpeed;
+                ctx.translate(e.x,e.y);ctx.rotate(e.rot);
+                ctx.font=`${e.size}px serif`;ctx.textAlign='center';ctx.textBaseline='middle';
+                ctx.fillText(e.emoji,0,0);
+                break;
+        }
+        ctx.restore();
+    }
+    battleEffects=nextEffects;
+
+    if(battleEffects.length>0||bossHitFlash>0||shakeTimer>0||bossDeathAnim.active){
+        if(!window._battleRAF){
+            window._battleRAF=true;
+            function loop(){
+                drawBattle();
+                if(battleEffects.length>0||bossHitFlash>0||shakeTimer>0||bossDeathAnim.active){
+                    requestAnimationFrame(loop);
+                } else {
+                    window._battleRAF=false;
+                }
+            }
+            requestAnimationFrame(loop);
+        }
+    }
+}
+
+function spawnVictoryParticles(){
+    const c=document.getElementById('particles');c.width=window.innerWidth;c.height=window.innerHeight;
+    const ctx=c.getContext('2d');
+    const ps=[],colors=['#ffd93d','#4ade80','#f472b6','#60a5fa','#f87171','#a78bfa'];
+    for(let i=0;i<80;i++)ps.push({x:Math.random()*c.width,y:-20-Math.random()*200,vx:(Math.random()-.5)*4,vy:2+Math.random()*4,sz:4+Math.random()*6,color:colors[Math.floor(Math.random()*colors.length)],rot:Math.random()*360,rs:(Math.random()-.5)*10,life:1,type:'rect'});
+    const emojis=['⭐','✨','💫','🌟','🎉','🎊'];
+    for(let i=0;i<15;i++)ps.push({x:Math.random()*c.width,y:-30-Math.random()*100,vx:(Math.random()-.5)*2,vy:1+Math.random()*2,sz:16+Math.random()*12,emoji:emojis[Math.floor(Math.random()*emojis.length)],life:1.5,type:'emoji'});
+    function anim(){
+        ctx.clearRect(0,0,c.width,c.height);let alive=false;
+        ps.forEach(p=>{p.x+=p.vx;p.y+=p.vy;p.vy+=.05;p.rot+=p.rs||0;p.life-=p.type==='emoji'?0.004:0.003;
+            if(p.life>0&&p.y<c.height+20){alive=true;ctx.save();ctx.globalAlpha=Math.min(1,p.life);
+                if(p.type==='rect'){ctx.translate(p.x,p.y);ctx.rotate(p.rot*Math.PI/180);ctx.fillStyle=p.color;ctx.fillRect(-p.sz/2,-p.sz/2,p.sz,p.sz);}
+                else{ctx.font=`${p.sz}px serif`;ctx.textAlign='center';ctx.fillText(p.emoji,p.x,p.y);}
+                ctx.restore();}
+        });
+        if(alive)requestAnimationFrame(anim);else ctx.clearRect(0,0,c.width,c.height);
+    }
+    anim();
+}
+
+function shake(){triggerShake(5,5);}
+// ===== SLEEP CHECK-IN & TROPHY =====
+
+function saveSleepLog(){
+    localStorage.setItem('boss_sleep_log', JSON.stringify(state.sleepLog||[]));
+    localStorage.setItem('boss_today_checked', String(state.todayChecked||false));
+}
+
+function loadSleepLog(){
+    try{
+        const log=localStorage.getItem('boss_sleep_log');
+        if(log) state.sleepLog=JSON.parse(log);
+        const checked=localStorage.getItem('boss_today_checked');
+        if(checked) state.todayChecked=(checked==='true');
+    }catch(e){}
+}
+
+
+
+function getLastSleepRecord(){
+    if(!state.sleepLog||state.sleepLog.length===0) return null;
+    return state.sleepLog[state.sleepLog.length-1];
+}
+
+function showSleepCheckIn(){
+    loadSleepLog();
+    if(state.todayChecked) return; // Already checked today
+
+    const lastRec=getLastSleepRecord();
+    const msgEl=document.getElementById('sleep-msg');
+    if(lastRec){
+        if(lastRec.good){
+            msgEl.innerHTML='Oliver，昨晚睡得真香！<br>今天也要继续保持哦！💪';
+        } else {
+            msgEl.innerHTML='昨晚没睡好呀？<br>今晚早点休息，一定能打败大魔王的！🌟';
+        }
+    } else {
+        msgEl.innerHTML='Oliver，昨晚有没有乖乖睡觉呀？<br>告诉大魔王你昨晚的表现吧！';
+    }
+    document.getElementById('sleep-overlay').classList.add('show');
+}
+
+function handleSleepAnswer(goodSleep){
+    sfxClick();
+    document.getElementById('sleep-overlay').classList.remove('show');
+
+    state.sleepLog.push({
+        date: getTodayStr(),
+        good: goodSleep
+    });
+    state.todayChecked=true;
+    saveSleepLog();
+    renderTrophy();
+    saveAllState();
+}
+
+function renderTrophy(){
+    loadSleepLog();
+    const display=document.getElementById('trophy-display');
+    const icon=document.getElementById('trophy-icon');
+    const timeEl=document.getElementById('trophy-time');
+
+    // Always show trophy if there's any sleep record or any rewards
+    const hasSleep=state.sleepLog&&state.sleepLog.length>0;
+    const hasRewards=state.rewards&&state.rewards.length>0;
+    if(!hasSleep&&!hasRewards){
+        display.style.display='none';
+        return;
+    }
+    display.style.display='flex';
+
+    // Determine trophy state based on last sleep record
+    const lastRec=getLastSleepRecord();
+    icon.classList.remove('glowing','wooden');
+
+    if(lastRec){
+        if(lastRec.good){
+            icon.classList.add('glowing');
+        } else {
+            icon.classList.add('wooden');
+        }
+    } else {
+        icon.classList.add('glowing'); // Default glowing if no sleep record yet
+    }
+
+    // Show accumulated game time on trophy
+    const totalMinutes=(state.rewards||[]).reduce((s,r)=>s+r.minutes,0);
+    const totalRedeemed=(state.redeemLog||[]).reduce((s,r)=>s+r.minutes,0);
+    const available=Math.max(0,Math.min(totalMinutes-totalRedeemed,30));
+    if(totalMinutes>0){
+        timeEl.textContent='🎮 '+available+'分可用';
+    } else {
+        timeEl.textContent='';
+    }
+
+    // Hide redeem button if no time available
+    const redeemBtn=document.querySelector('.trophy-redeem-btn');
+    if(redeemBtn){
+        redeemBtn.style.display=available>0?'block':'none';
+    }
+}
+
+// ===== END SLEEP/TROPHY =====
+
+// ===== REDEEM GAME TIME =====
+
+function getTotalEarned(){
+    return (state.rewards||[]).reduce((s,r)=>s+r.minutes,0);
+}
+
+function getTotalRedeemed(){
+    return (state.redeemLog||[]).reduce((s,r)=>s+r.minutes,0);
+}
+
+function getAvailableToday(){
+    const todayMin=getTotalEarned();
+    const redeemedToday=getTotalRedeemed();
+    return Math.max(0, Math.min(todayMin-redeemedToday, 30));
+}
+
+function showRedeemModal(){
+    sfxClick();
+    const earned=getTotalEarned();
+    const redeemed=getTotalRedeemed();
+    const available=getAvailableToday();
+
+    const summary=document.getElementById('redeem-summary');
+    summary.innerHTML=`
+        <div class="total-minutes">🏆 累计获得: ${earned} 分钟</div>
+        <div class="used-minutes">已兑换: ${redeemed} 分钟</div>
+        <div class="avail-minutes">今日可用: ${available} / 30 分钟</div>
+    `;
+
+    const amounts=document.getElementById('redeem-amounts');
+    amounts.innerHTML='';
+    const options=[10,15,20];
+    options.forEach(mins=>{
+        const btn=document.createElement('button');
+        btn.className='btn-redeem-amt';
+        btn.textContent=mins+'分钟';
+        btn.disabled=(mins>available);
+        btn.onclick=()=>redeemMinutes(mins);
+        amounts.appendChild(btn);
+    });
+
+    // Show redeem history
+    const histDiv=document.getElementById('redeem-history');
+    const histTitle=histDiv.querySelector('.redeem-history-title');
+    if(state.redeemLog&&state.redeemLog.length>0){
+        histDiv.style.display='block';
+        const list=histDiv.querySelector('.redeem-history-list');
+        if(!list){
+            const l=document.createElement('div');
+            l.className='redeem-history-list';
+            histDiv.insertBefore(l,histDiv.lastChild);
+        }
+        const listEl=histDiv.querySelector('.redeem-history-list');
+        listEl.innerHTML='';
+        state.redeemLog.slice(0,10).forEach(r=>{
+            const div=document.createElement('div');
+            div.className='redeem-history-item';
+            div.innerHTML=`<span class="rh-date">${r.date}</span><span class="rh-minutes">-${r.minutes}分钟</span>`;
+            listEl.appendChild(div);
+        });
+    }else{
+        histDiv.style.display='none';
+    }
+
+    document.getElementById('redeem-overlay').classList.add('show');
+}
+
+function hideRedeemModal(){
+    sfxClick();
+    document.getElementById('redeem-overlay').classList.remove('show');
+}
+
+function redeemMinutes(mins){
+    sfxClick();
+    const available=getAvailableToday();
+    if(mins>available){
+        alert('今日可用时间不足！可用: '+available+' 分钟');
+        return;
+    }
+    const now=new Date();
+    const dateStr=now.getFullYear()+'-'+String(now.getMonth()+1).padStart(2,'0')+'-'+String(now.getDate()).padStart(2,'0');
+    const timeStr=now.getHours().toString().padStart(2,'0')+':'+now.getMinutes().toString().padStart(2,'0');
+    state.redeemLog.push({date:dateStr,time:timeStr,minutes:mins});
+    saveAllState();
+    hideRedeemModal();
+    alert('✅ 成功兑换 '+mins+' 分钟游戏时间！');
+}
+
+// ===== END REDEEM =====
+
+// ===== SERVER PERSISTENCE =====
+function getTodayStr(){
+    const d=new Date();
+    return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+}
+
+function collectAllPersistentData(){
+    return {
+        bedtime:state.bedtime,
+        warningMinutes:state.warningMinutes,
+        streak:state.streak,
+        rewards:state.rewards||[],
+        sleepLog:state.sleepLog||[],
+        todayChecked:state.todayChecked||false,
+        equipment:state.equipment||{},
+        customTasks:getCustomTasks()||[],
+        mandatoryIds:state.mandatoryIds||[],
+        poolIds:state.poolIds||[],
+        entryPin:localStorage.getItem(GAME_ENTRY_PIN_KEY)||"",
+        parentPin:PARENT_PIN,
+        redeemLog:state.redeemLog||[],
+        redeemedMinutes:state.redeemedMinutes||0,
+        battlesFought:state.battlesFought||0,
+        battleDate:state.battleDate||null,
+        // Per-day task state (for cross-device sync)
+        dayState: getDayState()
+    };
+}
+
+function getDayState(){
+    return {
+        date: getTodayStr(),
+        tasks: state.tasks.map(t=>({id:t.id,presetId:t.presetId,name:t.name,emoji:t.emoji,buff:t.buff,power:t.power,color:t.color,status:t.status,icon:t.icon})),
+        idCounter: state.idCounter
+    };
+}
+
+function applyServerData(data){
+    if(!data) return;
+    if(data.bedtime){state.bedtime=data.bedtime;}
+    if(data.warningMinutes){state.warningMinutes=data.warningMinutes;}
+    if(data.streak!==undefined){state.streak=data.streak;}
+    if(data.rewards){state.rewards=data.rewards;}
+    if(data.sleepLog){state.sleepLog=data.sleepLog;}
+    if(data.todayChecked!==undefined){state.todayChecked=data.todayChecked;}
+    if(data.equipment && data.dayState && data.dayState.date === getTodayStr()){state.equipment=data.equipment;}
+    else { state.equipment = {}; }
+    if(data.customTasks){
+        setCustomTasks(data.customTasks);
+    }
+    if(data.mandatoryIds){state.mandatoryIds=data.mandatoryIds;}
+    if(data.poolIds){state.poolIds=data.poolIds;}
+    if(data.entryPin){localStorage.setItem(GAME_ENTRY_PIN_KEY,data.entryPin);}
+    if(data.parentPin){}
+    if(data.redeemLog){state.redeemLog=data.redeemLog;}
+    if(data.redeemedMinutes!==undefined){state.redeemedMinutes=data.redeemedMinutes;}
+    if(data.battlesFought!==undefined){state.battlesFought=data.battlesFought;}
+    if(data.battleDate!==undefined){state.battleDate=data.battleDate;}
+    // Apply today's task state if same day
+    if(data.dayState && data.dayState.date === getTodayStr()){
+        state.tasks = data.dayState.tasks.map(t=>({...t}));
+        state.idCounter = data.dayState.idCounter || 0;
+    }
+}
+
+function saveAllState(){
+    // Always save to localStorage first
+    localStorage.setItem('boss_battle_streak', state.streak);
+    localStorage.setItem('boss_battle_rewards', JSON.stringify(state.rewards||[]));
+    localStorage.setItem('boss_sleep_log', JSON.stringify(state.sleepLog||[]));
+    localStorage.setItem('boss_today_checked', String(state.todayChecked||false));
+    localStorage.setItem('boss_mandatory', JSON.stringify(state.mandatoryIds));
+    localStorage.setItem('boss_pool', JSON.stringify(state.poolIds));
+    localStorage.setItem('boss_equipment', JSON.stringify(state.equipment||{}));
+    localStorage.setItem('boss_custom_tasks', JSON.stringify(getCustomTasks()||[]));
+    localStorage.setItem('boss_day_state', JSON.stringify(getDayState()));
+    localStorage.setItem('boss_redeem_log', JSON.stringify(state.redeemLog||[]));
+    localStorage.setItem('boss_redeemed_minutes', String(state.redeemedMinutes||0));
+    localStorage.setItem('boss_battles_fought', String(state.battlesFought||0));
+    localStorage.setItem('boss_battle_date', state.battleDate||'');
+
+    // Then try server save (non-blocking)
+    try{
+        const data=collectAllPersistentData();
+        fetch('/api/save',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(data)}).catch(()=>{});
+    }catch(e){}
+}
+
+function loadAllState(){
+    return new Promise(function(resolve){
+        // Try server first
+        fetch('/api/load').then(function(r){return r.json();}).then(function(data){
+            if(data&&Object.keys(data).length>0){
+                applyServerData(data);
+            }
+            // Then load from localStorage (server takes priority, localStorage is backup)
+            loadFromLocalStorage();
+            resolve();
+        }).catch(function(){
+            // Server unavailable, use localStorage
+            loadFromLocalStorage();
+            resolve();
+        });
+    });
+}
+
+function loadFromLocalStorage(){
+    try{
+        const s=localStorage.getItem('boss_battle_streak');
+        if(s) state.streak=parseInt(s);
+        const r=localStorage.getItem('boss_battle_rewards');
+        if(r) state.rewards=JSON.parse(r);
+        const log=localStorage.getItem('boss_sleep_log');
+        if(log) state.sleepLog=JSON.parse(log);
+        const checked=localStorage.getItem('boss_today_checked');
+        if(checked) state.todayChecked=(checked==='true');
+        const m=localStorage.getItem('boss_mandatory');
+        if(m) state.mandatoryIds=JSON.parse(m);
+        const p=localStorage.getItem('boss_pool');
+        if(p) state.poolIds=JSON.parse(p);
+        const eq=localStorage.getItem('boss_equipment');
+        // Only load equipment if it's from today (check dayState date first)
+        const ds=localStorage.getItem('boss_day_state');
+        const todayStr = getTodayStr();
+        let isToday = false;
+        if(ds){
+            try {
+                const dayData=JSON.parse(ds);
+                isToday = (dayData.date === todayStr);
+            } catch(e) {}
+        }
+        if(eq && isToday) state.equipment=JSON.parse(eq);
+        else state.equipment = {};
+        const rl=localStorage.getItem('boss_redeem_log');
+        if(rl) state.redeemLog=JSON.parse(rl);
+        const rm=localStorage.getItem('boss_redeemed_minutes');
+        if(rm) state.redeemedMinutes=parseInt(rm);
+        const bf=localStorage.getItem('boss_battles_fought');
+        if(bf) state.battlesFought=parseInt(bf);
+        const bd=localStorage.getItem('boss_battle_date');
+        if(bd) state.battleDate=bd;
+        // Load today's task state from localStorage
+        // Load today's task state from localStorage
+        if(ds){
+            const dayData=JSON.parse(ds);
+            if(dayData.date===getTodayStr()){
+                state.tasks=dayData.tasks.map(t=>({...t}));
+                state.idCounter=dayData.idCounter||0;
+            }
+        }
+    }catch(e){}
+}
+
+function getCustomTasks(){
+    try{
+        const c=localStorage.getItem('boss_custom_tasks');
+        return c?JSON.parse(c):[];
+    }catch(e){return [];}
+}
+
+function setCustomTasks(tasks){
+    try{
+        localStorage.setItem('boss_custom_tasks',JSON.stringify(tasks||[]));
+    }catch(e){}
+}
+
+
+
+function spawnParticles(){spawnVictoryParticles();}
+
+initTitle();
+
+// Preload all images
+const preloadImgs = [
+    'images/oliver.png','images/oliver_victory.png',
+    'images/boss.png','images/boss_defeated.png',
+    'images/boss_0.png','images/boss_1.png','images/boss_2.png',
+    'images/boss_3.png','images/boss_4.png','images/boss_5.png','images/boss_6.png',
+    'images/icon_bath.png','images/icon_brush.png',
+    'images/icon_english.png','images/icon_book.png',
+    'images/icon_pajamas.png','images/icon_toilet.png',
+    'images/icon_drink.png','images/icon_hug.png',
+    'images/icon_tidy.png','images/icon_stretch.png',
+];
+preloadImgs.forEach(src => { const img = new Image(); img.src = src; });
+</script>
+</body>
+</html>
