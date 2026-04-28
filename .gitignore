@@ -1,5 +1,6 @@
 # Secrets & local config
 deploy-config.json
+local-config.md
 DEPLOY.md
 *.env
 
