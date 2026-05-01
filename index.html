@@ -2601,8 +2601,10 @@ body {
 const TASKS = [
     {id:'bath', name:'洗澡', emoji:'🛁', buff:'水之力量', power:40, color:'#60a5fa', diff:2},
     {id:'brush', name:'刷牙', emoji:'🪥', buff:'闪光力量', power:20, color:'#e2e8f0', diff:1},
-    {id:'english', name:'读英语', emoji:'📚', buff:'英语魔力', power:60, color:'#4ade80', diff:3},
-    {id:'book', name:'读绘本', emoji:'📖', buff:'故事之力', power:40, color:'#f472b6', diff:2},
+    {id:'english_easy', name:'读英语(短)', emoji:'📚', buff:'英语魔力', power:30, color:'#4ade80', diff:1},
+    {id:'english_hard', name:'读英语(长)', emoji:'📚', buff:'英语魔力+', power:70, color:'#22c55e', diff:3},
+    {id:'book_easy', name:'短阅读', emoji:'📖', buff:'故事之力', power:25, color:'#f472b6', diff:1},
+    {id:'book_hard', name:'长阅读', emoji:'📖', buff:'故事之力+', power:55, color:'#ec4899', diff:3},
     {id:'pajamas', name:'换睡衣', emoji:'👕', buff:'盔甲之力', power:30, color:'#a78bfa', diff:1},
     {id:'toilet', name:'上厕所', emoji:'🚽', buff:'轻盈之力', power:20, color:'#fbbf24', diff:1},
     {id:'drink', name:'喝水', emoji:'💧', buff:'生命之水', power:30, color:'#38bdf8', diff:1},
@@ -2655,8 +2657,10 @@ function sfxEquip(){tone(600,.1);setTimeout(()=>tone(800,.1),80);setTimeout(()=>
 const EQUIPMENT_DEFS = {
     bath:      {type:'shield', name:'水之盾', icon:'🛡️', color:'#60a5fa', glow:'rgba(96,165,250,0.3)'},
     brush:     {type:'crown', name:'星之冠', icon:'👑', color:'#ffd93d', glow:'rgba(255,217,61,0.3)'},
-    english:   {type:'weapon', name:'知识之剑', icon:'⚔️', color:'#4ade80', glow:'rgba(74,222,128,0.3)'},
-    book:      {type:'aura', name:'故事光环', icon:'✨', color:'#f472b6', glow:'rgba(244,114,182,0.4)'},
+    english_easy:{type:'weapon', name:'知识之剑', icon:'⚔️', color:'#4ade80', glow:'rgba(74,222,128,0.3)'},
+    english_hard:{type:'weapon', name:'知识之剑+', icon:'⚔️', color:'#22c55e', glow:'rgba(34,197,94,0.4)'},
+    book_easy: {type:'aura', name:'故事光环', icon:'✨', color:'#f472b6', glow:'rgba(244,114,182,0.4)'},
+    book_hard:{type:'aura', name:'故事光环+', icon:'✨', color:'#ec4899', glow:'rgba(236,72,153,0.5)'},
     pajamas:   {type:'armor', name:'梦之铠甲', icon:'🦺', color:'#a78bfa', glow:'rgba(167,139,250,0.3)'},
     toilet:    {type:'boots', name:'轻盈之靴', icon:'👟', color:'#fbbf24', glow:'rgba(251,191,36,0.3)'},
     drink:     {type:'potion', name:'生命之水', icon:'🧪', color:'#38bdf8', glow:'rgba(56,189,248,0.3)'},
@@ -3086,43 +3090,43 @@ const BOSS_DEFS = {
     name: '周末瞌睡龙', emoji: '🐉',
     palette: [null,'#1a0033','#6b0099','#cc00ff','#ffd700','#fff','#3d0066','#ff44ff','#1a0a2e'],
     taunts: ['周末就是我的主场！','呼呼呼...再来一关！','Oliver，不困吗？'],
-    hpBase: 120, hpPerSkip: 15, hpPerTask: 8,
+    hpBase: 160, hpPerSkip: 20, hpPerTask: 12,
   },
   1: { // Monday
     name: '周一起床魔', emoji: '😈',
     palette: [null,'#330000','#880000','#ff3333','#ffd700','#fff','#660000','#ff6644','#1a0a2e'],
     taunts: ['周一了还想早睡？','我是最可怕的！','你起得来吗？'],
-    hpBase: 140, hpPerSkip: 18, hpPerTask: 10,
+    hpBase: 180, hpPerSkip: 25, hpPerTask: 15,
   },
   2: { // Tuesday
     name: '拖延小恶魔', emoji: '😏',
     palette: [null,'#003300','#006600','#00cc00','#ffd700','#fff','#004400','#44ff44','#1a0a2e'],
     taunts: ['明天再做吧~','不急不急~','再玩一会儿！'],
-    hpBase: 130, hpPerSkip: 16, hpPerTask: 8,
+    hpBase: 170, hpPerSkip: 22, hpPerTask: 12,
   },
   3: { // Wednesday
     name: '周中打盹怪', emoji: '😴',
     palette: [null,'#001a33','#004488','#0088ff','#ffd700','#fff','#002244','#44aaff','#1a0a2e'],
     taunts: ['才周三呢~','好困啊...你也是吧？','半途而废可不行！'],
-    hpBase: 135, hpPerSkip: 16, hpPerTask: 8,
+    hpBase: 175, hpPerSkip: 22, hpPerTask: 12,
   },
   4: { // Thursday
     name: '兴奋不眠星', emoji: '🌟',
     palette: [null,'#332200','#886600','#ffcc00','#fff','#ffe','#443300','#ffee66','#1a0a2e'],
     taunts: ['明天就周末了！激动吧！','睡不着吧？','再来一个故事！'],
-    hpBase: 125, hpPerSkip: 15, hpPerTask: 8,
+    hpBase: 165, hpPerSkip: 20, hpPerTask: 12,
   },
   5: { // Friday
     name: '狂欢熬夜王', emoji: '🎉',
     palette: [null,'#330022','#880055','#ff00aa','#ffd700','#fff','#660033','#ff44cc','#1a0a2e'],
     taunts: ['周五不熬夜等于没过！','狂欢吧！','周末开始了！'],
-    hpBase: 150, hpPerSkip: 20, hpPerTask: 10,
+    hpBase: 190, hpPerSkip: 25, hpPerTask: 15,
   },
   6: { // Saturday
     name: '游戏沉迷怪', emoji: '🎮',
     palette: [null,'#220033','#550088','#aa00ff','#ffd700','#fff','#330055','#cc44ff','#1a0a2e'],
     taunts: ['再玩一局！','就快通关了！','周六怕什么！'],
-    hpBase: 145, hpPerSkip: 18, hpPerTask: 10,
+    hpBase: 185, hpPerSkip: 25, hpPerTask: 15,
   },
 };
 
@@ -4229,7 +4233,7 @@ function startBattle(){
     // Boss HP scales with current day boss + tasks
     const boss=getCurrentBoss();
     let bossHP = boss.hpBase + (skip.length * boss.hpPerSkip) + (comp.length * boss.hpPerTask);
-    bossHP = Math.min(bossHP, 350);
+    bossHP = Math.min(bossHP, 500);
 
     // Time-based difficulty scaling
     const now=new Date();
@@ -4252,7 +4256,8 @@ function startBattle(){
 
     state.bossMaxHP = bossHP;
     state.bossHP = bossHP;
-    state.heroHP = 100;
+    state.heroHP = 80;
+    state.heroMaxHP = 80;
     state.allyReady = true;
     state.battleActive = true;
     state.battleTurn = 0;
@@ -4472,7 +4477,7 @@ function confirmAlly(){
     hideAlly();
     flash('#4ade80');
     // Big heal + damage buff
-    const heal=40;
+    const heal=30;
     state.heroHP=Math.min(state.heroMaxHP,state.heroHP+heal);
     drawBattle();
     addLog('🤝 盟友击掌！HP +'+heal+'！','hero');
@@ -4540,7 +4545,7 @@ function bossAtk(){
         f++;state.bossX=200-f*8;drawBattle();
         if(f>=10){
             clearInterval(ai);state.bossX=200;flash('#ef4444');
-            const baseDmg=8+state.battleTurn*2;
+            const baseDmg=12+state.battleTurn*3;
             const dmg=baseDmg+Math.floor(Math.random()*8);
             state.heroHP-=dmg;drawBattle();
             triggerShake(5,5);
