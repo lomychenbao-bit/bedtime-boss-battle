@@ -2599,18 +2599,18 @@ body {
 <script>
 // ===== DATA =====
 const TASKS = [
-    {id:'bath', name:'洗澡', emoji:'🛁', buff:'水之力量', power:40, color:'#60a5fa', diff:2},
-    {id:'brush', name:'刷牙', emoji:'🪥', buff:'闪光力量', power:20, color:'#e2e8f0', diff:1},
-    {id:'english_easy', name:'读英语(短)', emoji:'📚', buff:'英语魔力', power:30, color:'#4ade80', diff:1},
-    {id:'english_hard', name:'读英语(长)', emoji:'📚', buff:'英语魔力+', power:70, color:'#22c55e', diff:3},
-    {id:'book_easy', name:'短阅读', emoji:'📖', buff:'故事之力', power:25, color:'#f472b6', diff:1},
-    {id:'book_hard', name:'长阅读', emoji:'📖', buff:'故事之力+', power:55, color:'#ec4899', diff:3},
-    {id:'pajamas', name:'换睡衣', emoji:'👕', buff:'盔甲之力', power:30, color:'#a78bfa', diff:1},
-    {id:'toilet', name:'上厕所', emoji:'🚽', buff:'轻盈之力', power:20, color:'#fbbf24', diff:1},
-    {id:'drink', name:'喝水', emoji:'💧', buff:'生命之水', power:30, color:'#38bdf8', diff:1},
-    {id:'hug', name:'拥抱', emoji:'🤗', buff:'爱的力量', power:30, color:'#f87171', diff:2},
-    {id:'tidy', name:'收玩具', emoji:'🧸', buff:'整理之力', power:50, color:'#fb923c', diff:3},
-    {id:'stretch', name:'伸懒腰', emoji:'🤸', buff:'伸展之力', power:30, color:'#34d399', diff:1},
+    {id:'bath', name:'洗澡', emoji:'🛁', buff:'水之力量', power:15, color:'#60a5fa', diff:2},
+    {id:'brush', name:'刷牙', emoji:'🪥', buff:'闪光力量', power:10, color:'#e2e8f0', diff:1},
+    {id:'english_easy', name:'读英语(短)', emoji:'📚', buff:'英语魔力', power:12, color:'#4ade80', diff:1},
+    {id:'english_hard', name:'读英语(长)', emoji:'📚', buff:'英语魔力+', power:22, color:'#22c55e', diff:3},
+    {id:'book_easy', name:'短阅读', emoji:'📖', buff:'故事之力', power:10, color:'#f472b6', diff:1},
+    {id:'book_hard', name:'长阅读', emoji:'📖', buff:'故事之力+', power:20, color:'#ec4899', diff:3},
+    {id:'pajamas', name:'换睡衣', emoji:'👕', buff:'盔甲之力', power:12, color:'#a78bfa', diff:1},
+    {id:'toilet', name:'上厕所', emoji:'🚽', buff:'轻盈之力', power:8, color:'#fbbf24', diff:1},
+    {id:'drink', name:'喝水', emoji:'💧', buff:'生命之水', power:12, color:'#38bdf8', diff:1},
+    {id:'hug', name:'拥抱', emoji:'🤗', buff:'爱的力量', power:12, color:'#f87171', diff:2},
+    {id:'tidy', name:'收玩具', emoji:'🧸', buff:'整理之力', power:18, color:'#fb923c', diff:3},
+    {id:'stretch', name:'伸懒腰', emoji:'🤸', buff:'伸展之力', power:12, color:'#34d399', diff:1},
 ];
 const PARENT_PIN = "1234"; // 家长密码
 const GAME_ENTRY_PIN_KEY = "boss_entry_pin"; // localStorage key for entry PIN
@@ -3090,43 +3090,43 @@ const BOSS_DEFS = {
     name: '周末瞌睡龙', emoji: '🐉',
     palette: [null,'#1a0033','#6b0099','#cc00ff','#ffd700','#fff','#3d0066','#ff44ff','#1a0a2e'],
     taunts: ['周末就是我的主场！','呼呼呼...再来一关！','Oliver，不困吗？'],
-    hpBase: 160, hpPerSkip: 20, hpPerTask: 12,
+    hpBase: 400, hpPerSkip: 40, hpPerTask: 25,
   },
   1: { // Monday
     name: '周一起床魔', emoji: '😈',
     palette: [null,'#330000','#880000','#ff3333','#ffd700','#fff','#660000','#ff6644','#1a0a2e'],
     taunts: ['周一了还想早睡？','我是最可怕的！','你起得来吗？'],
-    hpBase: 180, hpPerSkip: 25, hpPerTask: 15,
+    hpBase: 450, hpPerSkip: 50, hpPerTask: 30,
   },
   2: { // Tuesday
     name: '拖延小恶魔', emoji: '😏',
     palette: [null,'#003300','#006600','#00cc00','#ffd700','#fff','#004400','#44ff44','#1a0a2e'],
     taunts: ['明天再做吧~','不急不急~','再玩一会儿！'],
-    hpBase: 170, hpPerSkip: 22, hpPerTask: 12,
+    hpBase: 420, hpPerSkip: 40, hpPerTask: 25,
   },
   3: { // Wednesday
     name: '周中打盹怪', emoji: '😴',
     palette: [null,'#001a33','#004488','#0088ff','#ffd700','#fff','#002244','#44aaff','#1a0a2e'],
     taunts: ['才周三呢~','好困啊...你也是吧？','半途而废可不行！'],
-    hpBase: 175, hpPerSkip: 22, hpPerTask: 12,
+    hpBase: 430, hpPerSkip: 40, hpPerTask: 25,
   },
   4: { // Thursday
     name: '兴奋不眠星', emoji: '🌟',
     palette: [null,'#332200','#886600','#ffcc00','#fff','#ffe','#443300','#ffee66','#1a0a2e'],
     taunts: ['明天就周末了！激动吧！','睡不着吧？','再来一个故事！'],
-    hpBase: 165, hpPerSkip: 20, hpPerTask: 12,
+    hpBase: 410, hpPerSkip: 40, hpPerTask: 25,
   },
   5: { // Friday
     name: '狂欢熬夜王', emoji: '🎉',
     palette: [null,'#330022','#880055','#ff00aa','#ffd700','#fff','#660033','#ff44cc','#1a0a2e'],
     taunts: ['周五不熬夜等于没过！','狂欢吧！','周末开始了！'],
-    hpBase: 190, hpPerSkip: 25, hpPerTask: 15,
+    hpBase: 480, hpPerSkip: 50, hpPerTask: 30,
   },
   6: { // Saturday
     name: '游戏沉迷怪', emoji: '🎮',
     palette: [null,'#220033','#550088','#aa00ff','#ffd700','#fff','#330055','#cc44ff','#1a0a2e'],
     taunts: ['再玩一局！','就快通关了！','周六怕什么！'],
-    hpBase: 185, hpPerSkip: 25, hpPerTask: 15,
+    hpBase: 460, hpPerSkip: 50, hpPerTask: 30,
   },
 };
 
@@ -4256,8 +4256,8 @@ function startBattle(){
 
     state.bossMaxHP = bossHP;
     state.bossHP = bossHP;
-    state.heroHP = 80;
-    state.heroMaxHP = 80;
+    state.heroHP = 90;
+    state.heroMaxHP = 90;
     state.allyReady = true;
     state.battleActive = true;
     state.battleTurn = 0;
@@ -4477,7 +4477,7 @@ function confirmAlly(){
     hideAlly();
     flash('#4ade80');
     // Big heal + damage buff
-    const heal=30;
+    const heal=35;
     state.heroHP=Math.min(state.heroMaxHP,state.heroHP+heal);
     drawBattle();
     addLog('🤝 盟友击掌！HP +'+heal+'！','hero');
