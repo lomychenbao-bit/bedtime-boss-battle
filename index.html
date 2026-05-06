@@ -2514,7 +2514,7 @@ body {
             <div class="battle-intro-vs">VS</div>
             <div class="battle-intro-hero">🧒</div>
             <div class="battle-intro-title" id="intro-title">今晚的战斗准备好了吗？</div>
-            <div class="battle-intro-msg" id="intro-msg">完成睡前任务，打败大魔王，<br>就能收集梦境碎片！</div>
+            <div class="battle-intro-msg" id="intro-msg">完成睡前任务，打败大魔王，<br>就能获得游戏时间奖励！</div>
             <div class="battle-intro-trophy-hint" id="intro-trophy-hint"></div>
             <button class="btn btn-battle-intro-start" onclick="startFromIntro()">⚔️ 开始战斗！</button>
         </div>
@@ -4836,11 +4836,14 @@ function showVictory(){
         <p>装备: ${eqList||'无'}</p>
         <p style="color:#4ade80;">${boss.name}被打败了！</p>
         ${dreamHTML}
+        <p style="color:#ffd93d;font-weight:700;">🎮 获得 15 分钟游戏时间！</p>
         <p style="color:#a78bfa;">🌟 梦境收集: ${totalDreams} 个碎片</p>
         ${skip.length>0?'<p style="color:#fbbf24;">下次全部完成更厉害！</p>':'<p style="color:#ffd93d;">完美通关！全部完成！</p>'}
     `;
     spawnVictoryParticles();
 
+    // Record reward
+    addReward(boss.name,boss.emoji,15);
     saveAllState();
 }
 
