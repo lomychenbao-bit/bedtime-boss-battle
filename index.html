@@ -758,6 +758,16 @@ body {
 }
 .btn-battle:active { box-shadow: 0 2px 0 #b91c1c; transform: translateY(4px); }
 
+.btn-dream {
+    transition: transform 0.08s ease, box-shadow 0.08s ease;
+    color: var(--white);
+    text-shadow: 2px 2px 0 rgba(0,0,0,0.4);
+    -webkit-appearance: none;
+    letter-spacing: 1px;
+    border-radius: var(--radius-md);
+}
+.btn-dream:active { box-shadow: 0 2px 0 #5b21b6; transform: translateY(4px); }
+
 /* ============================================
    MODAL OVERLAY
    ============================================ */
@@ -997,6 +1007,87 @@ body {
     box-shadow: 0 4px 0 #374151;
     border: 1.5px solid rgba(255,255,255,0.08);
     border-bottom: none;
+    transition: transform 0.08s;
+}
+.btn-close-modal:active { box-shadow: 0 1px 0 #374151; transform: translateY(3px); }
+
+/* ============================================
+   DREAM COLLECTION LIST
+   ============================================ */
+.dream-boss-section {
+    margin-bottom: 16px;
+    padding: 12px;
+    background: rgba(30,27,75,0.6);
+    border: 2px solid var(--purple-dark);
+    border-radius: var(--radius-md);
+}
+.dream-boss-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 10px;
+}
+.dream-boss-header .boss-emoji {
+    font-size: 1.5em;
+}
+.dream-boss-header .boss-name {
+    color: var(--white);
+    font-size: 0.45em;
+    text-shadow: 1px 1px 0 #000;
+}
+.dream-boss-header .boss-progress {
+    color: #a78bfa;
+    font-size: 0.38em;
+    margin-left: auto;
+    text-shadow: 1px 1px 0 #000;
+}
+.dream-fragments {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+.dream-fragment {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 8px;
+    background: rgba(15,10,46,0.7);
+    border: 2px solid rgba(167,139,250,0.4);
+    border-radius: var(--radius-sm);
+    width: 80px;
+    text-align: center;
+}
+.dream-fragment.collected {
+    border-color: var(--gold);
+    background: rgba(50,30,90,0.8);
+}
+.dream-fragment.empty {
+    border-color: rgba(107,114,128,0.3);
+    opacity: 0.4;
+}
+.dream-fragment .emoji {
+    font-size: 1.5em;
+    margin-bottom: 4px;
+}
+.dream-fragment .name {
+    color: var(--gold);
+    font-size: 0.32em;
+    text-shadow: 1px 1px 0 #000;
+    line-height: 1.3;
+}
+.dream-fragment .desc {
+    color: #a78bfa;
+    font-size: 0.26em;
+    text-shadow: 1px 1px 0 #000;
+    line-height: 1.3;
+    margin-top: 3px;
+}
+.dream-fragment.empty .name {
+    color: #6b7280;
+}
+.dream-fragment.empty .desc {
+    color: #4b5563;
+}
     margin-top: 10px;
 }
 .btn-close-modal:active { box-shadow: 0 1px 0 #374151; transform: translateY(3px); }
@@ -2346,6 +2437,7 @@ body {
         <div class="bottom-bar">
             <button class="btn btn-add" onclick="showModal()">✨ 翻牌选任务</button>
             <button class="btn btn-battle" id="battle-btn" onclick="showBattleConfirm()" style="display:none;">⚔️ 战斗！</button>
+            <button class="btn btn-dream" onclick="showDreamModal()" style="background:linear-gradient(180deg,#a78bfa,#7c3aed,#6d28d9);padding:16px;font-size:0.55em;box-shadow:0 5px 0 #5b21b6,0 7px 20px rgba(167,139,250,0.3);border-radius:var(--radius-md);border:2px solid rgba(255,255,255,0.1);border-bottom:none;">🌙 梦境</button>
         </div>
     </div>
 
@@ -2422,9 +2514,19 @@ body {
             <div class="battle-intro-vs">VS</div>
             <div class="battle-intro-hero">🧒</div>
             <div class="battle-intro-title" id="intro-title">今晚的战斗准备好了吗？</div>
-            <div class="battle-intro-msg" id="intro-msg">完成睡前任务，打败大魔王，<br>就能获得游戏时间奖励！</div>
+            <div class="battle-intro-msg" id="intro-msg">完成睡前任务，打败大魔王，<br>就能收集梦境碎片！</div>
             <div class="battle-intro-trophy-hint" id="intro-trophy-hint"></div>
             <button class="btn btn-battle-intro-start" onclick="startFromIntro()">⚔️ 开始战斗！</button>
+        </div>
+    </div>
+
+    <!-- DREAM COLLECTION MODAL -->
+    <div id="dream-modal" class="pin-overlay" style="display:none;">
+        <div class="pin-box" style="max-width:380px;max-height:85vh;overflow-y:auto;padding:24px 20px;">
+            <h3 style="color:#ffd93d;margin-bottom:5px;">🌙 梦境收集册</h3>
+            <p style="color:#a78bfa;font-size:0.75em;margin-bottom:15px;" id="dream-total-text">已收集 0 个梦境碎片</p>
+            <div id="dream-collection-list"></div>
+            <button class="btn btn-close-modal" onclick="hideDreamModal()" style="margin-top:15px;">关闭</button>
         </div>
     </div>
 
@@ -2472,6 +2574,13 @@ body {
         <div id="victory-canvas" class="victory-char"></div>
         <div class="victory-stats" id="victory-stats"></div>
         <button class="btn btn-start" onclick="newDay()">新的一天</button>
+    </div>
+
+    <!-- DREAM ENTRY ANIMATION -->
+    <div id="dream-screen" style="display:none;min-height:100vh;min-height:100dvh;background:linear-gradient(180deg,#050a1f 0%,#0a1040 50%,#050a1f 100%);flex-direction:column;align-items:center;justify-content:center;padding:20px;text-align:center;position:relative;z-index:1;">
+        <canvas id="dream-canvas" width="320" height="400" style="max-width:100%;"></canvas>
+        <div id="dream-text" style="color:#ffd93d;font-size:0.7em;text-shadow:2px 2px 0 #000,0 0 15px rgba(255,217,61,0.3);margin-top:20px;opacity:0;transition:opacity 1s;"></div>
+        <button id="dream-done-btn" class="btn btn-start" onclick="showDreamCollection()" style="display:none;margin-top:20px;font-size:0.55em;">🌙 查看梦境收集</button>
     </div>
 
     <!-- DEFEAT -->
@@ -2639,6 +2748,8 @@ let state = {
     redeemedMinutes: 0, // Total redeemed minutes (lifetime, reset on new day)
     battlesFought: 0, // Number of times boss has been fought today (max 1)
     battleDate: null, // Date string when boss was last fought (YYYY-MM-DD)
+    dreamCollect: {}, // { bossEmoji: [fragmentIndex, ...] } collected dream fragments
+    dreamShowDate: null, // Track which day's dream is showing
 };
 
 // ===== AUDIO =====
@@ -3130,6 +3241,66 @@ const BOSS_DEFS = {
   },
 };
 
+// ===== DREAM FRAGMENT DEFINITIONS =====
+const DREAM_DEFS = {
+  0: { // Sunday - 周末瞌睡龙
+    fragments: [
+      { name: '龙的瞌睡星', emoji: '💤', desc: '瞌睡龙打哈欠时掉落的星星' },
+      { name: '周末彩虹糖', emoji: '🌈', desc: '周末冒险找到的彩色糖果' },
+      { name: '紫色梦泡泡', emoji: '🫧', desc: '紫色翅膀扇出的泡泡梦' },
+    ],
+    bg: '#1a0033',
+  },
+  1: { // Monday - 周一起床魔
+    fragments: [
+      { name: '起床勇气星', emoji: '⭐', desc: '打败起床魔获得的勇气之星' },
+      { name: '红色小火苗', emoji: '🔥', desc: '周一早晨的温暖火焰' },
+      { name: '新一周徽章', emoji: '🏅', desc: '勇敢面对周一的证明' },
+    ],
+    bg: '#330000',
+  },
+  2: { // Tuesday - 拖延小恶魔
+    fragments: [
+      { name: '行动力种子', emoji: '🌱', desc: '拖延小恶魔留下的魔法种子' },
+      { name: '绿色闪电符', emoji: '⚡', desc: '瞬间行动的力量符文' },
+      { name: '时间沙漏', emoji: '⏳', desc: '不再拖延的时间魔法' },
+    ],
+    bg: '#003300',
+  },
+  3: { // Wednesday - 周中打盹怪
+    fragments: [
+      { name: '清醒水滴', emoji: '💧', desc: '打盹怪的眼泪变的清醒石' },
+      { name: '蓝色月光', emoji: '🌙', desc: '周三夜晚的温柔月光' },
+      { name: '半山腰旗帜', emoji: '🚩', desc: '翻过半山的勇气证明' },
+    ],
+    bg: '#001a33',
+  },
+  4: { // Thursday - 兴奋不眠星
+    fragments: [
+      { name: '安静星星', emoji: '✨', desc: '让心安静下来的小星星' },
+      { name: '金色梦网', emoji: '🕸️', desc: '接住好梦的金色网' },
+      { name: '期待之花', emoji: '🌸', desc: '对明天期待的魔法花' },
+    ],
+    bg: '#332200',
+  },
+  5: { // Friday - 狂欢熬夜王
+    fragments: [
+      { name: '安静音符', emoji: '🎵', desc: '让狂欢安静下来的音符' },
+      { name: '粉色云朵', emoji: '☁️', desc: '柔软舒适的睡眠云' },
+      { name: '周末钥匙', emoji: '🔑', desc: '开启美好周末的钥匙' },
+    ],
+    bg: '#330022',
+  },
+  6: { // Saturday - 游戏沉迷怪
+    fragments: [
+      { name: '休息按钮', emoji: '🔘', desc: '适时休息的魔法按钮' },
+      { name: '紫色水晶', emoji: '💎', desc: '比游戏更闪耀的水晶' },
+      { name: '晚安魔法棒', emoji: '🪄', desc: '说晚安的温柔魔法' },
+    ],
+    bg: '#220033',
+  },
+};
+
 function getCurrentBoss(){
   return BOSS_DEFS[new Date().getDay()];
 }
@@ -3382,7 +3553,7 @@ function showBattleIntro(){
     const totalMin=(state.rewards||[]).reduce((s,r)=>s+r.minutes,0);
     const trophyHint=document.getElementById('intro-trophy-hint');
     if(totalMin>0){
-        trophyHint.textContent='🏆 累计游戏时间: '+totalMin+' 分钟';
+        trophyHint.textContent='🌟 已收集梦境: '+getDreamCount()+' 个碎片';
     } else {
         trophyHint.textContent='';
     }
@@ -3404,8 +3575,9 @@ function newDay(){
     const bt=state.bedtime,wm=state.warningMinutes;
     const mr=state.rewards,sl=state.sleepLog,tc=state.todayChecked;
     const mi=state.mandatoryIds,pi=state.poolIds;
-    state={tasks:[],idCounter:0,totalPower:0,bossHP:100,bossMaxHP:100,heroHP:100,heroMaxHP:100,battleActive:false,battleTurn:0,heroX:60,heroY:90,bossX:200,bossY:50,bedtime:bt,warningMinutes:wm,equipment:{},allyReady:true,streak:state.streak,rewards:mr,sleepLog:sl||[],todayChecked:tc,mandatoryIds:mi,poolIds:pi,redeemLog:[],redeemedMinutes:0,battlesFought:0,battleDate:null};
-    ['victory-screen','defeat-screen','battle-screen','game-screen','battle-intro-overlay'].forEach(id=>document.getElementById(id).style.display='none');
+    const dc=state.dreamCollect||{};
+    state={tasks:[],idCounter:0,totalPower:0,bossHP:100,bossMaxHP:100,heroHP:100,heroMaxHP:100,battleActive:false,battleTurn:0,heroX:60,heroY:90,bossX:200,bossY:50,bedtime:bt,warningMinutes:wm,equipment:{},allyReady:true,streak:state.streak,rewards:mr,sleepLog:sl||[],todayChecked:tc,mandatoryIds:mi,poolIds:pi,redeemLog:[],redeemedMinutes:0,battlesFought:0,battleDate:null,dreamCollect:dc,dreamShowDate:null};
+    ['victory-screen','defeat-screen','battle-screen','game-screen','battle-intro-overlay','dream-screen'].forEach(id=>document.getElementById(id).style.display='none');
     document.getElementById('game-lock-overlay').classList.remove('unlocked');
     document.getElementById('title-screen').style.display='flex';
     initTitle();
@@ -4580,11 +4752,55 @@ function shake(){
 }
 
 // ===== END SCREENS =====
+
+// Collect a random dream fragment from the current boss
+function collectDream(){
+    const boss=getCurrentBoss();
+    const bossEmoji=boss.emoji;
+    const dreamDef=DREAM_DEFS[new Date().getDay()];
+    if(!dreamDef) return null;
+
+    // Initialize collection for this boss
+    if(!state.dreamCollect[bossEmoji]){
+        state.dreamCollect[bossEmoji]=[];
+    }
+
+    // Get available fragments not yet collected
+    const collected=state.dreamCollect[bossEmoji];
+    const available=[];
+    for(let i=0;i<dreamDef.fragments.length;i++){
+        if(!collected.includes(i)) available.push(i);
+    }
+
+    // If all collected, give a duplicate bonus star
+    if(available.length===0){
+        return { duplicate:true, fragment:dreamDef.fragments[0], bossName:boss.name, bossEmoji };
+    }
+
+    // Pick random fragment
+    const idx=available[Math.floor(Math.random()*available.length)];
+    state.dreamCollect[bossEmoji].push(idx);
+    saveAllState();
+    return { duplicate:false, fragment:dreamDef.fragments[idx], bossName:boss.name, bossEmoji };
+}
+
+// Get total dream fragment count
+function getDreamCount(){
+    let count=0;
+    for(const key in state.dreamCollect){
+        count+=state.dreamCollect[key].length;
+    }
+    return count;
+}
+
 function showVictory(){
     sfxVictory();
     state.streak++;
     saveStreak();
-    
+
+    // Collect dream fragment
+    const dreamResult=collectDream();
+
     document.getElementById('battle-screen').style.display='none';
     document.getElementById('victory-screen').style.display='flex';
     const comp=state.tasks.filter(t=>t.status==='completed');
@@ -4601,6 +4817,17 @@ function showVictory(){
     }).filter(Boolean).join(' ');
 
     const boss=getCurrentBoss();
+    const totalDreams=getDreamCount();
+
+    // Dream collection display
+    let dreamHTML='';
+    if(dreamResult){
+        if(dreamResult.duplicate){
+            dreamHTML=`<p style="color:#ffd93d;font-weight:700;">${dreamResult.fragment.emoji} 收集到 ${dreamResult.fragment.name} (已集齐，获得额外星星⭐)</p>`;
+        } else {
+            dreamHTML=`<p style="color:#ffd93d;font-weight:700;">${dreamResult.fragment.emoji} 收集到「${dreamResult.fragment.name}」</p>`;
+        }
+    }
 
     document.getElementById('victory-stats').innerHTML=`
         <p>完成: ${comp.length}/${state.tasks.length}</p>
@@ -4608,13 +4835,12 @@ function showVictory(){
         <p>回合: ${state.battleTurn}</p>
         <p>装备: ${eqList||'无'}</p>
         <p style="color:#4ade80;">${boss.name}被打败了！</p>
-        <p style="color:#ffd93d;font-weight:700;">🎮 获得 15 分钟游戏时间！</p>
+        ${dreamHTML}
+        <p style="color:#a78bfa;">🌟 梦境收集: ${totalDreams} 个碎片</p>
         ${skip.length>0?'<p style="color:#fbbf24;">下次全部完成更厉害！</p>':'<p style="color:#ffd93d;">完美通关！全部完成！</p>'}
     `;
     spawnVictoryParticles();
 
-    // Record reward
-    addReward(boss.name,boss.emoji,15);
     saveAllState();
 }
 
@@ -4622,10 +4848,246 @@ function showDefeat(){
     sfxDefeat();
     state.streak=0;
     saveStreak();
-    
+
     document.getElementById('battle-screen').style.display='none';
     document.getElementById('defeat-screen').style.display='flex';
     document.getElementById('defeat-canvas').innerHTML=`<img class="char-img" src="images/boss_${new Date().getDay()}.png" width="80" height="80" style="filter: grayscale(1) opacity(0.6);">`;
+}
+
+// ===== DREAM ENTRY ANIMATION =====
+let dreamAnimPhase=0, dreamAnimTime=0, dreamAnimRAF=null;
+
+function showDreamAnimation(){
+    document.getElementById('victory-screen').style.display='none';
+    document.getElementById('dream-screen').style.display='flex';
+    document.getElementById('dream-text').style.opacity='0';
+    document.getElementById('dream-done-btn').style.display='none';
+    dreamAnimPhase=0;
+    dreamAnimTime=0;
+
+    const canvas=document.getElementById('dream-canvas');
+    const ctx=canvas.getContext('2d');
+    canvas.width=320; canvas.height=400;
+
+    const boss=getCurrentBoss();
+    const dreamDef=DREAM_DEFS[new Date().getDay()];
+
+    // Load dream images
+    const bossStarImg=new Image(); bossStarImg.src='images/dream/dream_boss_star.png';
+    const starsImg=new Image(); starsImg.src='images/dream/dream_stars.png';
+    const oliverSleepImg=new Image(); oliverSleepImg.src='images/dream/dream_oliver_sleep.png';
+
+    // Animation parameters
+    let bossY=180, bossOpacity=1, bossScale=1;
+    let starY=-50, starOpacity=0, starTargetY=80;
+    let skyOpacity=0, oliverOpacity=0, oliverY=350;
+    let textOpacity=0;
+    let stars=[];
+    for(let i=0;i<30;i++){
+        stars.push({x:Math.random()*320, y:Math.random()*300, s:1+Math.random()*2, a:0.3+Math.random()*0.7, sp:1+Math.random()*2});
+    }
+
+    function animate(){
+        dreamAnimTime+=16; // ~60fps
+        ctx.clearRect(0,0,320,400);
+
+        // Phase 0: Boss transforms into star (0-2s)
+        if(dreamAnimTime<2000){
+            const t=dreamAnimTime/2000;
+            ctx.save();
+            // Draw boss fading out
+            if(t<0.5){
+                bossOpacity=1-t*2;
+                ctx.globalAlpha=bossOpacity;
+                const shakeX=Math.sin(t*20)*8*(1-t);
+                ctx.drawImage(bossStarImg, 120+shakeX-20, bossY-20, 80, 80);
+            }
+            // Star appearing
+            if(t>0.3){
+                starOpacity=Math.min(1,(t-0.3)/0.4);
+                ctx.globalAlpha=starOpacity;
+                const glow=10+Math.sin(t*10)*5;
+                ctx.shadowColor='#ffd93d';
+                ctx.shadowBlur=glow;
+                ctx.drawImage(bossStarImg, 160-20, bossY-20, 80, 80);
+                ctx.shadowBlur=0;
+            }
+            ctx.restore();
+        }
+        // Phase 1: Star floats up into sky (2-4s)
+        else if(dreamAnimTime<4000){
+            const t=(dreamAnimTime-2000)/2000;
+            // Background darkens to night sky
+            skyOpacity=t;
+            ctx.fillStyle=`rgba(5,10,31,${skyOpacity})`;
+            ctx.fillRect(0,0,320,400);
+            // Stars appearing
+            ctx.globalAlpha=skyOpacity;
+            stars.forEach(s=>{
+                const twinkle=0.5+0.5*Math.sin(dreamAnimTime*0.003*s.sp);
+                ctx.globalAlpha=skyOpacity*s.a*twinkle;
+                ctx.fillStyle='#ffd93d';
+                ctx.beginPath();
+                ctx.arc(s.x,s.y,s.s,0,Math.PI*2);
+                ctx.fill();
+            });
+            ctx.globalAlpha=1;
+            // Star floats upward
+            starY=bossY-t*100;
+            ctx.drawImage(bossStarImg, 160-20, starY-20, 80*(1-t*0.3), 80*(1-t*0.3));
+        }
+        // Phase 2: Oliver sleeping scene (4-7s)
+        else if(dreamAnimTime<7000){
+            const t=Math.min(1,(dreamAnimTime-4000)/2500);
+            // Full night sky
+            ctx.fillStyle=`rgba(5,10,31,1)`;
+            ctx.fillRect(0,0,320,400);
+            // Background stars image
+            ctx.globalAlpha=t;
+            ctx.drawImage(starsImg, 0, 0, 320, 250);
+            ctx.globalAlpha=1;
+            // Twinkling stars
+            stars.forEach(s=>{
+                const twinkle=0.5+0.5*Math.sin(dreamAnimTime*0.003*s.sp);
+                ctx.globalAlpha=s.a*twinkle*0.8;
+                ctx.fillStyle='#ffd93d';
+                ctx.beginPath();
+                ctx.arc(s.x,s.y,s.s,0,Math.PI*2);
+                ctx.fill();
+            });
+            ctx.globalAlpha=1;
+            // Oliver sleeping fades in from bottom
+            oliverOpacity=t;
+            oliverY=350-(1-t)*50;
+            ctx.globalAlpha=oliverOpacity;
+            ctx.drawImage(oliverSleepImg, 100, oliverY-30, 120, 120);
+            ctx.globalAlpha=1;
+            // Floating dream particles
+            for(let i=0;i<8;i++){
+                const px=80+Math.sin(dreamAnimTime*0.001+i*0.8)*60;
+                const py=200+Math.cos(dreamAnimTime*0.0008+i*1.2)*50-i*10;
+                ctx.globalAlpha=0.4+0.3*Math.sin(dreamAnimTime*0.002+i);
+                ctx.fillStyle=['#ffd93d','#4ade80','#f472b6','#a78bfa'][i%4];
+                ctx.beginPath();
+                ctx.arc(px,py,2+Math.sin(dreamAnimTime*0.003+i),0,Math.PI*2);
+                ctx.fill();
+            }
+            ctx.globalAlpha=1;
+        }
+        // Phase 3: Text fade in + done button (7s+)
+        else{
+            // Final static scene
+            ctx.fillStyle='rgba(5,10,31,1)';
+            ctx.fillRect(0,0,320,400);
+            ctx.drawImage(starsImg, 0, 0, 320, 250);
+            stars.forEach(s=>{
+                const twinkle=0.5+0.5*Math.sin(dreamAnimTime*0.003*s.sp);
+                ctx.globalAlpha=s.a*twinkle*0.8;
+                ctx.fillStyle='#ffd93d';
+                ctx.beginPath();
+                ctx.arc(s.x,s.y,s.s,0,Math.PI*2);
+                ctx.fill();
+            });
+            ctx.globalAlpha=1;
+            ctx.drawImage(oliverSleepImg, 100, 300, 120, 120);
+            for(let i=0;i<8;i++){
+                const px=80+Math.sin(dreamAnimTime*0.001+i*0.8)*60;
+                const py=200+Math.cos(dreamAnimTime*0.0008+i*1.2)*50-i*10;
+                ctx.globalAlpha=0.4+0.3*Math.sin(dreamAnimTime*0.002+i);
+                ctx.fillStyle=['#ffd93d','#4ade80','#f472b6','#a78bfa'][i%4];
+                ctx.beginPath();
+                ctx.arc(px,py,2+Math.sin(dreamAnimTime*0.003+i),0,Math.PI*2);
+                ctx.fill();
+            }
+            ctx.globalAlpha=1;
+
+            // Show text
+            const textEl=document.getElementById('dream-text');
+            textEl.style.opacity='1';
+            textEl.innerHTML=`🌙 Oliver进入了甜甜的梦乡...<br><span style="color:#a78bfa;font-size:0.85em;">今晚的梦境是: ${dreamDef.fragments.map(f=>f.emoji).join(' ')}</span>`;
+
+            // Show done button after text appears
+            if(dreamAnimTime<7500){
+                document.getElementById('dream-done-btn').style.display='block';
+            }
+
+            // Keep animating for particles
+        }
+
+        dreamAnimRAF=requestAnimationFrame(animate);
+    }
+
+    // Start animation when boss star image loads
+    if(bossStarImg.complete && bossStarImg.naturalHeight>0){
+        animate();
+    } else {
+        bossStarImg.onload=animate;
+        // Fallback: start anyway after 2s
+        setTimeout(animate,2000);
+    }
+}
+
+function showDreamCollection(){
+    if(dreamAnimRAF) cancelAnimationFrame(dreamAnimRAF);
+    document.getElementById('dream-screen').style.display='none';
+    showVictory();
+}
+
+function showDreamModal(){
+    sfxClick();
+    loadAllState().then(()=>{
+        const list=document.getElementById('dream-collection-list');
+        const totalText=document.getElementById('dream-total-text');
+        const totalCount=getDreamCount();
+        totalText.textContent=`已收集 ${totalCount} 个梦境碎片`;
+
+        let html='';
+        // Show all 7 bosses
+        for(let day=0;day<7;day++){
+            const bossDef=BOSS_DEFS[day];
+            const dreamDef=DREAM_DEFS[day];
+            const bossEmoji=bossDef.emoji;
+            const collected=state.dreamCollect[bossEmoji]||[];
+            const dayNames=['周日','周一','周二','周三','周四','周五','周六'];
+
+            html+=`<div class="dream-boss-section">`;
+            html+=`<div class="dream-boss-header">`;
+            html+=`<span class="boss-emoji">${bossEmoji}</span>`;
+            html+=`<span class="boss-name">${bossDef.name}</span>`;
+            html+=`<span class="boss-progress">${collected.length}/${dreamDef.fragments.length}</span>`;
+            html+=`</div>`;
+            html+=`<div class="dream-fragments">`;
+
+            for(let i=0;i<dreamDef.fragments.length;i++){
+                if(collected.includes(i)){
+                    const frag=dreamDef.fragments[i];
+                    html+=`<div class="dream-fragment collected">`;
+                    html+=`<span class="emoji">${frag.emoji}</span>`;
+                    html+=`<span class="name">${frag.name}</span>`;
+                    html+=`<span class="desc">${frag.desc}</span>`;
+                    html+=`</div>`;
+                } else {
+                    html+=`<div class="dream-fragment empty">`;
+                    html+=`<span class="emoji">❓</span>`;
+                    html+=`<span class="name">未收集</span>`;
+                    html+=`</div>`;
+                }
+            }
+            html+=`</div></div>`;
+        }
+
+        if(totalCount===0){
+            html=`<p style="color:#a78bfa;font-size:0.4em;text-align:center;padding:20px 0;text-shadow:1px 1px 0 #000;">还没有收集到梦境碎片哦~<br>完成睡前任务打败Boss就能获得！</p>`;
+        }
+
+        list.innerHTML=html;
+        document.getElementById('dream-modal').style.display='flex';
+    });
+}
+
+function hideDreamModal(){
+    sfxClick();
+    document.getElementById('dream-modal').style.display='none';
 }
 
 function spawnParticles(){
@@ -4698,7 +5160,7 @@ function triggerBossDeath(){
             vy:-3-Math.random()*4, life:1.5,
             rot:Math.random()*Math.PI*2, rotSpeed:(Math.random()-0.5)*0.3});
     }
-    setTimeout(()=>{flash('#4ade80');showVictory();},1200);
+    setTimeout(()=>{flash('#4ade80');showDreamAnimation();},1200);
 }
 
 function renderBattleEffects(ctx){
@@ -5036,7 +5498,8 @@ function collectAllPersistentData(){
         battlesFought:state.battlesFought||0,
         battleDate:state.battleDate||null,
         // Per-day task state (for cross-device sync)
-        dayState: getDayState()
+        dayState: getDayState(),
+        dreamCollect: state.dreamCollect||{}
     };
 }
 
@@ -5069,6 +5532,7 @@ function applyServerData(data){
     if(data.redeemedMinutes!==undefined){state.redeemedMinutes=data.redeemedMinutes;}
     if(data.battlesFought!==undefined){state.battlesFought=data.battlesFought;}
     if(data.battleDate!==undefined){state.battleDate=data.battleDate;}
+    if(data.dreamCollect){state.dreamCollect=data.dreamCollect;}
     // Apply today's task state if same day
     if(data.dayState && data.dayState.date === getTodayStr()){
         state.tasks = data.dayState.tasks.map(t=>({...t}));
@@ -5091,6 +5555,7 @@ function saveAllState(){
     localStorage.setItem('boss_redeemed_minutes', String(state.redeemedMinutes||0));
     localStorage.setItem('boss_battles_fought', String(state.battlesFought||0));
     localStorage.setItem('boss_battle_date', state.battleDate||'');
+    localStorage.setItem('boss_dream_collect', JSON.stringify(state.dreamCollect||{}));
 
     // Then try server save (non-blocking)
     try{
@@ -5152,6 +5617,8 @@ function loadFromLocalStorage(){
         if(bf) state.battlesFought=parseInt(bf);
         const bd=localStorage.getItem('boss_battle_date');
         if(bd) state.battleDate=bd;
+        const dc=localStorage.getItem('boss_dream_collect');
+        if(dc) state.dreamCollect=JSON.parse(dc);
         // Load today's task state from localStorage
         // Load today's task state from localStorage
         if(ds){
@@ -5196,6 +5663,15 @@ const preloadImgs = [
     'images/icon_tidy.png','images/icon_stretch.png',
 ];
 preloadImgs.forEach(src => { const img = new Image(); img.src = src; });
+
+// Preload dream images
+const dreamPreloadImgs = [
+    'images/dream/dream_boss_star.png',
+    'images/dream/dream_stars.png',
+    'images/dream/dream_oliver_sleep.png',
+    'images/dream/dream_collect.png',
+];
+dreamPreloadImgs.forEach(src => { const img = new Image(); img.src = src; });
 </script>
 </body>
 </html>
