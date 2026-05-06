@@ -1088,6 +1088,74 @@ body {
 .dream-fragment.empty .desc {
     color: #4b5563;
 }
+
+/* ============================================
+   DREAM REDEMPTION SECTION
+   ============================================ */
+.dream-redeem-section {
+    margin-top: 20px;
+    padding-top: 16px;
+    border-top: 2px solid rgba(167,139,250,0.3);
+}
+.redeem-title {
+    color: #ffd93d;
+    font-size: 0.5em;
+    text-align: center;
+    margin-bottom: 14px;
+    text-shadow: 1px 1px 0 #000;
+}
+.redeem-tier {
+    margin-bottom: 14px;
+    padding: 10px;
+    background: rgba(30,27,75,0.5);
+    border: 2px solid rgba(74,44,138,0.5);
+    border-radius: var(--radius-md);
+}
+.redeem-tier-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 8px;
+}
+.redeem-tier-header span {
+    color: var(--white);
+    font-size: 0.42em;
+    text-shadow: 1px 1px 0 #000;
+}
+.redeem-remaining {
+    color: #a78bfa !important;
+    font-size: 0.38em !important;
+}
+.redeem-option-btn {
+    display: block;
+    width: 100%;
+    font-family: var(--font-game);
+    background: linear-gradient(145deg, rgba(61,40,102,0.7), rgba(45,27,105,0.8));
+    border: 2px solid var(--purple-dark);
+    border-bottom: 2px solid rgba(50,30,90,0.6);
+    color: var(--white);
+    text-shadow: 1px 1px 0 #000;
+    padding: 10px 12px;
+    font-size: 0.38em;
+    border-radius: var(--radius-sm);
+    margin-bottom: 6px;
+    cursor: pointer;
+    text-align: left;
+    transition: transform 0.1s, box-shadow 0.1s;
+}
+.redeem-option-btn:active {
+    transform: scale(0.97);
+    border-color: var(--gold);
+    box-shadow: 0 2px 10px rgba(255,217,61,0.2);
+}
+.redeem-disabled {
+    color: #6b7280;
+    font-size: 0.36em;
+    text-shadow: 1px 1px 0 #000;
+    text-align: center;
+    padding: 6px 0;
+    opacity: 0.6;
+}
     margin-top: 10px;
 }
 .btn-close-modal:active { box-shadow: 0 1px 0 #374151; transform: translateY(3px); }
@@ -2750,6 +2818,11 @@ let state = {
     battleDate: null, // Date string when boss was last fought (YYYY-MM-DD)
     dreamCollect: {}, // { bossEmoji: [fragmentIndex, ...] } collected dream fragments
     dreamShowDate: null, // Track which day's dream is showing
+    dreamRedeemLog: [], // {date: 'YYYY-MM-DD', tier: number, reward: string, cost: number}
+    dreamBossSeals: {}, // { bossEmoji: true/false } golden seal for completing all 3 fragments of a boss
+    redeemWeekStart: null, // Week start date for weekly limit tracking
+    weeklySmallRedeems: 0, // Small reward redeems this week (max 2)
+    weeklyMediumRedeems: 0, // Medium reward redeems this week (max 1)
 };
 
 // ===== AUDIO =====
@@ -3576,7 +3649,12 @@ function newDay(){
     const mr=state.rewards,sl=state.sleepLog,tc=state.todayChecked;
     const mi=state.mandatoryIds,pi=state.poolIds;
     const dc=state.dreamCollect||{};
-    state={tasks:[],idCounter:0,totalPower:0,bossHP:100,bossMaxHP:100,heroHP:100,heroMaxHP:100,battleActive:false,battleTurn:0,heroX:60,heroY:90,bossX:200,bossY:50,bedtime:bt,warningMinutes:wm,equipment:{},allyReady:true,streak:state.streak,rewards:mr,sleepLog:sl||[],todayChecked:tc,mandatoryIds:mi,poolIds:pi,redeemLog:[],redeemedMinutes:0,battlesFought:0,battleDate:null,dreamCollect:dc,dreamShowDate:null};
+    const drl=state.dreamRedeemLog||[];
+    const dbs=state.dreamBossSeals||{};
+    const rws=state.redeemWeekStart||null;
+    const wsr=state.weeklySmallRedeems||0;
+    const wmr=state.weeklyMediumRedeems||0;
+    state={tasks:[],idCounter:0,totalPower:0,bossHP:100,bossMaxHP:100,heroHP:100,heroMaxHP:100,battleActive:false,battleTurn:0,heroX:60,heroY:90,bossX:200,bossY:50,bedtime:bt,warningMinutes:wm,equipment:{},allyReady:true,streak:state.streak,rewards:mr,sleepLog:sl||[],todayChecked:tc,mandatoryIds:mi,poolIds:pi,redeemLog:[],redeemedMinutes:0,battlesFought:0,battleDate:null,dreamCollect:dc,dreamShowDate:null,dreamRedeemLog:drl,dreamBossSeals:dbs,redeemWeekStart:rws,weeklySmallRedeems:wsr,weeklyMediumRedeems:wmr};
     ['victory-screen','defeat-screen','battle-screen','game-screen','battle-intro-overlay','dream-screen'].forEach(id=>document.getElementById(id).style.display='none');
     document.getElementById('game-lock-overlay').classList.remove('unlocked');
     document.getElementById('title-screen').style.display='flex';
@@ -4793,6 +4871,137 @@ function getDreamCount(){
     return count;
 }
 
+// ===== DREAM REDEMPTION SYSTEM =====
+
+const DREAM_REWARD_TIERS = {
+    small: {
+        cost: 3,
+        name: '小奖励',
+        emoji: '🌟',
+        weeklyLimit: 2,
+        options: [
+            { name: '选明天早餐吃什么', emoji: '🍳' },
+            { name: '多15分钟Minecraft', emoji: '🎮' },
+            { name: '选一个额外的睡前故事', emoji: '📖' },
+            { name: '选明天穿什么衣服', emoji: '👕' },
+        ]
+    },
+    medium: {
+        cost: 5,
+        name: '中奖励',
+        emoji: '🌟🌟',
+        weeklyLimit: 1,
+        options: [
+            { name: '去公园玩', emoji: '🏞️' },
+            { name: '和妈妈一起烤饼干/做早餐', emoji: '🍪' },
+            { name: '周末选一个家庭活动', emoji: '🎯' },
+            { name: '买一本新绘本', emoji: '📚' },
+        ]
+    },
+    large: {
+        cost: 7,
+        name: '大奖励',
+        emoji: '🌟🌟🌟',
+        weeklyLimit: 0, // Special - no weekly reset
+        options: [
+            { name: '选一个新玩具(50元内)', emoji: '🧸' },
+            { name: '去游乐场玩', emoji: '🎠' },
+            { name: '和爸爸妈妈做一件特别的事(自己选)', emoji: '👨‍👩‍👦' },
+        ]
+    }
+};
+
+function getWeekStart(){
+    // Monday as week start
+    const now = new Date();
+    const dayOfWeek = now.getDay(); // 0=Sunday
+    const diff = dayOfWeek === 0 ? -6 : 1 - dayOfWeek; // days to Monday
+    const monday = new Date(now);
+    monday.setDate(now.getDate() + diff);
+    return monday.getFullYear()+'-'+String(monday.getMonth()+1).padStart(2,'0')+'-'+String(monday.getDate()).padStart(2,'0');
+}
+
+function checkWeeklyLimits(){
+    const weekStart = getWeekStart();
+    if(state.redeemWeekStart !== weekStart){
+        state.weeklySmallRedeems = 0;
+        state.weeklyMediumRedeems = 0;
+        state.redeemWeekStart = weekStart;
+    }
+}
+
+function getAvailableRedeems(){
+    checkWeeklyLimits();
+    const total = getDreamCount();
+    return {
+        small: {
+            ...DREAM_REWARD_TIERS.small,
+            canRedeem: total >= 3 && state.weeklySmallRedeems < DREAM_REWARD_TIERS.small.weeklyLimit,
+            remaining: Math.max(0, DREAM_REWARD_TIERS.small.weeklyLimit - state.weeklySmallRedeems),
+        },
+        medium: {
+            ...DREAM_REWARD_TIERS.medium,
+            canRedeem: total >= 5 && state.weeklyMediumRedeems < DREAM_REWARD_TIERS.medium.weeklyLimit,
+            remaining: Math.max(0, DREAM_REWARD_TIERS.medium.weeklyLimit - state.weeklyMediumRedeems),
+        },
+        large: {
+            ...DREAM_REWARD_TIERS.large,
+            canRedeem: total >= 7,
+            remaining: total >= 7 ? '✅' : `差${7-total}个`,
+        }
+    };
+}
+
+function redeemDreamFragment(tier, rewardIdx){
+    const tierDef = DREAM_REWARD_TIERS[tier];
+    const reward = tierDef.options[rewardIdx];
+    const today = getTodayStr();
+
+    // Deduct fragments (take from oldest collected first)
+    let remaining = tierDef.cost;
+    for(const bossKey in state.dreamCollect){
+        if(remaining <= 0) break;
+        const arr = state.dreamCollect[bossKey];
+        while(arr.length > 0 && remaining > 0){
+            arr.shift();
+            remaining--;
+        }
+        if(arr.length === 0) delete state.dreamCollect[bossKey];
+    }
+
+    // Update weekly limits
+    checkWeeklyLimits();
+    if(tier === 'small') state.weeklySmallRedeems++;
+    else if(tier === 'medium') state.weeklyMediumRedeems++;
+
+    // Log the redemption
+    state.dreamRedeemLog.push({
+        date: today,
+        tier: tier,
+        reward: reward.name,
+        cost: tierDef.cost
+    });
+
+    // Check if any boss is now complete (all 3 fragments collected)
+    checkBossSeals();
+
+    saveAllState();
+    return reward;
+}
+
+function checkBossSeals(){
+    for(let day=0;day<7;day++){
+        const bossDef = BOSS_DEFS[day];
+        const dreamDef = DREAM_DEFS[day];
+        const bossEmoji = bossDef.emoji;
+        const collected = (state.dreamCollect[bossEmoji]||[]).length;
+        if(collected >= dreamDef.fragments.length){
+            state.dreamBossSeals = state.dreamBossSeals || {};
+            state.dreamBossSeals[bossEmoji] = true;
+        }
+    }
+}
+
 function showVictory(){
     sfxVictory();
     state.streak++;
@@ -5044,20 +5253,23 @@ function showDreamModal(){
         const totalCount=getDreamCount();
         totalText.textContent=`已收集 ${totalCount} 个梦境碎片`;
 
+        checkWeeklyLimits();
+
+        // Build fragment collection HTML
         let html='';
-        // Show all 7 bosses
         for(let day=0;day<7;day++){
             const bossDef=BOSS_DEFS[day];
             const dreamDef=DREAM_DEFS[day];
             const bossEmoji=bossDef.emoji;
             const collected=state.dreamCollect[bossEmoji]||[];
-            const dayNames=['周日','周一','周二','周三','周四','周五','周六'];
+            const hasSeal=(state.dreamBossSeals||{})[bossEmoji];
 
-            html+=`<div class="dream-boss-section">`;
+            html+=`<div class="dream-boss-section" style="position:relative;">`;
+            if(hasSeal) html+=`<span style="position:absolute;top:8px;right:10px;font-size:1.3em;" title="已封印">⭐</span>`;
             html+=`<div class="dream-boss-header">`;
             html+=`<span class="boss-emoji">${bossEmoji}</span>`;
             html+=`<span class="boss-name">${bossDef.name}</span>`;
-            html+=`<span class="boss-progress">${collected.length}/${dreamDef.fragments.length}</span>`;
+            html+=`<span class="boss-progress">${collected.length}/${dreamDef.fragments.length}${hasSeal?' ⭐':''}</span>`;
             html+=`</div>`;
             html+=`<div class="dream-fragments">`;
 
@@ -5083,9 +5295,98 @@ function showDreamModal(){
             html=`<p style="color:#a78bfa;font-size:0.4em;text-align:center;padding:20px 0;text-shadow:1px 1px 0 #000;">还没有收集到梦境碎片哦~<br>完成睡前任务打败Boss就能获得！</p>`;
         }
 
-        list.innerHTML=html;
+        // Redemption section HTML
+        const redeemHTML=buildRedeemHTML();
+        list.innerHTML=html+redeemHTML;
         document.getElementById('dream-modal').style.display='flex';
     });
+}
+
+function buildRedeemHTML(){
+    checkWeeklyLimits();
+    const total=getDreamCount();
+    const avail=getAvailableRedeems();
+
+    let html=`<div class="dream-redeem-section">`;
+    html+=`<div class="redeem-title">🔄 兑换奖励</div>`;
+
+    // Small reward
+    const s=avail.small;
+    html+=`<div class="redeem-tier">`;
+    html+=`<div class="redeem-tier-header">`;
+    html+=`<span>${s.emoji} 小奖励 (3个碎片)</span>`;
+    html+=`<span class="redeem-remaining">本周剩余 ${s.remaining} 次</span>`;
+    html+=`</div>`;
+    if(s.canRedeem){
+        s.options.forEach((opt,idx)=>{
+            html+=`<button class="redeem-option-btn" onclick="redeemAndNotify('small',${idx})">${opt.emoji} ${opt.name}</button>`;
+        });
+    } else {
+        html+=`<div class="redeem-disabled">碎片不足或本周已达上限</div>`;
+    }
+    html+=`</div>`;
+
+    // Medium reward
+    const m=avail.medium;
+    html+=`<div class="redeem-tier">`;
+    html+=`<div class="redeem-tier-header">`;
+    html+=`<span>${m.emoji} 中奖励 (5个碎片)</span>`;
+    html+=`<span class="redeem-remaining">本周剩余 ${m.remaining} 次</span>`;
+    html+=`</div>`;
+    if(m.canRedeem){
+        m.options.forEach((opt,idx)=>{
+            html+=`<button class="redeem-option-btn" onclick="redeemAndNotify('medium',${idx})">${opt.emoji} ${opt.name}</button>`;
+        });
+    } else {
+        html+=`<div class="redeem-disabled">碎片不足或本周已达上限</div>`;
+    }
+    html+=`</div>`;
+
+    // Large reward
+    const l=avail.large;
+    html+=`<div class="redeem-tier">`;
+    html+=`<div class="redeem-tier-header">`;
+    html+=`<span>${l.emoji} 大奖励 (7个碎片)</span>`;
+    html+=`<span class="redeem-remaining">${typeof l.remaining==='number'?'✅':l.remaining}</span>`;
+    html+=`</div>`;
+    if(l.canRedeem){
+        l.options.forEach((opt,idx)=>{
+            html+=`<button class="redeem-option-btn" onclick="redeemAndNotify('large',${idx})">${opt.emoji} ${opt.name}</button>`;
+        });
+    } else {
+        html+=`<div class="redeem-disabled">碎片不足 ${l.remaining}</div>`;
+    }
+    html+=`</div>`;
+
+    html+=`</div>`;
+    return html;
+}
+
+function redeemAndNotify(tier, rewardIdx){
+    const reward=redeemDreamFragment(tier, rewardIdx);
+    const tierDef=DREAM_REWARD_TIERS[tier];
+    sfxEquip();
+
+    // Show notification
+    const total=getDreamCount();
+    const totalText=document.getElementById('dream-total-text');
+    if(totalText) totalText.textContent=`已收集 ${total} 个梦境碎片`;
+
+    // Rebuild redeem section
+    const list=document.getElementById('dream-collection-list');
+    if(list){
+        // Remove old redeem section and add new one
+        const oldSection=list.querySelector('.dream-redeem-section');
+        if(oldSection){
+            const newHTML=buildRedeemHTML();
+            const tempDiv=document.createElement('div');
+            tempDiv.innerHTML=newHTML;
+            oldSection.replaceWith(tempDiv.firstElementChild);
+        }
+    }
+
+    // Show alert
+    alert(`${tierDef.emoji} 兑换成功！\n\n奖励: ${reward.emoji} ${reward.name}\n\n请爸爸妈妈兑现这个奖励给Oliver！\n碎片消耗: ${tierDef.cost}个`);
 }
 
 function hideDreamModal(){
@@ -5502,7 +5803,12 @@ function collectAllPersistentData(){
         battleDate:state.battleDate||null,
         // Per-day task state (for cross-device sync)
         dayState: getDayState(),
-        dreamCollect: state.dreamCollect||{}
+        dreamCollect: state.dreamCollect||{},
+        dreamRedeemLog: state.dreamRedeemLog||[],
+        dreamBossSeals: state.dreamBossSeals||{},
+        redeemWeekStart: state.redeemWeekStart||null,
+        weeklySmallRedeems: state.weeklySmallRedeems||0,
+        weeklyMediumRedeems: state.weeklyMediumRedeems||0
     };
 }
 
@@ -5536,6 +5842,11 @@ function applyServerData(data){
     if(data.battlesFought!==undefined){state.battlesFought=data.battlesFought;}
     if(data.battleDate!==undefined){state.battleDate=data.battleDate;}
     if(data.dreamCollect){state.dreamCollect=data.dreamCollect;}
+    if(data.dreamRedeemLog){state.dreamRedeemLog=data.dreamRedeemLog;}
+    if(data.dreamBossSeals){state.dreamBossSeals=data.dreamBossSeals;}
+    if(data.redeemWeekStart){state.redeemWeekStart=data.redeemWeekStart;}
+    if(data.weeklySmallRedeems!==undefined){state.weeklySmallRedeems=data.weeklySmallRedeems;}
+    if(data.weeklyMediumRedeems!==undefined){state.weeklyMediumRedeems=data.weeklyMediumRedeems;}
     // Apply today's task state if same day
     if(data.dayState && data.dayState.date === getTodayStr()){
         state.tasks = data.dayState.tasks.map(t=>({...t}));
@@ -5559,6 +5870,11 @@ function saveAllState(){
     localStorage.setItem('boss_battles_fought', String(state.battlesFought||0));
     localStorage.setItem('boss_battle_date', state.battleDate||'');
     localStorage.setItem('boss_dream_collect', JSON.stringify(state.dreamCollect||{}));
+    localStorage.setItem('boss_dream_redeem_log', JSON.stringify(state.dreamRedeemLog||[]));
+    localStorage.setItem('boss_dream_seals', JSON.stringify(state.dreamBossSeals||{}));
+    localStorage.setItem('boss_redeem_week_start', state.redeemWeekStart||'');
+    localStorage.setItem('boss_weekly_small', String(state.weeklySmallRedeems||0));
+    localStorage.setItem('boss_weekly_medium', String(state.weeklyMediumRedeems||0));
 
     // Then try server save (non-blocking)
     try{
@@ -5622,6 +5938,16 @@ function loadFromLocalStorage(){
         if(bd) state.battleDate=bd;
         const dc=localStorage.getItem('boss_dream_collect');
         if(dc) state.dreamCollect=JSON.parse(dc);
+        const drl=localStorage.getItem('boss_dream_redeem_log');
+        if(drl) state.dreamRedeemLog=JSON.parse(drl);
+        const dbs=localStorage.getItem('boss_dream_seals');
+        if(dbs) state.dreamBossSeals=JSON.parse(dbs);
+        const rws=localStorage.getItem('boss_redeem_week_start');
+        if(rws) state.redeemWeekStart=rws;
+        const wsr=localStorage.getItem('boss_weekly_small');
+        if(wsr) state.weeklySmallRedeems=parseInt(wsr);
+        const wmr=localStorage.getItem('boss_weekly_medium');
+        if(wmr) state.weeklyMediumRedeems=parseInt(wmr);
         // Load today's task state from localStorage
         // Load today's task state from localStorage
         if(ds){
